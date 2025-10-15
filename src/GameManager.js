@@ -12,9 +12,10 @@ class GameManager
         const dT = timestamp-this.prevTime;
         if(this.currentScene && this.ctx)
         {
-            this.currentScene.update(dT);
+            this.currentScene.update(dT/1000);
             this.currentScene.draw(this.ctx);
         }
+        this.prevTime = timestamp;
         requestAnimationFrame((t)=>this.update(t));
     }
     handlePointerMove(e)
