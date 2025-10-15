@@ -1,5 +1,6 @@
 class GameScene
 {
+    player = null;
     update(dT)
     {
         

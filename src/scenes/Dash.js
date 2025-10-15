@@ -46,6 +46,16 @@ class GameSceneDash extends GameScene
                 obj.update(dT);
             
         });
+        let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
+        let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
+        bullets.forEach((bb)=>{
+            baddies.forEach((enemy)=>{
+                if(bb.hitbox.testRect(enemy.hitbox))
+                {
+                    bb.hit(enemy);
+                }
+            });
+        });
         if(Math.random()<0.1)
         {
             let star = new BgStar();
@@ -55,6 +65,16 @@ class GameSceneDash extends GameScene
             star.targetY=10001;
             this.addObject(star);
             console.log(star);
+        }
+        if(Math.random()<0.01)
+        {
+            let enemy = new Hostile();
+            enemy.x=Math.random()*window.gameManager.ctx.canvas.width;
+            enemy.y=50+Math.random()*50;
+            enemy.targetX=this.player.x;
+            enemy.targetY=this.player.y;
+            this.addObject(enemy);
+            console.log(enemy);
         }
         //console.log(living.length);
         //console.log(living);

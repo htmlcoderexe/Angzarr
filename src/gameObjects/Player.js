@@ -1,11 +1,13 @@
-class Player extends GameObject
+class Player extends Actor
 {
     bullets_per_sec = 5;
     shootingCoolDown = 0;
     constructor()
     {
-        super();
+        super("player");
         this.speed=1200.00;
+        this.hitbox = new Rectangle(-10,-10,20,20);
+        this.originalHitbox = new Rectangle(-10,-10,20,20);
     }
     draw(ctx)
     {

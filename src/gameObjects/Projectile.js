@@ -1,5 +1,14 @@
 class Projectile extends GameObject
 {
+    friendly = false;
+    damage = 4;
+    constructor()
+    {
+        super("bullet");
+        this.hitbox = new Rectangle(-5,-5,10,30);
+        this.originalHitbox = new Rectangle(-5,-5,10,30);
+        
+    }
     draw(ctx)
     {
         
@@ -8,6 +17,11 @@ class Projectile extends GameObject
         grad.addColorStop(1,"rgb(255 120 0 / 0.2)");
         ctx.fillStyle = grad;
         ctx.fillRect(this.x-5,this.y-5,10,30);
+    }
+    hit(other)
+    {
+        other.HP-=this.damage;
+        this.die();
     }
     update(dT)
     {
