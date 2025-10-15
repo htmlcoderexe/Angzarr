@@ -1,0 +1,1 @@
+This is a game project in JavaScript for funsies. Cool name!
