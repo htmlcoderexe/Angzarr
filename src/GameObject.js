@@ -1,10 +1,12 @@
 class GameObject
 {
+    scene = null;
     x = 0;
     y = 0;
     targetX = 0;
     targetY = 0;
     speed = 0;
+    isDead = false;
     update(dT)
     {
         // skipping useless calc

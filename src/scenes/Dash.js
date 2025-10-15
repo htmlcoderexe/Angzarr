@@ -7,17 +7,25 @@ class GameSceneDash extends GameScene
     {
         super();
         this.player = new Player();
-        this.gameObjects.push(this.player);
+        this.addObject(this.player);
+    }
+    addObject(obj)
+    { 
+        this.gameObjects.push(obj);
+        //console.log(this.gameObjects.length);
+        obj.scene = this;
+        //console.log(obj,this);
     }
     handlePrimaryPointerMove(e)
     {
         this.player.targetX=e.offsetX;
         this.player.targetY = e.offsetY;
-        console.log(e);
+        //console.log(e);
     }
     draw(ctx)
     {
-        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+        ctx.fillStyle="#000030";
+        ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
         this.gameObjects.forEach((obj)=>{
             obj.draw(ctx);
         });
@@ -25,8 +33,17 @@ class GameSceneDash extends GameScene
     }
     update(dT)
     {
+        let living = [];
+        console.log(this.gameObjects.length);
+        this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         this.gameObjects.forEach((obj)=>{
-            obj.update(dT);
+            //console.log(obj);
+
+                obj.update(dT);
+            
         });
+        //console.log(living.length);
+        //console.log(living);
+        //this.gameObjects=living;
     }
 }
