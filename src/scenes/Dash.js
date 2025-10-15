@@ -24,11 +24,11 @@ class GameSceneDash extends GameScene
     }
     drawBg(ctx)
     {
-        
+
     }
     draw(ctx)
     {
-        drawBg(ctx);
+        this.drawBg(ctx);
         ctx.fillStyle="#000030";
         ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
         this.gameObjects.forEach((obj)=>{
@@ -38,7 +38,6 @@ class GameSceneDash extends GameScene
     }
     update(dT)
     {
-        let living = [];
         console.log(this.gameObjects.length);
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         this.gameObjects.forEach((obj)=>{
@@ -47,6 +46,16 @@ class GameSceneDash extends GameScene
                 obj.update(dT);
             
         });
+        if(Math.random()<0.1)
+        {
+            let star = new BgStar();
+            star.x=Math.random()*window.gameManager.ctx.canvas.width;
+            star.y=1;
+            star.targetX=star.x;
+            star.targetY=10001;
+            this.addObject(star);
+            console.log(star);
+        }
         //console.log(living.length);
         //console.log(living);
         //this.gameObjects=living;
