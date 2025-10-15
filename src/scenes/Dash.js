@@ -22,8 +22,13 @@ class GameSceneDash extends GameScene
         this.player.targetY = e.offsetY;
         //console.log(e);
     }
+    drawBg(ctx)
+    {
+        
+    }
     draw(ctx)
     {
+        drawBg(ctx);
         ctx.fillStyle="#000030";
         ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
         this.gameObjects.forEach((obj)=>{

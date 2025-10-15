@@ -28,6 +28,7 @@ class GameManager
         {
             this.currentScene.handleSecondaryPointerMove(e);
         }
+        e.preventDefault();
     }
     handlePointerUp(e)
     {
