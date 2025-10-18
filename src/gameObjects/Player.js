@@ -2,6 +2,7 @@ class Player extends Actor
 {
     bullets_per_sec = 5;
     shootingCoolDown = 0;
+    body_path = "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z";
     constructor()
     {
         super("player");
@@ -11,8 +12,11 @@ class Player extends Actor
     }
     draw(ctx)
     {
-        ctx.fillStyle = "#FF00FF";
-        ctx.fillRect(this.x-10,this.y-10,20,20);
+        ctx.fillStyle = "#FF6000";
+        const p = new Path2D("M " + this.x + "," + this.y+ " " +this.body_path);
+        
+        ctx.fill(p);
+        //ctx.fillRect(this.x-10,this.y-10,20,20);
     }
     update(dT)
     {
