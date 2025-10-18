@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    .framecontrols select
+    {
+        width: 15em;
+        display: inline-block;
+        position:relative;
+    }
+    #currentpath
+    {
+        width: 100%;
+        height: 15em;
+    }
+</style>
+</head>
+<body>
+<script src="Animation.js"></script>
+<script>
+window.vecSprite = null;
+window.sprite = 
+{
+    "idle":[
+        [
+            {   "time": 0.0,
+                "fill": "#000000",
+                "path": "m 0 0 l 0 100 l 100 0 l 0 -100 l -100 0 z"
+            },
+            {
+                "time": 0.3,
+                "fill": "#000000",
+                "path": "m 0 0 l 0 100 l 150 50 l -50 -150 l -100 0 z"
+            },
+            {
+                "time": 0.6,
+                "fill": "#000000",
+                "path": "m 0 0 l 0 100 l 100 0 l 0 -100 l -100 0 z"
+            },
+            {
+                "time": 0.9,
+                "fill": "#000000",
+                "path": "m 0 0 l -50 150 l 150 -50 l 0 -100 l -100 0 z"
+            },
+            {   "time": 1.2,
+                "fill": "#000000",
+                "path": "m 0 0 l 0 100 l 100 0 l 0 -100 l -100 0 z"
+            },
+        ]   
+        
+    ]
+};
+function draw(ts)
+{
+    if(window.ts==null)
+    {
+        window.ts = ts;
+    }
+    let dT= (ts-window.ts)/1000;
+    let a = window.vecSprite.animations[window.sel_a.value];
+    a.update(dT);
+    window.ctx.resetTransform();
+    window.ctx.clearRect(0,0,400,400);
+    window.ctx.translate(200,200);
+    a.draw(window.ctx);
+    window.ts = ts;
+    requestAnimationFrame(draw);
+}
+
+function setTime(t)
+{
+
+}
+
+function toVecAnimation()
+{
+    let anims = [];
+    for(const [key, value] of Object.entries(window.sprite)) 
+    {
+        let paths = [];
+        value.forEach((p,i)=>{
+            paths.push(AnimatedPath.fromKeyFrames(p));
+        });
+        anims.push(new VectorAnimation(paths, key));
+    }
+    console.log("fuck you");
+    window.vecSprite = new VectorSprite(anims);
+}
+
+function reloadGUI()
+{   
+    window.sel_a.innerHTML="";
+    for(const [key, value] of Object.entries(window.sprite)) 
+    {
+        let opt = document.createElement("option");
+        opt.append(key);
+        window.sel_a.appendChild(opt);
+    }
+    window.sel_a.selectedIndex=0;
+    window.sel_a.dispatchEvent(new Event("change"));
+    /*/
+    window.sel_p.selectedIndex=0;
+    window.sel_p.dispatchEvent(new Event("change"));
+    window.sel_f.selectedIndex=0;
+    window.sel_f.dispatchEvent(new Event("change"));
+    //*/
+}
+function loadGUI()
+{
+window.sel_a.addEventListener("change",(e)=>{
+    window.sel_p.innerHTML="";
+    for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
+    {
+        let opt = document.createElement("option");
+        opt.append(i);
+        window.sel_p.appendChild(opt);
+    }
+    window.sel_p.selectedIndex=0;
+    window.sel_p.dispatchEvent(new Event("change"));
+});
+window.sel_p.addEventListener("change",(e)=>{
+    window.sel_f.innerHTML="";
+    for(let i=0;i<window.sprite[window.sel_a.value][window.sel_p.value].length;i++)
+    {
+        let opt = document.createElement("option");
+        opt.append(i);
+        window.sel_f.appendChild(opt);
+    }
+    window.sel_f.selectedIndex=0;
+    window.sel_f.dispatchEvent(new Event("change"));
+});
+window.sel_f.addEventListener("change",(e)=>{
+    for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
+    {
+        let pframe = window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value];
+        window.pathbox.value = pframe.path;
+        window.pathtime.value = pframe.time;
+    }
+});
+window.pathbox.addEventListener("blur",(e)=>{
+    window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].path=window.pathbox.value;
+    toVecAnimation();
+});
+}
+
+
+
+</script>
+<canvas width="400" height="400" id="view"></canvas>
+<input type="number" id="frametime" step="0.1" /><br /><textarea id="currentpath" ></textarea>
+<div class="framecontrols">
+    <select id="animations" size="10" multiple>
+    </select>
+    <select id="paths" size="10" multiple>
+    </select>
+    <select id="frames" size="10" multiple>
+    </select>
+</div>
+<script>
+window.ctx = document.getElementById("view").getContext("2d");
+window.sel_a = document.getElementById("animations");
+window.sel_p = document.getElementById("paths");
+window.sel_f = document.getElementById("frames");
+window.pathbox = document.getElementById("currentpath");
+window.pathtime = document.getElementById("frametime");
+//console.log(window.stored);
+loadGUI();
+reloadGUI();
+toVecAnimation();
+console.log(window.vecSprite);
+requestAnimationFrame(draw);
+/*
+let paths = [];
+window.stored["frames"].forEach((f)=>{paths.push(f['path'])});
+console.log(paths);
+let chunked = [];
+paths.forEach((p)=>{chunked.push(chunk(p))});
+console.log(chunked);
+let done = diff(chunked);
+console.log(done);
+window.stored["frames"].forEach((f,i)=>{
+    f['path']=done[0];
+    f['values'] = done[1][i];
+    });
+//
+console.log(window.stored["frames"]);
+//*/
+</script>
+</body>
+</html>
