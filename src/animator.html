@@ -8,10 +8,15 @@
         display: inline-block;
         position:relative;
     }
-    #currentpath
+    .bigtext
     {
         width: 100%;
         height: 15em;
+    }
+    .biggertext
+    {
+        width: 100%;
+        height: 30em;
     }
 </style>
 </head>
@@ -74,17 +79,15 @@ function setTime(t)
 
 function toVecAnimation()
 {
-    let anims = [];
-    for(const [key, value] of Object.entries(window.sprite)) 
-    {
-        let paths = [];
-        value.forEach((p,i)=>{
-            paths.push(AnimatedPath.fromKeyFrames(p));
-        });
-        anims.push(new VectorAnimation(paths, key));
-    }
-    console.log("fuck you");
-    window.vecSprite = new VectorSprite(anims);
+    window.vecSprite = VectorSprite.fromRawObject(window.sprite);
+    document.getElementById("output").value = JSON.stringify(window.sprite,null,"\t");
+}
+
+function loadFromText()
+{
+    window.sprite=JSON.parse(document.getElementById("output").value);
+    toVecAnimation();
+    reloadGUI();
 }
 
 function reloadGUI()
@@ -137,7 +140,7 @@ window.sel_f.addEventListener("change",(e)=>{
         window.pathtime.value = pframe.time;
     }
 });
-window.pathbox.addEventListener("blur",(e)=>{
+window.pathbox.addEventListener("input",(e)=>{
     window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].path=window.pathbox.value;
     toVecAnimation();
 });
@@ -147,7 +150,13 @@ window.pathbox.addEventListener("blur",(e)=>{
 
 </script>
 <canvas width="400" height="400" id="view"></canvas>
-<input type="number" id="frametime" step="0.1" /><br /><textarea id="currentpath" ></textarea>
+<input type="number" id="frametime" step="0.1" /><br /><textarea class="bigtext" id="currentpath" ></textarea>
+<div>
+    <input id="newAnimName" />
+    <button onclick="addAnimation()";>New animation</button>
+    <button onclick="addPath()";>New path</button>
+    <button onclick="addFrame()";>New frame</button>
+</div>
 <div class="framecontrols">
     <select id="animations" size="10">
     </select>
@@ -156,6 +165,8 @@ window.pathbox.addEventListener("blur",(e)=>{
     <select id="frames" size="10">
     </select>
 </div>
+<textarea class="biggertext" id="output" ></textarea>
+<button onclick="loadFromText()">Reload</button>
 <script>
 window.ctx = document.getElementById("view").getContext("2d");
 window.sel_a = document.getElementById("animations");

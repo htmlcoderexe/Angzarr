@@ -200,4 +200,17 @@ class VectorSprite
             this.animations[a.name] = a;
         });
     }
+    static fromRawObject(obj)
+    {
+        let anims = [];
+        for(const [key, value] of Object.entries(obj)) 
+        {
+            let paths = [];
+            value.forEach((p,i)=>{
+                paths.push(AnimatedPath.fromKeyFrames(p));
+            });
+            anims.push(new VectorAnimation(paths, key));
+        }
+        return new VectorSprite(anims);
+    }
 }
