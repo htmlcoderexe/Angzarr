@@ -1,25 +1,89 @@
 class Player extends Actor
 {
+    basicshape ={
+        "idle": [
+            [
+                {
+                    "time": 0,
+                    "fill": "#000000",
+                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
+                },
+                {
+                    "time": 0.2,
+                    "fill": "#000000",
+                    "path": "m 0,80 c 6,-0 14,-35 14,-40 h -28 c 0,5 8,40 14,40 z"
+                },
+                {
+                    "time": 0.4,
+                    "fill": "#000000",
+                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
+                },
+                {
+                    "time": 0.6,
+                    "fill": "#000000",
+                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
+                },
+                {
+                    "time": 0.8,
+                    "fill": "#FFAF00",
+                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
+                }
+            ],
+            [
+                {
+                    "time": 0,
+                    "fill": "#000000",
+                    "path": "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z"
+                },
+                {
+                    "time": 0.2,
+                    "fill": "#000000",
+                    "path": "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z"
+                },
+                {
+                    "time": 0.4,
+                    "fill": "#000000",
+                    "path": "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z"
+                },
+                {
+                    "time": 0.6,
+                    "fill": "#000000",
+                    "path": "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z"
+                },
+                {
+                    "time": 0.8,
+                    "fill": "#FF6000",
+                    "path": "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z"
+                }
+            ]
+        ]
+    };
     bullets_per_sec = 5;
     shootingCoolDown = 0;
+    animation = null;
     body_path = "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z";
     constructor()
     {
         super("player");
+        this.animation=VectorSprite.fromRawObject(this.basicshape);
         this.speed=1200.00;
         this.hitbox = new Rectangle(-10,-10,20,20);
         this.originalHitbox = new Rectangle(-10,-10,20,20);
     }
     draw(ctx)
     {
-        ctx.fillStyle = "#FF6000";
-        const p = new Path2D("M " + this.x + "," + this.y+ " " +this.body_path);
-        
-        ctx.fill(p);
+        //ctx.fillStyle = "#FF6000";
+        //const p = new Path2D("M " + this.x + "," + this.y+ " " +this.body_path);
+        ctx.resetTransform();
+        ctx.translate(this.x,this.y);
+        this.animation.animations['idle'].draw(ctx);
+        ctx.resetTransform();
+        //ctx.fill(p);
         //ctx.fillRect(this.x-10,this.y-10,20,20);
     }
     update(dT)
     {
+        this.animation.animations['idle'].update(dT);
         super.update(dT);
         this.shootingCoolDown-=dT;
         if(this.shootingCoolDown<=0)
