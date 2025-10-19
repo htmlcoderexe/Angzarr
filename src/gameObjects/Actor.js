@@ -4,9 +4,12 @@ class Actor extends GameObject
     animation = null;
     HP = 10;
     MaxHP = 10;
-    constructor(type="actor")
+    constructor(shape, type="actor")
     {
         super(type);
+        console.log("made a <" + type + "> with" + shape);
+        this.basicshape = shape;
+        console.log(this.basicshape);
         this.animation=VectorSprite.fromRawObject(this.basicshape);
         console.log(this.animation);
     }

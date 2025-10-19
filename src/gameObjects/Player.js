@@ -1,6 +1,6 @@
 class Player extends Actor
 {
-    basicshape ={
+    static anim ={
         "idle": [
             [
                 {
@@ -60,12 +60,10 @@ class Player extends Actor
     };
     bullets_per_sec = 5;
     shootingCoolDown = 0;
-    animation = null;
     body_path = "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z";
     constructor()
     {
-        super("player");
-        this.animation=VectorSprite.fromRawObject(this.basicshape);
+        super(Player.anim, "player");
         this.speed=1200.00;
         this.hitbox = new Rectangle(-10,-10,20,20);
         this.originalHitbox = new Rectangle(-10,-10,20,20);

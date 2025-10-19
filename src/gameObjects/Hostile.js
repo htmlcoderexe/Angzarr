@@ -1,6 +1,6 @@
 class Hostile extends Actor
 {
-    basicshape={
+    static anim={
         "idle": [
             [
                 {
@@ -41,9 +41,7 @@ class Hostile extends Actor
     size = 50;
     constructor()
     {
-        super("hostile"); 
-        this.animation=VectorSprite.fromRawObject(this.basicshape);
-       
+        super(Hostile.anim, "hostile"); 
         this.speed= 100;
         this.hitbox = new Rectangle(-25,-25,50,50);
         this.originalHitbox = new Rectangle(-25,-25,50,50);
