@@ -8,7 +8,12 @@ function Init()
     canvas.addEventListener("pointerup",(e)=>window.gameManager.handlePointerUp(e));
     canvas.addEventListener("pointerdown",(e)=>window.gameManager.handlePointerDown(e));
     canvas.addEventListener("click",(e)=>window.gameManager.handlePointerClick(e));
+    canvas.addEventListener("keyup",(e)=>window.gameManager.handleKeyUp(e));
+    document.addEventListener("keydown",(e)=>window.gameManager.handleKeyDown(e));
+    canvas.addEventListener("keypress",(e)=>window.gameManager.handleKeyPress(e));
     window.gameManager.ctx = canvas.getContext("2d");
     window.gameManager.currentScene = new GameSceneDash();
+    window.gameManager.currentScene.longSide = canvas.height;
+    window.gameManager.currentScene.shortSide = canvas.width;
     requestAnimationFrame((tstamp)=>{window.gameManager.update(tstamp);});
 }

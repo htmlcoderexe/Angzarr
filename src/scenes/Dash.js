@@ -3,11 +3,15 @@ class GameSceneDash extends GameScene
     player = null;
     gameObjects = [];
     test = {"x":0,"y":0};
+    speedMultiplier = 1;
+    normalSpeedSpot = 100;
     constructor()
     {
         super();
         this.player = new Player();
         this.addObject(this.player);
+        this.player.x = this.shortSide/2;
+        this.player.y = this.longSide - this.normalSpeedSpot;
     }
     addObject(obj)
     { 
@@ -20,7 +24,18 @@ class GameSceneDash extends GameScene
     {
         this.player.targetX=e.offsetX;
         this.player.targetY = e.offsetY;
+        this.speedMultiplier = (this.longSide-e.offsetY)/this.normalSpeedSpot;
+        this.speedMultiplier=Math.min(1.5,(Math.max(0.7,this.speedMultiplier)));
         //console.log(e);
+    }
+    handleKeyDown(e)
+    {
+        
+        console.log("Dash keydown");
+        if(e.key==" ")
+        {
+            this.player.doSkill();
+        }
     }
     drawBg(ctx)
     {
@@ -56,9 +71,18 @@ class GameSceneDash extends GameScene
                 }
             });
         });
-        if(Math.random()<0.1)
+        this.doSpeedStuff(dT);
+        //console.log(living.length);
+        //console.log(living);
+        //this.gameObjects=living;
+    }
+    doSpeedStuff(dT)
+    {
+        
+        if(Math.random()<0.1*this.speedMultiplier)
         {
             let star = new BgStar();
+            star.speed*=this.speedMultiplier;
             star.x=Math.random()*window.gameManager.ctx.canvas.width;
             star.y=1;
             star.targetX=star.x;
@@ -66,7 +90,7 @@ class GameSceneDash extends GameScene
             this.addObject(star);
             console.log(star);
         }
-        if(Math.random()<0.01)
+        if(Math.random()<0.01*this.speedMultiplier)
         {
             let enemy = new Hostile();
             enemy.x=Math.random()*window.gameManager.ctx.canvas.width;
@@ -76,8 +100,5 @@ class GameSceneDash extends GameScene
             this.addObject(enemy);
             console.log(enemy);
         }
-        //console.log(living.length);
-        //console.log(living);
-        //this.gameObjects=living;
     }
 }

@@ -42,4 +42,19 @@ class GameManager
     {
 
     }
+    handleKeyDown(e)
+    {
+        console.log("gamemanager keydown");
+        this.currentScene.handleKeyDown(e);
+    }
+    handleKeyUp(e)
+    {
+        this.currentScene.handleKeyUp(e);
+
+    }
+    handleKeyPress(e)
+    {
+        this.currentScene.handleKeyPress(e);
+
+    }
 }

@@ -60,6 +60,7 @@ class Player extends Actor
     };
     bullets_per_sec = 5;
     shootingCoolDown = 0;
+    beamCoolDown = 0;
     body_path = "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z";
     constructor()
     {
@@ -84,6 +85,11 @@ class Player extends Actor
         this.animation.animations['idle'].update(dT);
         super.update(dT);
         this.shootingCoolDown-=dT;
+        this.beamCoolDown-=dT;
+        if(this.beamCoolDown<=0)
+        {
+            this.beamCoolDown=0;
+        }
         if(this.shootingCoolDown<=0)
         {
             const bulletCD = 1/this.bullets_per_sec;
@@ -96,5 +102,12 @@ class Player extends Actor
             bb.speed = 1200;
             this.scene.addObject(bb);
         }
+    }
+    doSkill()
+    {
+        console.log("beep");
+        this.beamCoolDown+=10;
+        let beam = new VerticalBeam(50,this.x,this.y,this.x,0);
+        this.scene.addObject(beam);
     }
 }

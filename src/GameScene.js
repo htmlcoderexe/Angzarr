@@ -1,6 +1,8 @@
 class GameScene
 {
     player = null;
+    longSide =0;
+    shortSide = 0;
     update(dT)
     {
         
@@ -38,6 +40,19 @@ class GameScene
 
     }
     handleSecondaryPointerClick(e)
+    {
+
+    }
+    handleKeyDown(e)
+    {
+        console.log("gamescene keydown");
+
+    }
+    handleKeyUp(e)
+    {
+
+    }
+    handleKeyPress(e)
     {
 
     }
