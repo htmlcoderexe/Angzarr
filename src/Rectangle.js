@@ -6,6 +6,16 @@ class Rectangle
     height = 1;
     constructor(x,y,w,h)
     {
+        if(w<0)
+        {
+            w*=-1;
+            x-=w;
+        }
+        if(h<0)
+        {
+            h*=-1;
+            y-=h;
+        }
         this.x = x;
         this.y = y;
         this.width = w;
