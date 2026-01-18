@@ -32,6 +32,15 @@ class GameManager
     }
     handlePointerUp(e)
     {
+        if(e.isPrimary)
+        {
+            this.currentScene.handlePrimaryPointerUp(e);
+        }
+        else
+        {
+            this.currentScene.handleSecondaryPointerUp(e);
+        }
+        e.preventDefault();
 
     }
     handlePointerDown(e)
@@ -40,21 +49,33 @@ class GameManager
     }
     handlePointerClick(e)
     {
+        if(e.isPrimary)
+        {
+            this.currentScene.handlePrimaryPointerClick(e);
+        }
+        else
+        {
+            this.currentScene.handleSecondaryPointerClick(e);
+        }
+        e.preventDefault();
 
     }
     handleKeyDown(e)
     {
         console.log("gamemanager keydown");
         this.currentScene.handleKeyDown(e);
+        e.preventDefault();
     }
     handleKeyUp(e)
     {
         this.currentScene.handleKeyUp(e);
+        e.preventDefault();
 
     }
     handleKeyPress(e)
     {
         this.currentScene.handleKeyPress(e);
+        e.preventDefault();
 
     }
 }
