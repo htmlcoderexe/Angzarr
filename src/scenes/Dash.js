@@ -5,6 +5,8 @@ class GameSceneDash extends GameScene
     test = {"x":0,"y":0};
     speedMultiplier = 1;
     normalSpeedSpot = 100;
+    movingship = false;
+    uimgr;
     constructor()
     {
         super();
@@ -12,6 +14,13 @@ class GameSceneDash extends GameScene
         this.addObject(this.player);
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - this.normalSpeedSpot;
+        this.uimgr=new GUIManager();
+        const bt = new UIButton(new Rectangle(0,this.longSide-100,70,70));
+        console.log(this.longSide);
+        bt.click = ()=>{
+            this.player.doSkill();
+        };
+        this.uimgr.components.push(bt);
     }
     addObject(obj)
     { 
@@ -27,6 +36,18 @@ class GameSceneDash extends GameScene
         this.speedMultiplier = (this.longSide-e.offsetY)/this.normalSpeedSpot;
         this.speedMultiplier=Math.min(1.5,(Math.max(0.7,this.speedMultiplier)));
         //console.log(e);
+    }
+    handlePrimaryPointerClick(e)
+    {
+        let handled = this.uimgr.handleClick(e);
+    }
+    handleSecondaryPointerClick(e)
+    {
+        let handled = this.uimgr.handleClick(e);
+    }
+    handleSecondaryPointerUp(e)
+    {
+        let handled = this.uimgr.handleClick(e);
     }
     handleKeyDown(e)
     {
@@ -49,11 +70,12 @@ class GameSceneDash extends GameScene
         this.gameObjects.forEach((obj)=>{
             obj.draw(ctx);
         });
+        this.uimgr.draw(ctx);
         //console.log(this.test);
     }
     update(dT)
     {
-        console.log(this.gameObjects.length);
+        //console.log(this.gameObjects.length);
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         this.gameObjects.forEach((obj)=>{
             //console.log(obj);
@@ -63,7 +85,18 @@ class GameSceneDash extends GameScene
         });
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
+        let beams = this.gameObjects.filter((e)=>e.type=="beam");
         bullets.forEach((bb)=>{
+            baddies.forEach((enemy)=>{
+                if(bb.hitbox.testRect(enemy.hitbox))
+                {
+                    bb.hit(enemy);
+                }
+            });
+        });
+        beams.forEach((bb)=>{
+            console.log("beam");
+            console.log(bb);
             baddies.forEach((enemy)=>{
                 if(bb.hitbox.testRect(enemy.hitbox))
                 {
