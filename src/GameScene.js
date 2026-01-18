@@ -3,6 +3,11 @@ class GameScene
     player = null;
     longSide =0;
     shortSide = 0;
+    constructor()
+    {
+        this.shortSide= window.innerWidth;
+        this.longSide=window.innerHeight;
+    }
     update(dT)
     {
         
@@ -45,7 +50,6 @@ class GameScene
     }
     handleKeyDown(e)
     {
-        console.log("gamescene keydown");
 
     }
     handleKeyUp(e)
