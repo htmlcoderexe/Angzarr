@@ -88,7 +88,7 @@ class GameSceneDash extends GameScene
             star.targetX=star.x;
             star.targetY=10001;
             this.addObject(star);
-            console.log(star);
+            //console.log(star);
         }
         if(Math.random()<0.01*this.speedMultiplier)
         {
@@ -98,7 +98,7 @@ class GameSceneDash extends GameScene
             enemy.targetX=this.player.x;
             enemy.targetY=this.player.y;
             this.addObject(enemy);
-            console.log(enemy);
+            //console.log(enemy);
         }
     }
 }

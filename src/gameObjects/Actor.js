@@ -7,11 +7,11 @@ class Actor extends GameObject
     constructor(shape, type="actor")
     {
         super(type);
-        console.log("made a <" + type + "> with" + shape);
+        //console.log("made a <" + type + "> with" + shape);
         this.basicshape = shape;
-        console.log(this.basicshape);
+        //console.log(this.basicshape);
         this.animation=VectorSprite.fromRawObject(this.basicshape);
-        console.log(this.animation);
+        //console.log(this.animation);
     }
     update(dT)
     {

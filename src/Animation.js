@@ -57,7 +57,7 @@ class AnimatedPath
             {//new Array(paths[0].length);
                 if(paths[i][c]!=refval)
                 {   
-                    console.log(refval, paths[i][c]);
+                    //console.log(refval, paths[i][c]);
                     eq = false;
                 }
             }
@@ -195,7 +195,7 @@ class VectorSprite
     animations = {};
     constructor(animations)
     {
-        console.log("yes");
+        //console.log("yes");
         animations.forEach((a)=>{
             this.animations[a.name] = a;
         });

@@ -33,7 +33,7 @@ class Projectile extends GameObject
 
         if(this.x<0 || this.x>10000 || this.y<0 || this.y>10000)
         {
-            console.log(this, "died.");
+            //console.log(this, "died.");
             this.isDead=true;
         }
     }
