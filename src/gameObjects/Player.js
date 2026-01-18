@@ -105,8 +105,10 @@ class Player extends Actor
     }
     doSkill()
     {
+        if(this.beamCoolDown>0)
+            return;
         console.log("beep");
-        this.beamCoolDown+=10;
+        this.beamCoolDown+=4;
         let beam = new VerticalBeam(50,this.x,this.y,this.x,0);
         this.scene.addObject(beam);
     }

@@ -2,11 +2,13 @@ class VerticalBeam extends GameObject
 {
     
     friendly = false;
-    damage = 10;
+    damage = 30;
+    hitmaxcd=2;
+    hitcd=0;
     fadetimer = 1.0;
     maxfade = 1.0;
     innerColour = [200,255,220,1];
-    outerColour = [20,200,150,0.5];
+    outerColour = [20,200,150,0.0];
     constructor(width, startX, startY, endX, endY)
     {
         super("beam");
@@ -37,12 +39,26 @@ class VerticalBeam extends GameObject
     {
         if(this.isDead)
             return;
+        super.update(dT);
         this.fadetimer-=dT;
+        this.hitcd-=dT;
+        if(this.hitcd<0)
+            this.hitcd=0;
         if(this.fadetimer<=0)
         {
             this.isDead=true;
             return;
         }
 
+    }
+    hit(other)
+    {
+        console.log("beam hit");
+        if(this.hitcd>0)
+        {
+
+        }
+        this.hitcd+=this.hitmaxcd;
+        other.HP-=this.damage;
     }
 }
