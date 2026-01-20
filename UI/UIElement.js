@@ -5,6 +5,10 @@ class UIElement
     children = [];
     parent = null;
     clickHandler = ()=>{};
+    constructor(rekt)
+    {
+        this.hitbox= new Rectangle(rekt.x,rekt.y,rekt.width,rekt.height);
+    }
     update(dT)
     {
         this.children.forEach((c)=>{
