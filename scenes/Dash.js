@@ -15,11 +15,20 @@ class GameSceneDash extends GameScene
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - this.normalSpeedSpot;
         this.uimgr=new GUIManager();
+        /*
         const bt = new UIButton(new Rectangle(0,this.longSide-100,70,70));
         console.log(this.longSide);
         bt.click = ()=>{
             this.player.doSkill();
         };
+        //*/
+        const lazor = new Ability(this.player);
+        lazor.maxcharge=4;
+        lazor.chargeused=4;
+        lazor.base_recharge=1;
+        lazor.apply=()=>this.player.doSkill();
+        this.player.abilities.push(lazor);
+        const bt = new AbilitySlot(new Rectangle(0,this.longSide-100,70,70),lazor);
         this.uimgr.components.push(bt);
     }
     addObject(obj)
@@ -55,7 +64,7 @@ class GameSceneDash extends GameScene
         console.log("Dash keydown");
         if(e.key==" ")
         {
-            this.player.doSkill();
+            this.player.abilities[0].use();
         }
     }
     drawBg(ctx)
