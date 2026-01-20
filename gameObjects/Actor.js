@@ -4,6 +4,7 @@ class Actor extends GameObject
     animation = null;
     HP = 10;
     MaxHP = 10;
+    abilities = [];
     constructor(shape, type="actor")
     {
         super(type);
@@ -15,6 +16,9 @@ class Actor extends GameObject
     }
     update(dT)
     {
+        this.abilities.forEach((a)=>{
+            a.update(dT);
+        });
         if(this.animation)
             this.animation.animations['idle'].update(dT);
         if(this.HP<=0)
