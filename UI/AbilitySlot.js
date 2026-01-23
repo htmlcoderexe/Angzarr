@@ -13,7 +13,7 @@ class AbilitySlot extends UIElement
         if(this.ability!=null)
         {
             UIRenderer.drawGauge(ctx,
-                this.hitbox.x+6,this.hitbox.y+6,24,this.hitbox.height-8,
+                this.hitbox.x+10,this.hitbox.y+10,24,this.hitbox.height-16,
                 Math.floor(this.ability.charge),this.ability.maxcharge,
                 "0 255 50");
         }

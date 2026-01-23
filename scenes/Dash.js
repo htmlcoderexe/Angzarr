@@ -28,7 +28,7 @@ class GameSceneDash extends GameScene
         lazor.base_recharge=1;
         lazor.apply=()=>this.player.doSkill();
         this.player.abilities.push(lazor);
-        const bt = new AbilitySlot(new Rectangle(0,this.longSide-100,70,70),lazor);
+        const bt = new AbilitySlot(new Rectangle(10,this.longSide-100,70,72),lazor);
         this.uimgr.components.push(bt);
     }
     addObject(obj)
