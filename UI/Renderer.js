@@ -116,6 +116,30 @@ class UIRenderer
         ctx.stroke();
         
     }
+
+    static drawScreenBox(ctx,x,y,w,h,text)
+    {
+        let main = "16 16 16";
+        let outline = "40 40 40";
+        let outline2 ="128 128 128";
+        let fontcolour ="0 192 16";
+        ctx.beginPath();
+        ctx.roundRect(x+0.5,y+0.5,w,h,7);
+        ctx.fillStyle=this.rgb(main);
+        ctx.fill();
+        ctx.strokeStyle=this.rgb(outline);
+        ctx.lineWidth=9;
+        ctx.stroke();
+        ctx.strokeStyle=this.rgb(outline2);
+        ctx.lineWidth=5;
+        ctx.stroke();
+        ctx.font = "small-caps bold 42px monospace";
+        ctx.textAlign="center";
+        ctx.textBaseline="middle";
+        //ctx.strokeStyle=this.rgb(outline);
+        ctx.fillStyle=this.rgb(fontcolour);
+        ctx.fillText(text,x+w/2,y+h/2);
+    }
     static drawButton(ctx,x,y,w,h,text)
     {
         let main ="255 64 0";

@@ -4,8 +4,7 @@ class UIButton extends UIElement
     bgcolor="#FF9000";
     constructor(rekt)
     {
-        super();
-        this.hitbox= new Rectangle(rekt.x,rekt.y,rekt.width,rekt.height);
+        super(rekt);
         
     }
     draw(ctx)

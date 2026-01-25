@@ -7,6 +7,8 @@ class GameSceneDash extends GameScene
     normalSpeedSpot = 100;
     movingship = false;
     uimgr;
+    scoredisplay;
+    score=0;
     constructor()
     {
         super();
@@ -30,6 +32,9 @@ class GameSceneDash extends GameScene
         this.player.abilities.push(lazor);
         const bt = new AbilitySlot(new Rectangle(10,this.longSide-100,70,72),lazor);
         this.uimgr.components.push(bt);
+        const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
+        this.scoredisplay=scoredspl;
+        this.uimgr.components.push(scoredspl);
     }
     addObject(obj)
     { 
@@ -114,6 +119,15 @@ class GameSceneDash extends GameScene
             });
         });
         this.doSpeedStuff(dT);
+        this.scoredisplay.text= String(this.score).padStart(6,'0');
+        
+        baddies.forEach((enemy)=>{
+            if(enemy.hitbox.testRect(this.player.hitbox))
+            {
+                localStorage.setItem("bestScore", this.score);
+                window.gameManager.currentScene = new GameSceneDash();
+            }
+        });
         //console.log(living.length);
         //console.log(living);
         //this.gameObjects=living;
@@ -140,6 +154,8 @@ class GameSceneDash extends GameScene
             enemy.targetX=this.player.x;
             enemy.targetY=this.player.y;
             this.addObject(enemy);
+            enemy.onDeath=()=>{
+                        this.score++;};
             //console.log(enemy);
         }
     }
