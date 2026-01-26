@@ -1,15 +1,27 @@
+/**
+ * Background "stars" or other parallax objects
+ */
 class BgStar extends GameObject
 {
+    /**
+    Size of the star
+     */
     size = 10;
+    /**
+    Colour of the star
+     */
     colour ="";
     constructor()
     {
         super();
+        // randomise speeds, sizes and colours
         this.speed = 500 +(Math.random()*200);
         this.size = 8 +(Math.random()*4);
+        // keep this in a small range for various pastel colours
         let r = 200 + Math.random()*55;
         let g = 200 + Math.random()*55;
         let b = 200 + Math.random()*55;
+        // add random transparency to make some look more faded from distance
         let a = 0.1+ Math.random()*0.5;
         this.colour = "rgb("+ r + " "+g+" " +b+ " / " + a +")";
     }
@@ -21,15 +33,13 @@ class BgStar extends GameObject
     }
     update(dT)
     {
+        // stop processing if dead
         if(this.isDead)
-        return;
-        //console.log("WTFFFFFFFFF",this);
-        // special bullet stuff goes here
+            return;
         super.update(dT);
-
+        // clean up any objects that are long past the player
         if(this.x<0 || this.x>10000 || this.y<0 || this.y>10000)
         {
-            //console.log(this, "died.");
             this.isDead=true;
         }
     }

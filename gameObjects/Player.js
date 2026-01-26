@@ -1,5 +1,19 @@
+/**
+ * Represents the player.
+ */
 class Player extends Actor
 {
+    /**
+    Stores the graphics used for the player's ship.
+    This is an object with string properties, each property name corresponds
+    to an animation name, the "default" one is called "idle".
+    Each animation contains an array of parts.
+    Each part contains an array of keyframes.
+    Each keyframe is an object with properties "time", "fill" and "path".
+    "fill" is a hexadecimal colour.
+    "path" is a path in the SVG path format.
+     */
+    // #TODO: store this elsewhere especially if adding customisation
     static anim ={
         "idle": [
             [
@@ -58,51 +72,70 @@ class Player extends Actor
             ]
         ]
     };
+    /**
+    main "gun" fire rate; #TODO: better structure
+     */
     bullets_per_sec = 5;
+    /**
+    keeps track of main gun cooldown.
+     */
     shootingCoolDown = 0;
-    beamCoolDown = 0;
-    body_path = "m 0,-48 c 14,0 32,48 32,96 h -64 c 0,-48 18,-96 32,-96 z";
+    /**
+     * Creates a new Player with default settings.
+     */
     constructor()
     {
         super(Player.anim, "player");
+        // this is the speed in pixels/sec for following the controls.
         this.speed=1200.00;
+        // define hitboxes
         this.hitbox = new Rectangle(-10,-10,20,20);
         this.originalHitbox = new Rectangle(-10,-10,20,20);
     }
     draw(ctx)
     {
-        //ctx.fillStyle = "#FF6000";
-        //const p = new Path2D("M " + this.x + "," + this.y+ " " +this.body_path);
         ctx.resetTransform();
         ctx.translate(this.x,this.y);
         this.animation.animations['idle'].draw(ctx);
         ctx.resetTransform();
-        //ctx.fill(p);
-        //ctx.fillRect(this.x-10,this.y-10,20,20);
     }
     update(dT)
     {
         this.animation.animations['idle'].update(dT);
         super.update(dT);
+        // update and fire main gun
         this.shootingCoolDown-=dT;
-        this.beamCoolDown-=dT;
-        if(this.beamCoolDown<=0)
-        {
-            this.beamCoolDown=0;
-        }
         if(this.shootingCoolDown<=0)
         {
+            // calculate cooldown based on RoF
             const bulletCD = 1/this.bullets_per_sec;
+            // advance the cooldown
             this.shootingCoolDown+=bulletCD;
+            // if the player is prevented from shooting for a time,
+            // (most commonly if the tab has been paused by the browser)
+            // large negative cooldown may accumulate
+            // this causes an endless stream of bullets (one per frame)
+            // until the cooldown is again positive
+            // this prevents that from happening.
+            if(this.shootingCoolDown<0)
+            {
+                this.shootingCoolDown=0;
+            }
+            // spawn a bullet at player's location
             let bb = new Projectile();
             bb.x=this.x;
             bb.y=this.y;
+            // make it home towards the point straight ahead of the player
             bb.targetX=this.x;
             bb.targetY =-1;
             bb.speed = 1200;
             this.scene.addObject(bb);
         }
     }
+    /**
+     * Currently used as the function for firing the laser
+     #TODO: move this into a proper ability definition
+     */
     doSkill()
     {
         let beam = new VerticalBeam(50,this.x,this.y,this.x,0);

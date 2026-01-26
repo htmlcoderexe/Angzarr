@@ -1,15 +1,39 @@
+/**
+ * Represents a single path keyframe
+ */
 class Frame
 {
+    /**
+    The time position of the keyframe
+     */
     time = 0;
+    /**
+    Fill colour of the path
+     */
     fill = "#000000";
+    /**
+    Path data in SVG path format
+     */
     path = "";
 }
-
+/**
+ * Represents a single part (path) with keyframe animation
+ */
 class AnimatedPath
 {
+    /**
+    Array of keyframes
+     */
     frames = [];
+    /** Contains the "static" elements of the path data */
     path = [];
+    /**
+    Current fill colour
+     */
     fill = "#000000";
+    /**
+    Animation length
+     */
     length = 0;
     /**
      * Splits a string into individual chunks likely to contain path information. 
@@ -19,22 +43,28 @@ class AnimatedPath
     static chunk(path)
     {
         const out = [];
+        // this accumulates current piece
         let buf = "";
+        // list of all path commands
         let cmds =["l","v","h","c","q","z","m","a"];
+        // numeric param symbols
         let nums =["0","1","2","3","4","5","6","7","8","9",".","-"];
         for(let i=0;i<path.length;i++)
         {
             let c = path[i];
+            // if hit anything that's not a number or a command, split off
             if(!nums.includes(c) && !cmds.includes(c.toLowerCase()))
             {
                 out.push(buf);
                 buf ="";
             }
+            // else accumulate
             else
             {
                 buf+=c;
             }
         }
+        // split off current buffer
         out.push(buf);
         return out;
     }
@@ -45,30 +75,45 @@ class AnimatedPath
      */
     static diff(paths)
     {
+        // keeps a list of unchanging items
         const strings = [];
-        const values = new Array(paths.length);for(let i =0;i<paths.length;i++ )
-            {
-                values[i]= [];}
+        // keeps a list of items that change in keyframes
+        const values = new Array(paths.length);
+        // init an array of arrays for each frame
+        for(let i =0;i<paths.length;i++ )
+        {
+            values[i]= [];
+        }
+        // accumulator
         let cur_str ="";
+        // go through every separate chunk in the first frame
+        // and find out if it changes in any other frames
         paths[0].forEach((chunk, c)=>{
+            // this keeps track whether a different value was found
             let eq = true;
+            // this is the reference value to compare to
             let refval = paths[0][c];
+            // go through every frame 
             for(let i =0;i<paths.length;i++ )
-            {//new Array(paths[0].length);
+            {
+                // compare the corresponding chunk in this frame
                 if(paths[i][c]!=refval)
                 {   
-                    //console.log(refval, paths[i][c]);
+                    // if difference found, set the flag
                     eq = false;
                 }
             }
+            // if no difference found, add the chunk as is to accumulator
             if(eq)
             {
                 cur_str += chunk +" ";
             }
             else
             {
+                // otherwise, split the accumulator off
                 strings.push(cur_str);
                 cur_str = "";
+                // insert the changed chunk as a new value in each frame
                 for(let i =0;i<paths.length;i++ )
                 {
                     let val = parseFloat(paths[i][c]);
@@ -76,7 +121,7 @@ class AnimatedPath
                 }
             }
         });
-        
+        // split the last accumulator off and finish
         strings.push(cur_str);
         return [strings, values];    
     }
@@ -105,44 +150,71 @@ class AnimatedPath
     static tween(a,b,t)
     {
         const c = [];
+        // basically lerp between corresponding values in the two arrays
         a.forEach((val,i)=>{
             c.push(a[i]+(b[i]-val)*t);
         });
         return c;
     }
+    /**
+     * Creates an AnimatedPath out of an array of keyframes
+     * @param {Array} frames 
+     * @returns 
+     */
     static fromKeyFrames(frames)
     {
         let result = new AnimatedPath();
         let paths = [];
+        // add the frames to the new object
         frames.forEach((f)=>{
             result.frames.push({"time": f.time});
             result.fill = f.fill; // for now
+            // also save the paths in parallel for processing
             paths.push(f.path);
         });
         let chunked = [];
+        // chunk the paths
         paths.forEach((p)=>{
             chunked.push(AnimatedPath.chunk(p));
         });
+        // process chunked paths to extract only the changing values
         let output = AnimatedPath.diff(chunked);
+        // set the static path data
         result.path = output[0];
+        // set the changing values
         result.frames.forEach((f,i)=>{
             f.values = output[1][i];
+            // update path animation length to the highest time value seen
             result.length = f.time;
         });
         return result;
     }
+    /**
+     * Locates the correct keyframes corresponding to the time given
+     * @param {number} t 
+     * @returns an object containing:
+     * "a", the values for previous frame, 
+     * "b", the values for next frame,
+     * "t", the interpolation parameter between the frames
+     */
     findFrames(t)
     {
         let a,b,dT
         let i =0;
         let dS = 1;
+        // go through all frames
         for(i=0; i<this.frames.length-1;i++)
         {
+            // candidate a & b
             a=this.frames[i];
             b=this.frames[i+1];
+            // calculate how far ahead of "a"
             dT = t-a['time'];
+            // time between "a" and "b"
             dS = b['time']-a['time'];
+            // calculate lerp value between the two
             dT/=dS;
+            // return everything if the candidate b is after T
             if(t<=b['time'])
                 break;
         }
