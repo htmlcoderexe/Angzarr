@@ -157,6 +157,9 @@ class AnimatedPath
 class VectorAnimation
 {
     current_time = 0;
+    fade_time = 0;
+    fade_start = 0;
+    fade_fill="";
     length = 0.1;
     paths = [];
     name = "";
@@ -176,17 +179,34 @@ class VectorAnimation
             let strpath = AnimatedPath.stitch(path.path, values);
             ctx.fillStyle = path.fill;
             ctx.fill(new Path2D(strpath));
+            if(this.fade_time>0 && this.fade_start > 0)
+            {
+                let a = this.fade_time / this.fade_start;
+                ctx.fillStyle = "rgb("+this.fade_fill+" / " + a + ")";
+                ctx.fill(new Path2D(strpath));
+            }
         }
     }
     update(dT)
     {
         this.current_time+=dT;
+        this.fade_time-=dT;
+        if(this.fade_time<=0)
+        {
+            this.fade_time=0;
+            this.fade_start = 0;
+        }
         while(this.current_time>this.length)
         {
             this.current_time-=this.length;
         }
     }
-
+    applyFade(colour, time, a=1)
+    {
+        this.fade_fill=colour;
+        this.fade_time=time;
+        this.fade_start=time / a;
+    }
 }
 
 class VectorSprite

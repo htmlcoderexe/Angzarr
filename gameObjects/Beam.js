@@ -59,6 +59,6 @@ class VerticalBeam extends GameObject
 
         }
         this.hitcd+=this.hitmaxcd;
-        other.HP-=this.damage;
+        other.damage(this.damage);
     }
 }

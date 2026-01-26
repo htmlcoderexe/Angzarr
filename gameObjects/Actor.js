@@ -33,4 +33,13 @@ class Actor extends GameObject
         this.animation.animations['idle'].draw(ctx);
         ctx.resetTransform();
     }
+    damage(amount, type=0)
+    {
+        this.HP-=amount;
+        if(this.HP<=0)
+        {
+            this.die();
+        }
+         this.animation.animations['idle'].applyFade("255 0 0",0.5);
+    }
 }

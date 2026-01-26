@@ -20,7 +20,7 @@ class Projectile extends GameObject
     }
     hit(other)
     {
-        other.HP-=this.damage;
+        other.damage(this.damage);
         this.die();
     }
     update(dT)
