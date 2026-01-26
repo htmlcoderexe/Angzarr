@@ -1,3 +1,6 @@
+/**
+ * These are the bad guys or whatever.
+ */
 class Hostile extends Actor
 {
     static anim={

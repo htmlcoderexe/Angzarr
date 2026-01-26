@@ -1,6 +1,15 @@
+/**
+ * Base class for UI elements that are drawn on screen and interacted with.
+ */
 class UIElement
 {
+    /**
+     * Element's hitbox, before displacement
+     */
     hitbox = new Rectangle(0,0,1,1);
+    /**
+     * Element's hitbox, after displacement
+     */
     originalHitbox = new Rectangle(0,0,1,1);
     children = [];
     parent = null;
@@ -9,16 +18,26 @@ class UIElement
     {
         this.hitbox= new Rectangle(rekt.x,rekt.y,rekt.width,rekt.height);
     }
+    /**
+     * Updates the element's state
+     * @param {number} dT 
+     */
     update(dT)
     {
+        // base implementation just recursively updates children
         this.children.forEach((c)=>{
             c.update(dT);
         });
     }
+    /**
+     * Draws the element to the canvas
+     * @param {CanvasRenderingContext2D} ctx 
+     */
     draw(ctx)
     {
-        //ctx.resetTransform();
-        //ctx.translate(this.hitbox.x,this.hitbox.y);
+        // this might be needed later to properly offset child controls?
+        // ctx.translate(this.hitbox.x,this.hitbox.y);
+        // base implementation just recursively draws children
         this.children.forEach((c)=>{
             c.draw(ctx);
         });
@@ -58,9 +77,13 @@ class UIElement
             return null;
         }
     }
-
+    /**
+     * Clicks the control.
+     * @param {PointerEvent} e 
+     */
     click(e)
     {
+        // just call the clickhandler for now
         this.clickHandler();
     }
 

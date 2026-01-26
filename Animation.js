@@ -226,83 +226,155 @@ class AnimatedPath
     }
 }
 
+/**
+ * Represents one complete animation containing keyframed paths.
+ */
 class VectorAnimation
 {
+    /**
+     * Position in the timeline
+     */
     current_time = 0;
-    fade_time = 0;
-    fade_start = 0;
-    fade_fill="";
+    /**
+     * Length of the animation in seconds
+     */
     length = 0.1;
+    /**
+     * Array of AnimatedPaths contained in the animation
+     */
     paths = [];
+    /**
+     * Name used to refer to the animation
+     */
     name = "";
+    /**
+     * Time left on the tint/fade effect
+     */
+    fade_time = 0;
+    /**
+     * Full duration of the fade effect
+     */
+    fade_start = 0;
+    /**
+     * Colour used for the fade effect
+     */
+    fade_fill="";
+    /**
+     * Creates a new instance of an animation given a list of animated paths and a name
+     * @param {AnimatedPath[]} paths 
+     * @param {string} name 
+     */
     constructor(paths, name)
     {
         this.name = name;
         paths.forEach((p)=>this.paths.push(p));
+        // fix the animation's length to the length of the first path given
         this.length = this.paths[0].length;
     }
+    /**
+     * Draws the animation in its current state
+     * Drawing origin is 0,0 - translate the canvas to draw in a different location.
+     * @param {CanvasRenderingContext2D} ctx - canvas context to use 
+     */
     draw(ctx)
     {
+        // draw each path
         for(let i =0;i<this.paths.length;i++)
         {
             let path = this.paths[i];
+            // get the two frames to tween 
             let frame=path.findFrames(this.current_time);
             let values = AnimatedPath.tween(frame.a, frame.b, frame.t);
+            // generate the SVG path commands from the path and the keyframe values
             let strpath = AnimatedPath.stitch(path.path, values);
+            // render the path in its fill colour
             ctx.fillStyle = path.fill;
             ctx.fill(new Path2D(strpath));
+            // if a fade is applied, also render the fade
             if(this.fade_time>0 && this.fade_start > 0)
             {
+                // calculate the fade intensity
                 let a = this.fade_time / this.fade_start;
                 ctx.fillStyle = "rgb("+this.fade_fill+" / " + a + ")";
                 ctx.fill(new Path2D(strpath));
             }
         }
     }
+    /**
+     * Update animation state
+     * @param {number} dT - elapsed time
+     */
     update(dT)
     {
+        // progress timeline and fade timer
         this.current_time+=dT;
         this.fade_time-=dT;
+        // set fade params to zero if fade expired
         if(this.fade_time<=0)
         {
             this.fade_time=0;
             this.fade_start = 0;
         }
+        // wrap around timeline if past length
         while(this.current_time>this.length)
         {
             this.current_time-=this.length;
         }
     }
+    /**
+     * Applies a fading colour tint effect
+     * @param {string} colour - colour to use, in decimal "R G B" format
+     * @param {number} time - seconds before the effect fully fades out
+     * @param {number} a - intensity of the effect at the start from 0 to 1, where 1 is solid colour 
+     */
     applyFade(colour, time, a=1)
     {
         this.fade_fill=colour;
         this.fade_time=time;
+        // if a is not 1, this sets a fake "start" time to start out the effect at the desired intensity
         this.fade_start=time / a;
     }
 }
-
+/**
+ * Represents a complete graphics object with a collection of VectorAnimations
+ */
 class VectorSprite
 {
-    paths = [];
+    /**
+     * Contains the VectorAnimations, referenced by name
+     */
     animations = {};
+    /**
+     * Creates a new instance given a set of animations
+     * @param {VectorAnimation[]} animations 
+     */
     constructor(animations)
     {
-        //console.log("yes");
+        // add each animation by its name
         animations.forEach((a)=>{
             this.animations[a.name] = a;
         });
     }
+    /**
+     * Creates a VectorSprite out of a raw JSON object
+     * @param {array} obj 
+     * @returns 
+     */
     static fromRawObject(obj)
     {
         let anims = [];
+        // get every animation by name
         for(const [key, value] of Object.entries(obj)) 
         {
             let paths = [];
+            // create an AnimatedPath out of every path in the array and add
             value.forEach((p,i)=>{
                 paths.push(AnimatedPath.fromKeyFrames(p));
             });
+            // create an animation out of each set of paths and add to animations
             anims.push(new VectorAnimation(paths, key));
         }
+        // create and return the vector sprite
         return new VectorSprite(anims);
     }
 }

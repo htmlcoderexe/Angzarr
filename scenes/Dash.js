@@ -36,6 +36,11 @@ class GameSceneDash extends GameScene
         this.scoredisplay=scoredspl;
         this.uimgr.components.push(scoredspl);
     }
+    /**
+     * Adds an object to the scene
+     * @param {GameObject} obj 
+     */
+    // #TODO: maybe put this into the parent class???
     addObject(obj)
     { 
         this.gameObjects.push(obj);
@@ -45,8 +50,10 @@ class GameSceneDash extends GameScene
     }
     handlePrimaryPointerMove(e)
     {
+        // aim the plaier towards new pointer location
         this.player.targetX=e.offsetX;
         this.player.targetY = e.offsetY;
+        // make stuff go slower when pulling back and faster when pushing forward
         this.speedMultiplier = (this.longSide-e.offsetY)/this.normalSpeedSpot;
         this.speedMultiplier=Math.min(1.5,(Math.max(0.7,this.speedMultiplier)));
         //console.log(e);
@@ -79,6 +86,8 @@ class GameSceneDash extends GameScene
     draw(ctx)
     {
         this.drawBg(ctx);
+        // clear the sky 
+        // should this not be this "BG" that the empty method above is supposed to "draw"?
         ctx.fillStyle="#000030";
         ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
         this.gameObjects.forEach((obj)=>{
@@ -89,74 +98,92 @@ class GameSceneDash extends GameScene
     }
     update(dT)
     {
-        //console.log(this.gameObjects.length);
+        // ditch any dead objects 
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
+        // update what's left
         this.gameObjects.forEach((obj)=>{
-            //console.log(obj);
-
-                obj.update(dT);
+            obj.update(dT);
             
         });
+        // #TODO: less hardcoding
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
+        // yea ask every bullet hey did you hit something
         bullets.forEach((bb)=>{
             baddies.forEach((enemy)=>{
                 if(bb.hitbox.testRect(enemy.hitbox))
                 {
+                    // oof
                     bb.hit(enemy);
                 }
             });
         });
+        // same for beams
         beams.forEach((bb)=>{
-            console.log("beam");
-            console.log(bb);
             baddies.forEach((enemy)=>{
                 if(bb.hitbox.testRect(enemy.hitbox))
                 {
+                    // ow 
                     bb.hit(enemy);
                 }
             });
         });
         this.doSpeedStuff(dT);
+        // update score
         this.scoredisplay.text= String(this.score).padStart(6,'0');
         
         baddies.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
                 localStorage.setItem("bestScore", this.score);
+                // this kills the player
                 window.gameManager.currentScene = new GameSceneDash();
             }
         });
-        //console.log(living.length);
-        //console.log(living);
-        //this.gameObjects=living;
     }
+    /**
+     * Stuff that depends on player's speed
+     * @param {number} dT 
+     */
+    // #TODO: this is shit and doesn't even use the dT which is probably why
+    // it's even more clustered than RNGesus on crack
     doSpeedStuff(dT)
     {
-        
+        // spawn stars with about 10% base chance
         if(Math.random()<0.1*this.speedMultiplier)
         {
             let star = new BgStar();
+            // match star speed to the player speed
             star.speed*=this.speedMultiplier;
+            // random displacement across the field
             star.x=Math.random()*window.gameManager.ctx.canvas.width;
+            // but always at the top
             star.y=1;
+            // goes straight down
             star.targetX=star.x;
             star.targetY=10001;
             this.addObject(star);
-            //console.log(star);
         }
+        // spawn baddies with about 1% base chance
         if(Math.random()<0.01*this.speedMultiplier)
         {
             let enemy = new Hostile();
+            // random spread across
             enemy.x=Math.random()*window.gameManager.ctx.canvas.width;
+            // somewhere near the top
             enemy.y=50+Math.random()*50;
+            // go right for the player
+            // not really needed as they already do that in their updates?
+            // not all of them?
+            // this code is shit but it works for now
             enemy.targetX=this.player.x;
             enemy.targetY=this.player.y;
             this.addObject(enemy);
+            // toasted baddies make number go brrrr
             enemy.onDeath=()=>{
-                        this.score++;};
-            //console.log(enemy);
+                this.score++;
+            };
         }
     }
 }

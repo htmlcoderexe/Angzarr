@@ -15,5 +15,6 @@ function Init()
     window.gameManager.currentScene = new GameSceneDash();
     window.gameManager.currentScene.longSide = canvas.height;
     window.gameManager.currentScene.shortSide = canvas.width;
+    // we need this to set it off
     requestAnimationFrame((tstamp)=>{window.gameManager.update(tstamp);});
 }
