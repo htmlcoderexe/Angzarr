@@ -138,10 +138,10 @@ class GameSceneDash extends GameScene
                 localStorage.setItem("bestScore", this.score);
                 // this kills the player
                 let retrybt = new UIButton(new Rectangle(
-                    this.shortSide/2-120/2,
+                    this.shortSide/2-240/2,
                     this.longSide*0.60,
-                    120,
-                    40),
+                    240,
+                    80),
                     "Retry"
                 );
                 retrybt.clickHandler=()=>{
