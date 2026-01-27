@@ -38,10 +38,5 @@ class BgStar extends GameObject
         if(this.isDead)
             return;
         super.update(dT);
-        // clean up any objects that are long past the player
-        if(this.x<0 || this.x>10000 || this.y<0 || this.y>10000)
-        {
-            this.isDead=true;
-        }
     }
 }

@@ -147,6 +147,11 @@ class GameObject
         this.x+=this.movementVector.x;
         this.y+=this.movementVector.y;
         this.recalcHitbox();
+        // clean up any objects that are long past the player
+        if(this.x<-10000 || this.x>10000 || this.y<-10000 || this.y>10000)
+        {
+            this.isDead=true;
+        }
     }
     /**
      * Draws the object using given canvas context.
