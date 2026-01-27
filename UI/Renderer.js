@@ -192,7 +192,7 @@ class UIRenderer
         ctx.strokeStyle=this.rgb(outline2);
         ctx.lineWidth=5;
         ctx.stroke();
-        ctx.font = "small-caps bold 42px monospace";
+        ctx.font = "small-caps bold 24px sixtyfour";
         ctx.textAlign="center";
         ctx.textBaseline="middle";
         ctx.fillStyle=this.rgb(fontcolour);
@@ -262,7 +262,7 @@ class UIRenderer
         ctx.lineWidth=1;
         ctx.stroke();
         // font, #TODO: replace with something cooler, Geo font looks nice
-        ctx.font = "small-caps bold 30px monospace";
+        ctx.font = "small-caps bold 64px geo";
         // braindead centering logic at 3AM
         ctx.textAlign="center";
         ctx.textBaseline="middle";

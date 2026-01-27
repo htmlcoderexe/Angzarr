@@ -29,7 +29,17 @@
 <body>
 <canvas id="mainscreen"></canvas>
 <script>
-    Init();
+    let buttonFont = new FontFace('geo', 'url(https://fonts.gstatic.com/s/geo/v23/CSRz4zRZluflKHpn.woff2)');
+    let counterFont = new FontFace('sixtyfour',"url(https://fonts.gstatic.com/s/sixtyfour/v3/OD5vuMCT1numDm3nakXtp2h4jg463t9haG_3mBkVsV20uFT3BAE5f43flSU.woff2)");
+    Promise.all([buttonFont.load(),counterFont.load()]).then((fonts)=>{
+        fonts.forEach((font)=>{
+            document.fonts.add(font);
+        });
+        Init();
+    }).catch((_)=>{
+        // proceed without i guess
+        Init();
+    });
 </script>
 </body>    
 </html>
