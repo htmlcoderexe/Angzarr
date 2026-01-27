@@ -103,6 +103,7 @@ class GameSceneDash extends GameScene
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
+        let pickups = this.gameObjects.filter((e)=>e.type=="pickup");
         // yea ask every bullet hey did you hit something
         bullets.forEach((bb)=>{
             baddies.forEach((enemy)=>{
@@ -133,6 +134,13 @@ class GameSceneDash extends GameScene
                 localStorage.setItem("bestScore", this.score);
                 // this kills the player
                 window.gameManager.currentScene = new GameSceneDash();
+            }
+        });
+        pickups.forEach((enemy)=>{
+            if(enemy.hitbox.testRect(this.player.hitbox))
+            {
+                this.score++;
+                enemy.die();
             }
         });
     }
@@ -169,17 +177,16 @@ class GameSceneDash extends GameScene
             enemy.targetX=this.player.x;
             enemy.targetY=this.player.y;
             this.addObject(enemy);
-            // toasted baddies make number go brrrr
+            // toasted baddies drop points?
             enemy.onDeath=()=>{
-                this.score++;
                 
                 for(let i=0;i<Math.random()*4;i++)
                 {
                     let p = new Pickup();
                     p.x=enemy.x;
                     p.y=enemy.y;
-                    p.movementVector.y=-10;
-                    p.movementVector.x=-10+Math.random()*20;
+                    p.movementVector.y=-5;
+                    p.movementVector.x=-5+Math.random()*10;
                     this.addObject(p);
                 }
                 

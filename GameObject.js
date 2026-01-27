@@ -13,7 +13,7 @@ const RELATIVE_MOVEMENT_GRAVITY = 2;
 
 const STAGE_DEFAULT_SPEED = 500;
 
-const GRAVITY_DEFAULT = 100;
+const GRAVITY_DEFAULT = 25;
 /**
  * Represents an object in the game that can be drawn and updated.
  */
@@ -142,7 +142,7 @@ class GameObject
         }
         else if(this.screenMovement==RELATIVE_MOVEMENT_GRAVITY)
         {
-            this.movementVector.y+=GRAVITY_DEFAULT*dT;
+            this.movementVector.y+=GRAVITY_DEFAULT*this.scene.speedMultiplier*dT;
         }
         this.x+=this.movementVector.x;
         this.y+=this.movementVector.y;
