@@ -92,6 +92,10 @@ class GameSceneDash extends GameScene
     }
     update(dT)
     {
+        if(this.paused)
+        {
+            return;
+        }
         // ditch any dead objects 
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         // update what's left
@@ -133,7 +137,18 @@ class GameSceneDash extends GameScene
             {
                 localStorage.setItem("bestScore", this.score);
                 // this kills the player
-                window.gameManager.currentScene = new GameSceneDash();
+                let retrybt = new UIButton(new Rectangle(
+                    this.shortSide/2-120/2,
+                    this.longSide*0.60,
+                    120,
+                    40),
+                    "Retry"
+                );
+                retrybt.clickHandler=()=>{
+                    window.gameManager.currentScene = new GameSceneDash();
+                };
+                this.uimgr.components.push(retrybt);
+                this.paused=true;
             }
         });
         pickups.forEach((enemy)=>{

@@ -16,8 +16,9 @@ class GameScene
      */
     shortSide = 0;
     /**
-     * Initialises the scene.
+     * Indicates whether the scene is paused.
      */
+    paused = false;
     /**
     * Contains the scene's objects.
     */
@@ -33,6 +34,9 @@ class GameScene
         obj.scene = this;
         //console.log(obj,this);
     }
+    /**
+     * Initialises the scene.
+     */
     constructor()
     {
         // this currently defaults to portrait orientation
