@@ -13,7 +13,9 @@ class GameSceneDash extends GameScene
     movingship = false;
     uimgr;
     scoredisplay;
+    hiscoredisplay;
     score=0;
+    hiscore=0;
     stageProgress = 0;
     constructor()
     {
@@ -23,6 +25,7 @@ class GameSceneDash extends GameScene
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.uimgr=new GUIManager();
+        this.hiscore=localStorage.getItem("bestScore");
         /*
         const bt = new UIButton(new Rectangle(0,this.longSide-100,70,70));
         console.log(this.longSide);
@@ -38,9 +41,12 @@ class GameSceneDash extends GameScene
         this.player.abilities.push(lazor);
         const bt = new AbilitySlot(new Rectangle(10,this.longSide-100,70,72),lazor);
         this.uimgr.components.push(bt);
-        const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
+        const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
         this.scoredisplay=scoredspl;
         this.uimgr.components.push(scoredspl);
+        const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
+        this.hiscoredisplay=hiscoredspl;
+        this.uimgr.components.push(hiscoredspl);
     }
     handlePrimaryPointerMove(e)
     {
@@ -129,13 +135,26 @@ class GameSceneDash extends GameScene
             });
         });
         this.doSpeedStuff(dT);
+        pickups.forEach((enemy)=>{
+            if(enemy.hitbox.testRect(this.player.hitbox))
+            {
+                this.score++;
+                enemy.die();
+            }
+        });
         // update score
         this.scoredisplay.text= String(this.score).padStart(6,'0');
+        if(this.score>=this.hiscore)
+        {
+            this.hiscore=this.score;
+            this.hiscoredisplay.colour="255 200 0";
+            localStorage.setItem("bestScore", this.hiscore);
+        }
+        this.hiscoredisplay.text= String(this.hiscore).padStart(6,'0');
         // this.scoredisplay.text = Math.round(this.speedMultiplier*100);
         baddies.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
-                localStorage.setItem("bestScore", this.score);
                 // this kills the player
                 let retrybt = new UIButton(new Rectangle(
                     this.shortSide/2-240/2,
@@ -149,13 +168,6 @@ class GameSceneDash extends GameScene
                 };
                 this.uimgr.components.push(retrybt);
                 this.paused=true;
-            }
-        });
-        pickups.forEach((enemy)=>{
-            if(enemy.hitbox.testRect(this.player.hitbox))
-            {
-                this.score++;
-                enemy.die();
             }
         });
     }
@@ -201,7 +213,7 @@ class GameSceneDash extends GameScene
                     p.x=enemy.x;
                     p.y=enemy.y;
                     p.movementVector.y=-5;
-                    p.movementVector.x=-5+Math.random()*10;
+                    p.movementVector.x=-2+Math.random()*4;
                     this.addObject(p);
                 }
                 

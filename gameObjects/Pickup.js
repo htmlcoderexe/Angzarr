@@ -7,13 +7,13 @@ class Pickup extends GameObject
     {
         super("pickup");
         this.screenMovement=RELATIVE_MOVEMENT_GRAVITY;
-        this.hitbox = new Rectangle(-30,-30,60,60);
-        this.originalHitbox = new Rectangle(-30,-30,60,60);
+        this.hitbox = new Rectangle(-50,-50,100,100);
+        this.originalHitbox = new Rectangle(-50,-50,100,100);
     }
     draw(ctx)
     {
         super.draw(ctx);
         ctx.fillStyle="#FFFF00";
-        ctx.fillRect(this.x-10,this.y-10,20,20);
+        ctx.fillRect(this.x-20,this.y-20,40,40);
     }
 }

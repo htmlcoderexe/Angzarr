@@ -175,13 +175,12 @@ class UIRenderer
      * @param {number} h 
      * @param {string} text - text to draw
      */
-    static drawScreenBox(ctx,x,y,w,h,text)
+    static drawScreenBox(ctx,x,y,w,h,text, colour)
     {
         // #TODO: remove at least some of this hardcoding please
         let main = "16 16 16";
         let outline = "40 40 40";
         let outline2 ="128 128 128";
-        let fontcolour ="0 192 16";
         ctx.beginPath();
         ctx.roundRect(x+0.5,y+0.5,w,h,7);
         ctx.fillStyle=this.rgb(main);
@@ -195,7 +194,7 @@ class UIRenderer
         ctx.font = "small-caps bold 24px sixtyfour";
         ctx.textAlign="center";
         ctx.textBaseline="middle";
-        ctx.fillStyle=this.rgb(fontcolour);
+        ctx.fillStyle=this.rgb(colour);
         ctx.fillText(text,x+w/2,y+h/2);
     }
     
