@@ -142,7 +142,7 @@ class GameObject
         }
         else if(this.screenMovement==RELATIVE_MOVEMENT_GRAVITY)
         {
-            this.movementVector.y+=GRAVITY_DEFAULT*this.scene.speedMultiplier*dT;
+            this.movementVector.y+=GRAVITY_DEFAULT*dT;
         }
         this.x+=this.movementVector.x;
         this.y+=this.movementVector.y;
