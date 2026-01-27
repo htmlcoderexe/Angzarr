@@ -3,19 +3,26 @@ class GameSceneDash extends GameScene
     player = null;
     gameObjects = [];
     test = {"x":0,"y":0};
+    /**
+    Game speed.
+     */
     speedMultiplier = 1;
-    normalSpeedSpot = 100;
+    /**
+    The distance from the bottom where the game speed is 1x
+     */
+    normalSpeedSpot = 0.33;
     movingship = false;
     uimgr;
     scoredisplay;
     score=0;
+    stageProgress = 0;
     constructor()
     {
         super();
         this.player = new Player();
         this.addObject(this.player);
         this.player.x = this.shortSide/2;
-        this.player.y = this.longSide - this.normalSpeedSpot;
+        this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.uimgr=new GUIManager();
         /*
         const bt = new UIButton(new Rectangle(0,this.longSide-100,70,70));
@@ -54,7 +61,7 @@ class GameSceneDash extends GameScene
         this.player.targetX=e.offsetX;
         this.player.targetY = e.offsetY;
         // make stuff go slower when pulling back and faster when pushing forward
-        this.speedMultiplier = (this.longSide-e.offsetY)/this.normalSpeedSpot;
+        this.speedMultiplier = (this.longSide-e.offsetY)/this.longSide/this.normalSpeedSpot;
         this.speedMultiplier=Math.min(1.5,(Math.max(0.7,this.speedMultiplier)));
         //console.log(e);
     }
@@ -132,7 +139,7 @@ class GameSceneDash extends GameScene
         this.doSpeedStuff(dT);
         // update score
         this.scoredisplay.text= String(this.score).padStart(6,'0');
-        
+        // this.scoredisplay.text = Math.round(this.speedMultiplier*100);
         baddies.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
