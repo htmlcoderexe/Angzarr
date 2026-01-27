@@ -18,6 +18,21 @@ class GameScene
     /**
      * Initialises the scene.
      */
+    /**
+    * Contains the scene's objects.
+    */
+    gameObjects = [];
+    /**
+     * Adds an object to the scene
+     * @param {GameObject} obj 
+     */
+    addObject(obj)
+    { 
+        this.gameObjects.push(obj);
+        //console.log(this.gameObjects.length);
+        obj.scene = this;
+        //console.log(obj,this);
+    }
     constructor()
     {
         // this currently defaults to portrait orientation

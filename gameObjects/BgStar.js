@@ -14,8 +14,9 @@ class BgStar extends GameObject
     constructor()
     {
         super();
+        this.screenMovement=RELATIVE_MOVEMENT_STAGE;
         // randomise speeds, sizes and colours
-        this.speed = 500 +(Math.random()*200);
+        this.speed = Math.random()*200;
         this.size = 8 +(Math.random()*4);
         // keep this in a small range for various pastel colours
         let r = 200 + Math.random()*55;

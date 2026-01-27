@@ -1,4 +1,20 @@
 /**
+ * The object and its movements are static relative to the screen.
+ */
+const RELATIVE_MOVEMENT_STATIC = 0;
+/**
+ * The object moves relative to the stage (towards the player at stage speed).
+ */
+const RELATIVE_MOVEMENT_STAGE = 1;
+/**
+ * The object is influenced by gravity relative to the screen.
+ */
+const RELATIVE_MOVEMENT_GRAVITY = 2;
+
+const STAGE_DEFAULT_SPEED = 500;
+
+const GRAVITY_DEFAULT = 100;
+/**
  * Represents an object in the game that can be drawn and updated.
  */
 class GameObject
@@ -31,6 +47,12 @@ class GameObject
     Speed of the movement towards target coordinates.
      */
     speed = 0;
+
+    movementVector = {x:0,y:0};
+    /**
+    The movement behaviour of the object.
+     */
+    screenMovement = RELATIVE_MOVEMENT_STATIC;
     /**
     If object is dead, it shall not be updated or drawn.
      */
@@ -87,34 +109,43 @@ class GameObject
         // don't do anything if object is dead
         if(this.isDead)
             return;
-        // skipping unnecessary recalculation
-        if(this.speed==0 || (this.x==this.targetX && this.y == this.targetY))
+        if(this.screenMovement==RELATIVE_MOVEMENT_STATIC)
         {
-            this.recalcHitbox();
-            return;
+            // move the object towards the target
+            // calculate distances in X and Y
+            const xDiff = this.targetX-this.x;
+            const yDiff = this.targetY-this.y;
+            // get the angle pointing towards target
+            const axisAngle = Math.atan2(yDiff,xDiff);
+            // get offsets based on the angle and object's speed
+            this.movementVector.x = this.speed * Math.cos(axisAngle) * dT;
+            this.movementVector.y = this.speed * Math.sin(axisAngle) * dT;
+            
+            // if the new offset "overshoots" the destination,
+            // snap the object to the destination coordinate
+            // this prevents jitter
+
+            const dist = Math.sqrt(xDiff*xDiff+yDiff*yDiff);
+            const delta = Math.sqrt(this.movementVector.x*this.movementVector.x+this.movementVector.y*this.movementVector.y);
+
+            if(delta>dist)
+            {
+                this.x=this.targetX;
+                this.y=this.targetY;
+                this.movementVector={x:0,y:0};
+            }
         }
-        // move the object towards the target
-        // calculate distances in X and Y
-        const xDiff = this.targetX-this.x;
-        const yDiff = this.targetY-this.y;
-        // get the angle pointing towards target
-        const axisAngle = Math.atan2(yDiff,xDiff);
-        // get offsets based on the angle and object's speed
-        const dX = this.speed * Math.cos(axisAngle) * dT;
-        const dY = this.speed * Math.sin(axisAngle) * dT;
-        this.x+=dX;
-        this.y+=dY;
-        // if the new offset "overshoots" the destination,
-        // snap the object to the destination coordinate
-        // this prevents jitter
-        if(Math.abs(xDiff)<Math.abs(dX))
+        else if(this.screenMovement==RELATIVE_MOVEMENT_STAGE)
         {
-            this.x=this.targetX;
+            this.movementVector.x=0;
+            this.movementVector.y=(STAGE_DEFAULT_SPEED+this.speed)*this.scene.speedMultiplier*dT;
         }
-        if(Math.abs(yDiff)<Math.abs(dY))
+        else if(this.screenMovement==RELATIVE_MOVEMENT_GRAVITY)
         {
-            this.y=this.targetY;
+            this.movementVector.y+=GRAVITY_DEFAULT*dT;
         }
+        this.x+=this.movementVector.x;
+        this.y+=this.movementVector.y;
         this.recalcHitbox();
     }
     /**

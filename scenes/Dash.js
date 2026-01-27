@@ -1,7 +1,6 @@
 class GameSceneDash extends GameScene
 {
     player = null;
-    gameObjects = [];
     test = {"x":0,"y":0};
     /**
     Game speed.
@@ -42,18 +41,6 @@ class GameSceneDash extends GameScene
         const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
         this.scoredisplay=scoredspl;
         this.uimgr.components.push(scoredspl);
-    }
-    /**
-     * Adds an object to the scene
-     * @param {GameObject} obj 
-     */
-    // #TODO: maybe put this into the parent class???
-    addObject(obj)
-    { 
-        this.gameObjects.push(obj);
-        //console.log(this.gameObjects.length);
-        obj.scene = this;
-        //console.log(obj,this);
     }
     handlePrimaryPointerMove(e)
     {
@@ -161,15 +148,10 @@ class GameSceneDash extends GameScene
         if(Math.random()<0.1*this.speedMultiplier)
         {
             let star = new BgStar();
-            // match star speed to the player speed
-            star.speed*=this.speedMultiplier;
             // random displacement across the field
             star.x=Math.random()*window.gameManager.ctx.canvas.width;
             // but always at the top
             star.y=1;
-            // goes straight down
-            star.targetX=star.x;
-            star.targetY=10001;
             this.addObject(star);
         }
         // spawn baddies with about 1% base chance
@@ -190,6 +172,17 @@ class GameSceneDash extends GameScene
             // toasted baddies make number go brrrr
             enemy.onDeath=()=>{
                 this.score++;
+                
+                for(let i=0;i<Math.random()*4;i++)
+                {
+                    let p = new Pickup();
+                    p.x=enemy.x;
+                    p.y=enemy.y;
+                    p.movementVector.y=-10;
+                    p.movementVector.x=-10+Math.random()*20;
+                    this.addObject(p);
+                }
+                
             };
         }
     }
