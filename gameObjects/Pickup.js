@@ -7,8 +7,8 @@ class Pickup extends GameObject
     {
         super("pickup");
         this.screenMovement=RELATIVE_MOVEMENT_GRAVITY;
-        this.hitbox = new Rectangle(-10,-10,20,20);
-        this.originalHitbox = new Rectangle(-10,-10,20,20);
+        this.hitbox = new Rectangle(-30,-30,60,60);
+        this.originalHitbox = new Rectangle(-30,-30,60,60);
     }
     draw(ctx)
     {
