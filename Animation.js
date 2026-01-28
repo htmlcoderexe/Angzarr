@@ -167,10 +167,10 @@ class AnimatedPath
         let paths = [];
         // add the frames to the new object
         frames.forEach((f)=>{
-            result.frames.push({"time": f.time});
             result.fill = f.fill; // for now
             // also save the paths in parallel for processing
             paths.push(f.path);
+            result.frames.push({"time": f.time, "fill":f.fill,"rotation":(f.rotation ?? 0)});
         });
         let chunked = [];
         // chunk the paths
@@ -220,7 +220,9 @@ class AnimatedPath
         }
         return {
             "a": a['values'], 
+            "ra":a['rotation'],
             "b": b['values'], 
+            "rb":b['rotation'],
             "t":dT
             };
     }
@@ -285,10 +287,13 @@ class VectorAnimation
             // get the two frames to tween 
             let frame=path.findFrames(this.current_time);
             let values = AnimatedPath.tween(frame.a, frame.b, frame.t);
+            let rot = frame.ra + (frame.rb-frame.ra)*frame.t;
+            console.log(rot);
             // generate the SVG path commands from the path and the keyframe values
             let strpath = AnimatedPath.stitch(path.path, values);
             // render the path in its fill colour
             ctx.fillStyle = path.fill;
+            ctx.rotate(rot/180*Math.PI);
             ctx.fill(new Path2D(strpath));
             // if a fade is applied, also render the fade
             if(this.fade_time>0 && this.fade_start > 0)
@@ -298,6 +303,7 @@ class VectorAnimation
                 ctx.fillStyle = "rgb("+this.fade_fill+" / " + a + ")";
                 ctx.fill(new Path2D(strpath));
             }
+            ctx.rotate(-rot*Math.PI/180);
         }
     }
     /**
