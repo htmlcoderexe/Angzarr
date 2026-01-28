@@ -17,6 +17,8 @@ class GameSceneDash extends GameScene
     score=0;
     hiscore=0;
     stageProgress = 0;
+    stageLength = 20000; // for testing
+    stageProgressBox;
     constructor()
     {
         super();
@@ -26,13 +28,6 @@ class GameSceneDash extends GameScene
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.uimgr=new GUIManager();
         this.hiscore=localStorage.getItem("bestScore");
-        /*
-        const bt = new UIButton(new Rectangle(0,this.longSide-100,70,70));
-        console.log(this.longSide);
-        bt.click = ()=>{
-            this.player.doSkill();
-        };
-        //*/
         const lazor = new Ability(this.player);
         lazor.maxcharge=4;
         lazor.chargeused=4;
@@ -47,6 +42,8 @@ class GameSceneDash extends GameScene
         const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
         this.hiscoredisplay=hiscoredspl;
         this.uimgr.components.push(hiscoredspl);
+        this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
+        this.uimgr.components.push(this.stageProgressBox);
     }
     handlePrimaryPointerMove(e)
     {
@@ -142,6 +139,8 @@ class GameSceneDash extends GameScene
                 enemy.die();
             }
         });
+        this.stageProgress += STAGE_DEFAULT_SPEED*this.speedMultiplier*dT;
+        this.stageProgressBox.progress = (this.stageProgress/this.stageLength);
         // update score
         this.scoredisplay.text= String(this.score).padStart(6,'0');
         if(this.score>=this.hiscore)
