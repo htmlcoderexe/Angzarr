@@ -16,8 +16,7 @@ class GameSceneDash extends GameScene
     hiscoredisplay;
     score=0;
     hiscore=0;
-    stageProgress = 0;
-    stageLength = 20000; // for testing
+    stage;
     stageProgressBox;
     constructor()
     {
@@ -44,6 +43,31 @@ class GameSceneDash extends GameScene
         this.uimgr.components.push(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
         this.uimgr.components.push(this.stageProgressBox);
+
+        let testStage = [
+            {x:50,y:50,offset:0},
+            {x:350,y:50,offset:0},
+            {x:50,y:50,offset:1000},
+            {x:350,y:50,offset:1000},
+            {x:50,y:50,offset:2000},
+            {x:200,y:150,offset:2000},
+            {x:350,y:50,offset:2000},
+            {x:50,y:50,offset:3000},
+            {x:350,y:50,offset:3000},
+            {x:50,y:150,offset:4000},
+            {x:350,y:150,offset:4000},
+            {x:50,y:50,offset:5000},
+            {x:350,y:50,offset:5000},
+            {x:50,y:50,offset:6000},
+            {x:150,y:50,offset:6500},
+            {x:250,y:50,offset:7000},
+            {x:350,y:50,offset:7500},
+            {x:50,y:50,offset:8000},
+            {x:200,y:50,offset:8000},
+            {x:350,y:50,offset:8000}
+        ];
+        let objs = Stage.load(testStage);
+        this.stage= new Stage(this,objs);
     }
     handlePrimaryPointerMove(e)
     {
@@ -139,8 +163,9 @@ class GameSceneDash extends GameScene
                 enemy.die();
             }
         });
-        this.stageProgress += STAGE_DEFAULT_SPEED*this.speedMultiplier*dT;
-        this.stageProgressBox.progress = (this.stageProgress/this.stageLength);
+        // this.stage.progress += STAGE_DEFAULT_SPEED*this.speedMultiplier*dT;
+        this.stage.update(dT);
+        this.stageProgressBox.progress = (this.stage.progress/this.stage.duration);
         // update score
         this.scoredisplay.text= String(this.score).padStart(6,'0');
         if(this.score>=this.hiscore)
@@ -189,7 +214,7 @@ class GameSceneDash extends GameScene
             this.addObject(star);
         }
         // spawn baddies with about 1% base chance
-        if(Math.random()<0.01*this.speedMultiplier)
+        if(false && Math.random()<0.01*this.speedMultiplier)
         {
             let enemy = new Hostile();
             // random spread across
