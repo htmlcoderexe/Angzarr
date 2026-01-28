@@ -42,7 +42,7 @@ class GameSceneDash extends GameScene
         this.hiscoredisplay=hiscoredspl;
         this.uimgr.components.push(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
-        this.uimgr.components.push(this.stageProgressBox);
+        // this.uimgr.components.push(this.stageProgressBox);
 
         let testStage = [
             {x:50,y:50,offset:0},
@@ -214,7 +214,7 @@ class GameSceneDash extends GameScene
             this.addObject(star);
         }
         // spawn baddies with about 1% base chance
-        if(false && Math.random()<0.01*this.speedMultiplier)
+        if(Math.random()<0.01*this.speedMultiplier)
         {
             let enemy = new Hostile();
             // random spread across
