@@ -157,6 +157,54 @@ class AnimatedPath
         return c;
     }
     /**
+     * Tweens between two fill values. Currently only supports #RRGGBB strings.
+     * @param {*} a 
+     * @param {*} b 
+     * @param {*} t 
+     * @returns 
+     */
+    static tweenFill(a,b,t)
+    {
+        if(typeof a == "string")
+        {
+            return AnimatedPath.tweenHex(a,b,t);
+        }
+
+    }
+    /**
+     * Tweens between two hex colours
+     * @param {string} a first colour as #RRGGBB
+     * @param {string} b second colour as #RRGGBB
+     * @param {string} t amount to interpolate
+     * @returns interpolated colour as #RRGGBB or #000000 if invalid format
+     */
+    static tweenHex(a,b,t)
+    {
+        if(a[0]!="#")
+        {
+            return "#000000";
+        }
+        let ar = parseInt(a.substring(1,3),16);
+        let ag = parseInt(a.substring(3,5),16);
+        let ab = parseInt(a.substring(5,7),16);
+        let br = parseInt(b.substring(1,3),16);
+        let bg = parseInt(b.substring(3,5),16);
+        let bb = parseInt(b.substring(5,7),16);
+        let R = ar + (br-ar)*t;
+        let G = ag + (bg-ag)*t;
+        let B = ab + (bb-ab)*t;
+        return AnimatedPath.rgbToHex(Math.floor(R), Math.floor(G), Math.floor(B));
+    }
+    static rgbToHex(r, g, b) 
+    {
+        return "#" + AnimatedPath.componentToHex(r) + AnimatedPath.componentToHex(g) + AnimatedPath.componentToHex(b);
+    }
+    static componentToHex(c) 
+    {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+    /**
      * Creates an AnimatedPath out of an array of keyframes
      * @param {Array} frames 
      * @returns 
@@ -167,7 +215,6 @@ class AnimatedPath
         let paths = [];
         // add the frames to the new object
         frames.forEach((f)=>{
-            result.fill = f.fill; // for now
             // also save the paths in parallel for processing
             paths.push(f.path);
             result.frames.push({"time": f.time, "fill":f.fill,"rotation":(f.rotation ?? 0)});
@@ -221,8 +268,10 @@ class AnimatedPath
         return {
             "a": a['values'], 
             "ra":a['rotation'],
+            "fa":a['fill'],
             "b": b['values'], 
             "rb":b['rotation'],
+            "fb":b['fill'],
             "t":dT
             };
     }
@@ -287,12 +336,15 @@ class VectorAnimation
             // get the two frames to tween 
             let frame=path.findFrames(this.current_time);
             let values = AnimatedPath.tween(frame.a, frame.b, frame.t);
+            // tween rotation
             let rot = frame.ra + (frame.rb-frame.ra)*frame.t;
-            console.log(rot);
             // generate the SVG path commands from the path and the keyframe values
             let strpath = AnimatedPath.stitch(path.path, values);
+            // tween fill
+            let fill = AnimatedPath.tweenFill(frame.fa, frame.fb, frame.t);
             // render the path in its fill colour
-            ctx.fillStyle = path.fill;
+            ctx.fillStyle = fill;
+            // rotate
             ctx.rotate(rot/180*Math.PI);
             ctx.fill(new Path2D(strpath));
             // if a fade is applied, also render the fade
@@ -303,6 +355,7 @@ class VectorAnimation
                 ctx.fillStyle = "rgb("+this.fade_fill+" / " + a + ")";
                 ctx.fill(new Path2D(strpath));
             }
+            // unrotate
             ctx.rotate(-rot*Math.PI/180);
         }
     }
