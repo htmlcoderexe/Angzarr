@@ -25,6 +25,8 @@ class GameSceneDash extends GameScene
         this.addObject(this.player);
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
+        this.player.targetX=this.player.x;
+        this.player.targetY=this.player.y;
         this.uimgr=new GUIManager();
         this.hiscore=localStorage.getItem("bestScore");
         const lazor = new Ability(this.player);
