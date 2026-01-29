@@ -72,9 +72,11 @@ class Hostile extends Actor
         ]
     };
     size = 50;
-    constructor()
+    constructor(gfx=null)
     {
-        super(Math.random()>0.5?Hostile.anim2:Hostile.anim, "hostile"); 
+        if(!gfx)
+            gfx = Math.random()>0.5?Hostile.anim2:Hostile.anim;
+        super(gfx, "hostile"); 
         // init some "basic" default values
         this.speed= 100;
         this.hitbox = new Rectangle(-25,-25,50,50);
@@ -86,5 +88,15 @@ class Hostile extends Actor
         // home in on the player #TODO: dynamic behaviours
         this.targetX = this.scene.player.x;
         this.targetY = this.scene.player.y;
+    }
+    static fromTemplate(template)
+    {
+        let result = new Hostile(HostileData.graphics[template.sprite]);
+        result.MaxHP=template.health;
+        result.HP=template.health;
+        result.hitbox = new Rectangle(...template.rect);
+        result.originalHitbox = new Rectangle(...template.rect);
+        result.speed=template.speed;
+        return result;
     }
 }

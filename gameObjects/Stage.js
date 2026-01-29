@@ -46,7 +46,7 @@ class Stage
             let x = item.x;
             let y = item.y;
             let o = item.offset;
-            let testmob = new Hostile();
+            let testmob = Hostile.fromTemplate(HostileData.hostiles[item.type]);
             testmob.x=x;
             testmob.y=y;
             let so = new SpawnObject(o,testmob);

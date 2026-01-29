@@ -44,29 +44,29 @@ class GameSceneDash extends GameScene
         this.hiscoredisplay=hiscoredspl;
         this.uimgr.components.push(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
-        // this.uimgr.components.push(this.stageProgressBox);
+        this.uimgr.components.push(this.stageProgressBox);
 
         let testStage = [
-            {x:50,y:50,offset:0},
-            {x:350,y:50,offset:0},
-            {x:50,y:50,offset:1000},
-            {x:350,y:50,offset:1000},
-            {x:50,y:50,offset:2000},
-            {x:200,y:150,offset:2000},
-            {x:350,y:50,offset:2000},
-            {x:50,y:50,offset:3000},
-            {x:350,y:50,offset:3000},
-            {x:50,y:150,offset:4000},
-            {x:350,y:150,offset:4000},
-            {x:50,y:50,offset:5000},
-            {x:350,y:50,offset:5000},
-            {x:50,y:50,offset:6000},
-            {x:150,y:50,offset:6500},
-            {x:250,y:50,offset:7000},
-            {x:350,y:50,offset:7500},
-            {x:50,y:50,offset:8000},
-            {x:200,y:50,offset:8000},
-            {x:350,y:50,offset:8000}
+            {x:50,y:50,offset:0, type:"eye_swarm"},
+            {x:350,y:50,offset:0, type:"eye_swarm"},
+            {x:50,y:50,offset:1000, type:"eye_swarm"},
+            {x:350,y:50,offset:1000, type:"static_spinner"},
+            {x:50,y:50,offset:2000, type:"static_spinner"},
+            {x:200,y:150,offset:2000, type:"eye_swarm"},
+            {x:350,y:50,offset:2000, type:"static_spinner"},
+            {x:50,y:50,offset:3000, type:"eye_swarm"},
+            {x:350,y:50,offset:3000, type:"eye_swarm"},
+            {x:50,y:150,offset:4000, type:"static_spinner"},
+            {x:350,y:150,offset:4000, type:"static_spinner"},
+            {x:50,y:50,offset:5000, type:"eye_swarm"},
+            {x:350,y:50,offset:5000, type:"eye_swarm"},
+            {x:50,y:50,offset:6000, type:"static_spinner"},
+            {x:150,y:50,offset:6500, type:"eye_swarm"},
+            {x:250,y:50,offset:7000, type:"eye_swarm"},
+            {x:350,y:50,offset:7500, type:"static_spinner"},
+            {x:50,y:50,offset:8000, type:"eye_swarm"},
+            {x:200,y:50,offset:8000, type:"static_spinner"},
+            {x:350,y:50,offset:8000, type:"eye_swarm"}
         ];
         let objs = Stage.load(testStage);
         this.stage= new Stage(this,objs);
@@ -216,7 +216,7 @@ class GameSceneDash extends GameScene
             this.addObject(star);
         }
         // spawn baddies with about 1% base chance
-        if(Math.random()<0.01*this.speedMultiplier)
+        if(false && Math.random()<0.01*this.speedMultiplier)
         {
             let enemy = new Hostile();
             // random spread across
