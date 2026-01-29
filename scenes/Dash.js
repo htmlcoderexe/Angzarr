@@ -31,7 +31,7 @@ class GameSceneDash extends GameScene
         this.hiscore=localStorage.getItem("bestScore");
         const lazor = new Ability(this.player);
         lazor.maxcharge=4;
-        lazor.chargeused=4;
+        lazor.chargeused=2;
         lazor.base_recharge=1;
         lazor.apply=()=>this.player.doSkill();
         this.player.abilities.push(lazor);
