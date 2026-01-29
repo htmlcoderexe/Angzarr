@@ -74,7 +74,7 @@ class Hostile extends Actor
     size = 50;
     constructor()
     {
-        super(Hostile.anim2, "hostile"); 
+        super(Math.random()>0.5?Hostile.anim2:Hostile.anim, "hostile"); 
         // init some "basic" default values
         this.speed= 100;
         this.hitbox = new Rectangle(-25,-25,50,50);
