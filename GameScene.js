@@ -19,6 +19,7 @@ class GameScene
      * Indicates whether the scene is paused.
      */
     paused = false;
+    visible = true;
     /**
     * Contains the scene's objects.
     */

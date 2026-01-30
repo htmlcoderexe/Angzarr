@@ -15,6 +15,12 @@ function Init()
     window.gameManager.currentScene = new GameSceneDash();
     window.gameManager.currentScene.longSide = canvas.height;
     window.gameManager.currentScene.shortSide = canvas.width;
+    document.addEventListener("visibilitychange", () => {
+            window.gameManager.currentScene.visible=!document.hidden;
+    });
+    document.addEventListener("blur",()=>{
+        window.gameManager.currentScene.visible=false;
+    });
     // we need this to set it off
     requestAnimationFrame((tstamp)=>{window.gameManager.update(tstamp);});
 }

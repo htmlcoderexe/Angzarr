@@ -18,6 +18,24 @@ class GameSceneDash extends GameScene
     hiscore=0;
     stage;
     stageProgressBox;
+    pause()
+    {
+        this.paused=true;
+        this.uimgr.message("GAME PAUSED","#00C010",0.5,9999);
+        let unpausebt = new UIButton(new Rectangle(
+            this.shortSide/2-240/2,
+            this.longSide*0.60,
+            240,
+            80),
+            "Continue"
+        );
+        unpausebt.clickHandler=()=>{
+            this.uimgr.message("","#000000");
+            this.uimgr.remove(unpausebt);
+            this.paused=false;
+        };
+        this.uimgr.add(unpausebt,"system");
+    }
     constructor(player = null)
     {
         super();
@@ -27,7 +45,7 @@ class GameSceneDash extends GameScene
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.player.targetX=this.player.x;
         this.player.targetY=this.player.y;
-        this.uimgr=new GUIManager();
+        this.uimgr=new GUIManager(this.shortSide,this.longSide);
         this.uimgr.activeLayer="game";
         this.hiscore=localStorage.getItem("bestScore");
         const lazor = new Ability(this.player);
@@ -46,20 +64,7 @@ class GameSceneDash extends GameScene
             ),"||"
         );
         pBt.clickHandler=()=>{
-            this.paused=true;
-            let unpausebt = new UIButton(new Rectangle(
-                this.shortSide/2-240/2,
-                this.longSide*0.60,
-                240,
-                80),
-                "Continue"
-            );
-            unpausebt.clickHandler=()=>{
-                this.uimgr.remove(unpausebt);
-                this.paused=false;
-            };
-            this.uimgr.add(unpausebt,"system");
-            this.paused=true;
+                this.pause();
             };
         this.uimgr.add(pBt);
         const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
@@ -156,14 +161,20 @@ class GameSceneDash extends GameScene
     }
     update(dT)
     {
+        this.uimgr.update(dT);
         if(this.paused)
         {
             return;
+        }
+        if(!this.visible)
+        {
+            this.pause();
         }
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
         // check if stage is cleared
         if(this.stage.finished && baddies.length==0)
         {
+                this.uimgr.message("LEVEL CLEAR","#00C010",1,9999);
                 let retrybt = new UIButton(new Rectangle(
                     this.shortSide/2-240/2,
                     this.longSide*0.60,
@@ -173,6 +184,7 @@ class GameSceneDash extends GameScene
                 );
                 retrybt.clickHandler=()=>{
                     // pass the player here to keep progress
+                    this.uimgr.message("","#000000");
                     window.gameManager.currentScene = new GameSceneDash(this.player);
                 };
                 this.uimgr.activeLayer="system";
@@ -236,6 +248,15 @@ class GameSceneDash extends GameScene
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
                 // this kills the player
+                if(this.hiscore==this.score)
+                {
+                    this.uimgr.message("HIGH SCORE","#FF6020",0.25,9999);
+                }
+                else
+                {
+                    this.uimgr.message("GAME OVER","#FF0020",1,9999);
+                }
+                
                 let retrybt = new UIButton(new Rectangle(
                     this.shortSide/2-240/2,
                     this.longSide*0.60,

@@ -242,8 +242,7 @@ class UIRenderer
         ctx.fillStyle=this.rgb(main);
         ctx.fill();
         // add a highlight gradient, harsher at the top, tailing to zero
-        console.log(arguments);
-        let grad = ctx.createLinearGradient(x+(w/2),y-2,x+(w/2),y+h);
+         let grad = ctx.createLinearGradient(x+(w/2),y-2,x+(w/2),y+h);
         grad.addColorStop(0,this.rgb(highlight));
         grad.addColorStop(0.4,this.rgb(highlight,0.3));
         grad.addColorStop(1,this.rgb(highlight,0.0));

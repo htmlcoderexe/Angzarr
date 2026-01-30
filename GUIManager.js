@@ -11,6 +11,19 @@ class GUIManager
      * Layer new components will be added to.
      */
     activeLayer = "system";
+    screenW=1;
+    screenH=1;
+    currentMessage="";
+    messageTimer = 0;
+    messageColour="#000000";
+    messageBlink=0;
+    messageBlinkTimer=0;
+    messageOn=false;
+    constructor(w,h)
+    {
+        this.w=w;
+        this.h=h;
+    }
     /**
      * Adds an UI Element to the screen
      * @param {UIElement} component 
@@ -27,13 +40,39 @@ class GUIManager
     {
         this.components=this.components.filter((c)=>c!=component);
     }
+    message(text, colour, blink = 0, time = 0)
+    {
+        this.currentMessage=text;
+        this.messageTimer=time;
+        this.messageBlink=blink;
+        this.messageBlinkTimer = blink;
+        this.messageColour=colour;
+        this.messageOn=true;
+    }
     /**
      * Updates the state 
      * @param {number} dT 
      */
     update(dT)
     {
-
+        this.messageTimer-=dT;
+        if(this.messageTimer<=0)
+        {
+            this.currentMessage="";
+        }
+        if(this.messageBlink!=0)
+        {
+            this.messageBlinkTimer-=dT;
+            if(this.messageBlinkTimer<=0)
+            {
+                this.messageOn=!this.messageOn;
+                this.messageBlinkTimer+=this.messageBlink;
+                if(this.messageBlinkTimer<0)
+                {
+                    this.messageBlinkTimer=this.messageBlink;
+                }
+            }
+        }
     }
     /**
      * Draws UI elements on the screen
@@ -54,6 +93,18 @@ class GUIManager
             selection.forEach((c)=>{
                 c.draw(ctx);
             });
+        }
+        
+        if(this.currentMessage!="")
+        {
+            if(this.messageOn)
+            {
+                ctx.font = "small-caps 32px sixtyfour";
+                ctx.textAlign="center";
+                ctx.textBaseline="middle";
+                ctx.fillStyle=this.messageColour;
+                ctx.fillText(this.currentMessage,this.w/2,this.h/3);
+            }
         }
     }
     handlePrimaryPointerMove(e)
