@@ -18,16 +18,17 @@ class GameSceneDash extends GameScene
     hiscore=0;
     stage;
     stageProgressBox;
-    constructor()
+    constructor(player = null)
     {
         super();
-        this.player = new Player();
+        this.player = player ?? new Player();
         this.addObject(this.player);
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.player.targetX=this.player.x;
         this.player.targetY=this.player.y;
         this.uimgr=new GUIManager();
+        this.uimgr.activeLayer="game";
         this.hiscore=localStorage.getItem("bestScore");
         const lazor = new Ability(this.player);
         lazor.maxcharge=4;
@@ -36,15 +37,39 @@ class GameSceneDash extends GameScene
         lazor.apply=()=>this.player.doSkill();
         this.player.abilities.push(lazor);
         const bt = new AbilitySlot(new Rectangle(10,this.longSide-100,70,72),lazor);
-        this.uimgr.components.push(bt);
+        this.uimgr.add(bt);
+        const pBt = new UIButton(
+            new Rectangle(
+                this.shortSide - 80,
+                this.longSide - 80,
+                64,64
+            ),"||"
+        );
+        pBt.clickHandler=()=>{
+            this.paused=true;
+            let unpausebt = new UIButton(new Rectangle(
+                this.shortSide/2-240/2,
+                this.longSide*0.60,
+                240,
+                80),
+                "Continue"
+            );
+            unpausebt.clickHandler=()=>{
+                this.uimgr.remove(unpausebt);
+                this.paused=false;
+            };
+            this.uimgr.add(unpausebt,"system");
+            this.paused=true;
+            };
+        this.uimgr.add(pBt);
         const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
         this.scoredisplay=scoredspl;
-        this.uimgr.components.push(scoredspl);
+        this.uimgr.add(scoredspl);
         const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
         this.hiscoredisplay=hiscoredspl;
-        this.uimgr.components.push(hiscoredspl);
+        this.uimgr.add(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
-        this.uimgr.components.push(this.stageProgressBox);
+        this.uimgr.add(this.stageProgressBox);
 
         let testStage = [
             {x:50,y:50,offset:0, type:"eye_swarm"},
@@ -109,6 +134,7 @@ class GameSceneDash extends GameScene
     draw(ctx)
     {
         this.drawBg(ctx);
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         // clear the sky 
         // should this not be this "BG" that the empty method above is supposed to "draw"?
         ctx.fillStyle="#000030";
@@ -116,7 +142,16 @@ class GameSceneDash extends GameScene
         this.gameObjects.forEach((obj)=>{
             obj.draw(ctx);
         });
-        this.uimgr.draw(ctx);
+        
+        this.uimgr.draw(ctx,"game");
+        if(this.paused)
+        {
+            ctx.save();
+            ctx.fillStyle="rgb(0 0 48 / 0.7)";
+            ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            ctx.restore();
+        }
+        this.uimgr.draw(ctx,"system");
         //console.log(this.test);
     }
     update(dT)
@@ -124,6 +159,25 @@ class GameSceneDash extends GameScene
         if(this.paused)
         {
             return;
+        }
+        let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
+        // check if stage is cleared
+        if(this.stage.finished && baddies.length==0)
+        {
+                let retrybt = new UIButton(new Rectangle(
+                    this.shortSide/2-240/2,
+                    this.longSide*0.60,
+                    240,
+                    80),
+                    "Continue"
+                );
+                retrybt.clickHandler=()=>{
+                    // pass the player here to keep progress
+                    window.gameManager.currentScene = new GameSceneDash(this.player);
+                };
+                this.uimgr.activeLayer="system";
+                this.uimgr.add(retrybt);
+                this.paused=true;
         }
         // ditch any dead objects 
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
@@ -134,7 +188,6 @@ class GameSceneDash extends GameScene
         });
         // #TODO: less hardcoding
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
-        let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
         let pickups = this.gameObjects.filter((e)=>e.type=="pickup");
         // yea ask every bullet hey did you hit something
@@ -161,10 +214,11 @@ class GameSceneDash extends GameScene
         pickups.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
-                this.score++;
+                this.player.currentScore++;
                 enemy.die();
             }
         });
+        this.score=this.player.currentScore;
         // this.stage.progress += STAGE_DEFAULT_SPEED*this.speedMultiplier*dT;
         this.stage.update(dT);
         this.stageProgressBox.progress = (this.stage.progress/this.stage.duration);
@@ -192,7 +246,8 @@ class GameSceneDash extends GameScene
                 retrybt.clickHandler=()=>{
                     window.gameManager.currentScene = new GameSceneDash();
                 };
-                this.uimgr.components.push(retrybt);
+                this.uimgr.activeLayer="system";
+                this.uimgr.add(retrybt);
                 this.paused=true;
             }
         });

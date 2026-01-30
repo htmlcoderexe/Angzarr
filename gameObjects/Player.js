@@ -80,6 +80,7 @@ class Player extends Actor
     keeps track of main gun cooldown.
      */
     shootingCoolDown = 0;
+    currentScore = 0;
     /**
      * Creates a new Player with default settings.
      */

@@ -13,6 +13,7 @@ class UIElement
     originalHitbox = new Rectangle(0,0,1,1);
     children = [];
     parent = null;
+    layer = "system";
     clickHandler = ()=>{};
     constructor(rekt)
     {

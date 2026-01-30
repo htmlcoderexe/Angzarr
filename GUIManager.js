@@ -8,6 +8,26 @@ class GUIManager
      */
     components = [];
     /**
+     * Layer new components will be added to.
+     */
+    activeLayer = "system";
+    /**
+     * Adds an UI Element to the screen
+     * @param {UIElement} component 
+     * @param {string} layer 
+     */
+    add(component, layer="")
+    {
+        if(layer=="")
+            layer = this.activeLayer;
+        component.layer=layer;
+        this.components.push(component);
+    }
+    remove(component)
+    {
+        this.components=this.components.filter((c)=>c!=component);
+    }
+    /**
      * Updates the state 
      * @param {number} dT 
      */
@@ -19,12 +39,22 @@ class GUIManager
      * Draws UI elements on the screen
      * @param {CanvasRenderingContext2D} ctx 
      */
-    draw(ctx)
+    draw(ctx, layer="")
     {
         // just draw every component
-        this.components.forEach((c)=>{
-            c.draw(ctx);
-        });
+        if(layer=="")
+        {
+            this.components.forEach((c)=>{
+                c.draw(ctx);
+            });
+        }
+        else
+        {
+            let selection = this.components.filter((e)=>e.layer==layer);
+            selection.forEach((c)=>{
+                c.draw(ctx);
+            });
+        }
     }
     handlePrimaryPointerMove(e)
     {

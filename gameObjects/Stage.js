@@ -24,10 +24,11 @@ class Stage
         if(this.finished)
             return;
         this.progress+=STAGE_DEFAULT_SPEED * this.scene.speedMultiplier * dT;
-        if(this.progress>this.duration)
+        if(this.progress>=this.duration)
         {
             this.progress=this.duration;
             this.finished=true;
+            console.log("done!!11");
         }
         for(let i=0;i<this.objects.length;i++)
         {
