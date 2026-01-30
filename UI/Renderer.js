@@ -207,19 +207,23 @@ class UIRenderer
      * @param {number} h 
      * @param {string} text - text of the button
      */
-    static drawButton(ctx,x,y,w,h,text)
+    static drawButton(ctx,x,y,w,h,text, colours=null)
     {
-        // button colour
-        let main ="255 64 0";
         // outer and inner colours of the border
         let outline = "120 40 0";
         let outline2 ="255 128 0";
+        // button colour
+        let main ="255 64 0";
         // highlight at the top part of the button
         let highlight="255 200 125";
         // shadow at the bottom part of the button
         let shadow="200 40 0";
         // technically the colour of the "base" from which the button protrudes
         let bottom="100 40 0";
+        if(colours)
+        {
+            [main,highlight,shadow] = [...colours];
+        }
         // font  colour
         let fontcolour ="255 230 120";
         // draw the base

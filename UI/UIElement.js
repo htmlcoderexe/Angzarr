@@ -14,6 +14,7 @@ class UIElement
     children = [];
     parent = null;
     layer = "system";
+    id="";
     clickHandler = ()=>{};
     constructor(rekt)
     {
@@ -44,6 +45,30 @@ class UIElement
         });
         
         
+    }
+    add(control)
+    {
+        console.log("added ");
+        console.log(control);
+        this.children.push(control);
+        control.parent=this;
+    }
+    find(id)
+    {
+        console.log(id,this.id);
+        if(this.id==id)
+            {
+                console.log("FUCK");
+                return this;
+            }
+        let result = null;
+        this.children.forEach((c)=>{
+            let result2 = c.find(id);
+            console.log(id,result2);
+            if(result2)
+                result = result2;
+        });
+        return result;
     }
     /**
      * Givent a point on the screen, find the most specific (nested) control it hits and nest it.

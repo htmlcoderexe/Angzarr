@@ -36,6 +36,130 @@ class GameSceneDash extends GameScene
         };
         this.uimgr.add(unpausebt,"system");
     }
+    levelDone()
+    {
+        this.uimgr.message("LEVEL CLEAR","#00C010",1,9999);
+        let retrybt = new UIButton(new Rectangle(
+            this.shortSide/2-240/2,
+            this.longSide*0.60-50,
+            240,
+            80),
+            "Continue"
+        );
+        retrybt.clickHandler=()=>{
+            // pass the player here to keep progress
+            this.uimgr.message("","#000000");
+            this.player.level++;
+            window.gameManager.currentScene = new GameSceneDash(this.player);
+        };
+        this.uimgr.activeLayer="system";
+        this.uimgr.add(retrybt);
+        let shopbt = new UIButton(new Rectangle(
+            this.shortSide/2-240/2,
+            this.longSide*0.60+100,
+            240,
+            80),
+            "Shop"
+        );
+        shopbt.colourScheme="green";
+        shopbt.clickHandler=()=>{
+            // pass the player here to keep progress
+            this.uimgr.message("","#000000");
+            let centreline= this.shortSide/2;
+            let shoptop=this.longSide*0.60;
+            let shoptest= new UISelector(
+                new Rectangle(
+                    centreline-180,
+                    shoptop,
+                    360,
+                    180
+                ),
+                [
+                    {
+                        description:"More bullets",
+                        cost: 20,
+                        bonus: "rof"
+                    },{
+                        description:"More charge",
+                        cost: 25,
+                        bonus: "cap"
+                    },{
+                        description:"Faster charge",
+                        cost: 40,
+                        bonus: "bat"
+                    }]
+            );
+            shoptest.id="shopselector";
+            this.uimgr.add(shoptest,"system");
+            let buybut=new UIButton(new Rectangle(120,this.longSide*0.60+120,110,50),"Buy");
+            buybut.colourScheme="green";
+            buybut.id="buybut";
+            let donebut=new UIButton(new Rectangle(120+130,this.longSide*0.60+120,110,50),"Done");
+            let coinsdisplay = new DisplayLabel(new Rectangle(centreline-85,shoptop-60,170,45),String(this.player.coins).padStart(6,"0"));
+            coinsdisplay.id="coinsdisplay";
+            let itemdisplay = new DisplayLabel(new Rectangle(centreline-120,shoptop+10,240,45),"");
+            itemdisplay.id="itemdisplay";
+            let costdisplay = new DisplayLabel(new Rectangle(centreline-85,shoptop+63,170,45),"0000");
+            costdisplay.id="costdisplay";
+            shoptest.changedHandler=()=>{
+                let opt = shoptest.options[shoptest.selectedIndex];
+                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
+                if(adjusted_cost>this.player.coins)
+                {
+                    this.uimgr.find("buybut").colourScheme="grey";
+                }
+                else
+                {
+                    this.uimgr.find("buybut").colourScheme="green";
+                }
+                this.uimgr.find("itemdisplay").text=opt.description;
+                this.uimgr.find("costdisplay").text=String(adjusted_cost).padStart(4,"0");
+                this.uimgr.find("coinsdisplay").text=String(this.player.coins).padStart(6,"0");
+            };
+            buybut.clickHandler=()=>{
+                let opt = shoptest.options[shoptest.selectedIndex];
+                if(opt.cost>this.player.coins)
+                {
+                    return;
+                }
+                switch(opt.bonus)
+                {
+                    case "rof":
+                    {
+                        this.player.bullets_per_sec+=1;
+                        break;
+                    }
+                    case "cap":
+                    {
+                        this.player.abilities[0].maxcharge+=1;
+                        break;
+                    }
+                    case "bat":
+                    {
+                        this.player.abilities[0].base_recharge+=0.5;
+                        break;
+                    }
+                }
+                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
+                this.player.coins-=adjusted_cost;
+                this.player.upgrades[opt.bonus]++;
+                shoptest.changedHandler();
+            };
+            donebut.clickHandler=()=>{
+                this.uimgr.remove(this.uimgr.find("shopselector"));
+            };
+            shoptest.add(buybut);
+            shoptest.add(donebut);
+            shoptest.add(coinsdisplay);
+            shoptest.add(itemdisplay);
+            shoptest.add(costdisplay);
+            shoptest.changedHandler();
+            console.log(this.uimgr);
+        };
+        this.uimgr.activeLayer="system";
+        this.uimgr.add(shopbt);
+        this.paused=true;
+    }
     constructor(player = null)
     {
         super();
@@ -48,12 +172,20 @@ class GameSceneDash extends GameScene
         this.uimgr=new GUIManager(this.shortSide,this.longSide);
         this.uimgr.activeLayer="game";
         this.hiscore=localStorage.getItem("bestScore");
-        const lazor = new Ability(this.player);
-        lazor.maxcharge=4;
-        lazor.chargeused=2;
-        lazor.base_recharge=1;
-        lazor.apply=()=>this.player.doSkill();
-        this.player.abilities.push(lazor);
+        let lazor;
+        if(this.player.abilities.length<1)
+        {
+            lazor = new Ability(this.player);
+            lazor.maxcharge=4;
+            lazor.chargeused=2;
+            lazor.base_recharge=1;
+            lazor.apply=()=>this.player.doSkill();
+            this.player.abilities.push(lazor);
+        }
+        else
+        {
+            lazor = this.player.abilities[0];
+        }
         const bt = new AbilitySlot(new Rectangle(10,this.longSide-100,70,72),lazor);
         this.uimgr.add(bt);
         const pBt = new UIButton(
@@ -98,7 +230,18 @@ class GameSceneDash extends GameScene
             {x:200,y:50,offset:8000, type:"static_spinner"},
             {x:350,y:50,offset:8000, type:"eye_swarm"}
         ];
-        let objs = Stage.load(testStage);
+        let fullStage= [];
+        let offset_tally=testStage[testStage.length-1].offset+1000;
+        for(let i=0;i<this.player.level;i++)
+        {
+            for(let j=0;j<testStage.length;j++)
+            {
+                let row = testStage[j];
+                let newRow = {x:row.x,y:row.y,type:row.type,offset:row.offset+i*offset_tally};
+                fullStage.push(newRow);
+            }
+        }
+        let objs = Stage.load(fullStage);
         this.stage= new Stage(this,objs);
     }
     handlePrimaryPointerMove(e)
@@ -174,22 +317,7 @@ class GameSceneDash extends GameScene
         // check if stage is cleared
         if(this.stage.finished && baddies.length==0)
         {
-                this.uimgr.message("LEVEL CLEAR","#00C010",1,9999);
-                let retrybt = new UIButton(new Rectangle(
-                    this.shortSide/2-240/2,
-                    this.longSide*0.60,
-                    240,
-                    80),
-                    "Continue"
-                );
-                retrybt.clickHandler=()=>{
-                    // pass the player here to keep progress
-                    this.uimgr.message("","#000000");
-                    window.gameManager.currentScene = new GameSceneDash(this.player);
-                };
-                this.uimgr.activeLayer="system";
-                this.uimgr.add(retrybt);
-                this.paused=true;
+            this.levelDone();
         }
         // ditch any dead objects 
         this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
@@ -227,6 +355,7 @@ class GameSceneDash extends GameScene
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
                 this.player.currentScore++;
+                this.player.coins++;
                 enemy.die();
             }
         });

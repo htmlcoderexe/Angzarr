@@ -81,6 +81,13 @@ class Player extends Actor
      */
     shootingCoolDown = 0;
     currentScore = 0;
+    coins=0;
+    level=1;
+    upgrades={
+        rof:1,
+        cap:1,
+        bat:1
+    };
     /**
      * Creates a new Player with default settings.
      */

@@ -40,6 +40,18 @@ class GUIManager
     {
         this.components=this.components.filter((c)=>c!=component);
     }
+    find(id)
+    {
+        let result = null;
+        this.components.forEach((c)=>{
+            console.log("checking "+id);
+            console.log(c);
+            let result2 = c.find(id);
+            if(result2)
+                result = result2;
+        });
+        return result;
+    }
     message(text, colour, blink = 0, time = 0)
     {
         this.currentMessage=text;
@@ -144,15 +156,18 @@ class GUIManager
     {
         let handled = false;
         // check all UI elements 
-        this.components.forEach((c)=>{
+        for(let i = this.components.length-1;i>=0;i--)
+        {
+            let c = this.components[i];
             const target = c.checkhit(e.offsetX,e.offsetY);
             // if an element is found, click it and set the flag
             if(target)
             {
-                target.click();
-                handled = true;
+                target.click(e);
+                return true;
             }
-        });
+
+        }
         return handled;
     }
     handleKeyDown(e)
