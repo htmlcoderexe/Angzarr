@@ -91,10 +91,10 @@ class GameSceneDash extends GameScene
             );
             shoptest.id="shopselector";
             this.uimgr.add(shoptest,"system");
-            let buybut=new UIButton(new Rectangle(120,this.longSide*0.60+120,110,50),"Buy");
+            let buybut=new UIButton(new Rectangle(centreline-120,this.longSide*0.60+120,110,50),"Buy");
             buybut.colourScheme="green";
             buybut.id="buybut";
-            let donebut=new UIButton(new Rectangle(120+130,this.longSide*0.60+120,110,50),"Done");
+            let donebut=new UIButton(new Rectangle(centreline+10,this.longSide*0.60+120,110,50),"Done");
             let coinsdisplay = new DisplayLabel(new Rectangle(centreline-85,shoptop-60,170,45),String(this.player.coins).padStart(6,"0"));
             coinsdisplay.id="coinsdisplay";
             let itemdisplay = new DisplayLabel(new Rectangle(centreline-120,shoptop+10,240,45),"");
@@ -118,7 +118,8 @@ class GameSceneDash extends GameScene
             };
             buybut.clickHandler=()=>{
                 let opt = shoptest.options[shoptest.selectedIndex];
-                if(opt.cost>this.player.coins)
+                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
+                if(adjusted_cost>this.player.coins)
                 {
                     return;
                 }
@@ -140,7 +141,6 @@ class GameSceneDash extends GameScene
                         break;
                     }
                 }
-                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
                 this.player.coins-=adjusted_cost;
                 this.player.upgrades[opt.bonus]++;
                 shoptest.changedHandler();
@@ -176,9 +176,9 @@ class GameSceneDash extends GameScene
         if(this.player.abilities.length<1)
         {
             lazor = new Ability(this.player);
-            lazor.maxcharge=4;
+            lazor.maxcharge=3;
             lazor.chargeused=2;
-            lazor.base_recharge=1;
+            lazor.base_recharge=0.5;
             lazor.apply=()=>this.player.doSkill();
             this.player.abilities.push(lazor);
         }
