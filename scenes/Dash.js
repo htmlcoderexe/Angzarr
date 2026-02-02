@@ -223,6 +223,8 @@ class GameSceneDash extends GameScene
         {
             this.pause();
         }
+        // ditch any dead objects 
+        this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
         let pickups = this.gameObjects.filter((e)=>e.type=="pickup");
         // check if stage is cleared
@@ -230,8 +232,6 @@ class GameSceneDash extends GameScene
         {
             this.levelDone();
         }
-        // ditch any dead objects 
-        this.gameObjects=this.gameObjects.filter((e)=>!e.isDead);
         // update what's left
         this.gameObjects.forEach((obj)=>{
             obj.update(dT);
