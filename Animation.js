@@ -251,6 +251,18 @@ class AnimatedPath
             // update path animation length to the highest time value seen
             result.length = f.time;
         });
+        if(result.length==0)
+        {
+            let f0=result.frames[0];
+            result.frames.push({
+                "time": 1, 
+                "fill":f0.fill,
+                "rotation":(f0.rotation ?? 0),
+                "values": f0.values
+                });
+            result.length = 1;
+            console.log(result);
+        }
         return result;
     }
     /**
