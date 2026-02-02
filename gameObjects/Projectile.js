@@ -27,7 +27,7 @@ class Projectile extends GameObject
                     type: "linear",
                     coords: [0, -5, 0, 30],
                     stops: [0,1],
-                    colours: ["#FFFF00FF","FF780030"]
+                    colours: ["#FFFF00FF","#FF780030"]
                 },
                 time: 0.0,
                 path: "M 0 30 C -15 -20 15 -20 0 30 z"
