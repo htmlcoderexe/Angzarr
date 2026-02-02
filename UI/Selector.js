@@ -39,6 +39,20 @@ class UISelector extends UIElement
         }
         super.draw(ctx);
     }
+    addEventListener(event, handler)
+    {
+        if(super.addEventListener(event,handler))
+            return true;
+        switch(event)
+        {
+            case "change":
+            {
+                this.changedHandler=handler;
+                return true;
+            }
+        }
+        return false;
+    }
     click(e)
     {
         let x = e.offsetX-this.hitbox.x;

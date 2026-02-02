@@ -63,98 +63,8 @@ class GameSceneDash extends GameScene
         );
         shopbt.colourScheme="green";
         shopbt.clickHandler=()=>{
-            // pass the player here to keep progress
-            this.uimgr.message("","#000000");
-            let centreline= this.shortSide/2;
-            let shoptop=this.longSide*0.60;
-            let shoptest= new UISelector(
-                new Rectangle(
-                    centreline-180,
-                    shoptop,
-                    360,
-                    180
-                ),
-                [
-                    {
-                        description:"More bullets",
-                        cost: 20,
-                        bonus: "rof"
-                    },{
-                        description:"More charge",
-                        cost: 25,
-                        bonus: "cap"
-                    },{
-                        description:"Faster charge",
-                        cost: 40,
-                        bonus: "bat"
-                    }]
-            );
-            shoptest.id="shopselector";
-            this.uimgr.add(shoptest,"system");
-            let buybut=new UIButton(new Rectangle(centreline-120,this.longSide*0.60+120,110,50),"Buy");
-            buybut.colourScheme="green";
-            buybut.id="buybut";
-            let donebut=new UIButton(new Rectangle(centreline+10,this.longSide*0.60+120,110,50),"Done");
-            let coinsdisplay = new DisplayLabel(new Rectangle(centreline-85,shoptop-60,170,45),String(this.player.coins).padStart(6,"0"));
-            coinsdisplay.id="coinsdisplay";
-            let itemdisplay = new DisplayLabel(new Rectangle(centreline-120,shoptop+10,240,45),"");
-            itemdisplay.id="itemdisplay";
-            let costdisplay = new DisplayLabel(new Rectangle(centreline-85,shoptop+63,170,45),"0000");
-            costdisplay.id="costdisplay";
-            shoptest.changedHandler=()=>{
-                let opt = shoptest.options[shoptest.selectedIndex];
-                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
-                if(adjusted_cost>this.player.coins)
-                {
-                    this.uimgr.find("buybut").colourScheme="grey";
-                }
-                else
-                {
-                    this.uimgr.find("buybut").colourScheme="green";
-                }
-                this.uimgr.find("itemdisplay").text=opt.description;
-                this.uimgr.find("costdisplay").text=String(adjusted_cost).padStart(4,"0");
-                this.uimgr.find("coinsdisplay").text=String(this.player.coins).padStart(6,"0");
-            };
-            buybut.clickHandler=()=>{
-                let opt = shoptest.options[shoptest.selectedIndex];
-                let adjusted_cost=opt.cost*this.player.upgrades[opt.bonus];
-                if(adjusted_cost>this.player.coins)
-                {
-                    return;
-                }
-                switch(opt.bonus)
-                {
-                    case "rof":
-                    {
-                        this.player.bullets_per_sec+=1;
-                        break;
-                    }
-                    case "cap":
-                    {
-                        this.player.abilities[0].maxcharge+=1;
-                        break;
-                    }
-                    case "bat":
-                    {
-                        this.player.abilities[0].base_recharge+=0.5;
-                        break;
-                    }
-                }
-                this.player.coins-=adjusted_cost;
-                this.player.upgrades[opt.bonus]++;
-                shoptest.changedHandler();
-            };
-            donebut.clickHandler=()=>{
-                this.uimgr.remove(this.uimgr.find("shopselector"));
-            };
-            shoptest.add(buybut);
-            shoptest.add(donebut);
-            shoptest.add(coinsdisplay);
-            shoptest.add(itemdisplay);
-            shoptest.add(costdisplay);
-            shoptest.changedHandler();
-            console.log(this.uimgr);
+            this.uimgr.activeLayer="system";
+            UITemplate.ShowTemplate(this.uimgr,"arcade_shop",[0,this.longSide*0.60],this.player);
         };
         this.uimgr.activeLayer="system";
         this.uimgr.add(shopbt);
@@ -330,7 +240,6 @@ class GameSceneDash extends GameScene
         // #TODO: less hardcoding
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
-        let pickups = this.gameObjects.filter((e)=>e.type=="pickup");
         // yea ask every bullet hey did you hit something
         bullets.forEach((bb)=>{
             baddies.forEach((enemy)=>{

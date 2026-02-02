@@ -48,17 +48,17 @@ class UIElement
     }
     add(control)
     {
-        console.log("added ");
-        console.log(control);
         this.children.push(control);
         control.parent=this;
+        console.log("added ");
+        console.log(control);
     }
     find(id)
     {
         console.log(id,this.id);
         if(this.id==id)
             {
-                console.log("FUCK");
+                console.log("FUCK <",id,"> FOUND");
                 return this;
             }
         let result = null;
@@ -102,6 +102,15 @@ class UIElement
         {
             return null;
         }
+    }
+    addEventListener(event, handler)
+    {
+        if(event=="click")
+        {
+            this.clickHandler=handler;
+            return true;
+        }
+        return false;
     }
     /**
      * Clicks the control.

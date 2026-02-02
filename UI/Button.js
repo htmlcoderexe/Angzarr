@@ -14,10 +14,11 @@ class UIButton extends UIElement
     // #TODO: fuck this
     bgcolor="#FF9000";
     colourScheme = "";
-    constructor(rekt, text)
+    constructor(rekt, text, colour="")
     {
         super(rekt);
         this.text = text;
+        this.colourScheme=colour;
     }
     draw(ctx)
     {

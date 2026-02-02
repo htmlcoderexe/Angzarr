@@ -19,10 +19,25 @@ class GUIManager
     messageBlink=0;
     messageBlinkTimer=0;
     messageOn=false;
+    contextParams = [];
+    w=1;
+    h=1;
+    hitbox = new Rectangle(0,0,1,1);
     constructor(w,h)
     {
         this.w=w;
         this.h=h;
+        this.hitbox=new Rectangle(0,0,w,h);
+        console.log(w,h,this.w,this.h);
+        window.$id=(id)=>{
+            
+            console.error(id);
+            return this.find(id);
+        };
+        window.$destroy=(id)=>this.remove(id);
+        window.$param=(param)=>{
+            return this.contextParams[param];
+        };
     }
     /**
      * Adds an UI Element to the screen
@@ -34,6 +49,7 @@ class GUIManager
         if(layer=="")
             layer = this.activeLayer;
         component.layer=layer;
+        component.parent = this;
         this.components.push(component);
     }
     remove(component)
