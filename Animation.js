@@ -310,6 +310,8 @@ class VectorAnimation
      * Colour used for the fade effect
      */
     fade_fill="";
+    loop_count = 0;
+    finished = false;
     /**
      * Creates a new instance of an animation given a list of animated paths and a name
      * @param {AnimatedPath[]} paths 
@@ -378,6 +380,8 @@ class VectorAnimation
         while(this.current_time>this.length)
         {
             this.current_time-=this.length;
+            this.loop_count++;
+            this.finished=true;
         }
     }
     /**
@@ -393,6 +397,22 @@ class VectorAnimation
         // if a is not 1, this sets a fake "start" time to start out the effect at the desired intensity
         this.fade_start=time / a;
     }
+    cloneFadeParams(other)
+    {
+        this.fade_fill=other.fade_fill;
+        this.fade_start=other.fade_start;
+        this.fade_time=other.fade_time;
+    }
+    reset()
+    {
+        this.loop_count=0;
+        this.finished=false;
+        this.current_time=0;
+        this.fade_fill="255 255 255";
+        this.fade_start=0;
+        this.fade_time=0;
+        
+    }
 }
 /**
  * Represents a complete graphics object with a collection of VectorAnimations
@@ -403,6 +423,9 @@ class VectorSprite
      * Contains the VectorAnimations, referenced by name
      */
     animations = {};
+    currentAnimation=null;
+    default_animation="idle";
+    loop_count=0;
     /**
      * Creates a new instance given a set of animations
      * @param {VectorAnimation[]} animations 
@@ -413,6 +436,45 @@ class VectorSprite
         animations.forEach((a)=>{
             this.animations[a.name] = a;
         });
+        this.play(this.default_animation);
+    }
+    play(name,loopcount=0)
+    {
+        if(!this.animations[name])
+        {
+            console.error("Animation <"+name+"> not found in sprite.");
+            return;
+        }
+        let old = this.currentAnimation;
+        this.currentAnimation=this.animations[name];
+        this.currentAnimation.reset();
+        if(old)
+            this.currentAnimation.cloneFadeParams(old);
+        this.loop_count = loopcount;
+    }
+    applyFade(colour, time, a=1)
+    {
+        if(this.currentAnimation)
+        {
+            this.currentAnimation.applyFade(colour,time,a);
+        }
+    }
+    update(dT)
+    {
+        this.currentAnimation.update(dT);
+        if(this.loop_count==0)
+        {
+            return;
+        }
+        if(this.currentAnimation.loop_count>=this.loop_count)
+        {
+            this.play(this.default_animation);
+        }
+
+    }
+    draw(ctx)
+    {
+        this.currentAnimation.draw(ctx);
     }
     /**
      * Creates a VectorSprite out of a raw JSON object

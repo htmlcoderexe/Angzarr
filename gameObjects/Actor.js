@@ -8,10 +8,6 @@ class Actor extends GameObject
      */
     basicshape ={};
     /**
-    Contains the VectorSprite used to represent the entity on the playing field.
-     */
-    animation = null;
-    /**
     Entity's current hitpoints.
      */
     HP = 10;
@@ -31,10 +27,8 @@ class Actor extends GameObject
     constructor(shape, type="actor")
     {
         super(type);
-        // needed to set the data
-        this.basicshape = shape;
         // creates the VectorSprite to be rendered
-        this.animation=VectorSprite.fromRawObject(this.basicshape);
+        this.sprite=VectorSprite.fromRawObject(shape);
     }
     /**
      * Updates the entity state
@@ -46,25 +40,9 @@ class Actor extends GameObject
         this.abilities.forEach((a)=>{
             a.update(dT);
         });
-        // updates animation state; #TODO - make this less hardcoded
-        if(this.animation)
-            this.animation.animations['idle'].update(dT);
         if(this.HP<=0)
             this.die();
         super.update(dT);
-    }
-    /**
-     * Draws the entity on a canvas context
-     * @param {CanvasRenderingContext2D} ctx - the canvas context to use 
-     */
-    draw(ctx)
-    {
-        // ensure object gets cleanly translated
-        ctx.resetTransform();
-        ctx.translate(this.x,this.y);
-        // draw the animation #TODO - make this less hardcoded
-        this.animation.animations['idle'].draw(ctx);
-        ctx.resetTransform();
     }
     /**
      * Applies damage to the entity
@@ -81,6 +59,6 @@ class Actor extends GameObject
             this.die();
         }
         // apply a red flash effect
-        this.animation.animations['idle'].applyFade("255 0 0",0.5);
+        this.sprite.applyFade("255 0 0",0.5);
     }
 }

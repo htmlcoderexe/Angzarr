@@ -66,6 +66,10 @@ class GameObject
      */
     hitbox = null;
     /**
+    Contains the VectorSprite used to represent the entity on the playing field.
+     */
+    sprite = null;
+    /**
      * Creates an instance of the object given type
      * @param {string} type - the type of the object.
      */
@@ -152,6 +156,8 @@ class GameObject
         {
             this.isDead=true;
         }
+        if(this.sprite)
+            this.sprite.update(dT);
     }
     /**
      * Draws the object using given canvas context.
@@ -159,6 +165,13 @@ class GameObject
      */
     draw(ctx)
     {
-
+        if(!this.sprite)
+            return;
+        // ensure object gets cleanly translated
+        ctx.resetTransform();
+        ctx.translate(this.x,this.y);
+        // draw the animation #TODO - make this less hardcoded
+        this.sprite.draw(ctx);
+        ctx.resetTransform();
     }
 }

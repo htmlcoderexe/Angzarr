@@ -100,16 +100,8 @@ class Player extends Actor
         this.hitbox = new Rectangle(-10,-10,20,20);
         this.originalHitbox = new Rectangle(-10,-10,20,20);
     }
-    draw(ctx)
-    {
-        ctx.resetTransform();
-        ctx.translate(this.x,this.y);
-        this.animation.animations['idle'].draw(ctx);
-        ctx.resetTransform();
-    }
     update(dT)
     {
-        this.animation.animations['idle'].update(dT);
         super.update(dT);
         // update and fire main gun
         this.shootingCoolDown-=dT;
