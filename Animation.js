@@ -163,13 +163,46 @@ class AnimatedPath
      * @param {*} t 
      * @returns 
      */
-    static tweenFill(a,b,t)
+    static tweenFill(ctx, a,b,t)
     {
-        if(typeof a == "string")
+        if(typeof a == "string" && typeof b == "string")
         {
             return AnimatedPath.tweenHex(a,b,t);
         }
+        if(a.type)
+        {
+            let graddef = AnimatedPath.tweenGradient(a,b,t);
+            switch(graddef.type)
+            {
+                case "linear":
+                {
+                    let grad = ctx.createLinearGradient(...graddef.coords);
+                    for(let i=0;i<graddef.stops.length;i++)
+                    {
+                        grad.addColorStop(graddef.stops[i],graddef.colours[i]);
+                    }
+                    return grad;
+                }
+            }
+        }
 
+    }
+    static tweenGradient(a,b,t)
+    {
+        let finalcoords=[];
+        let finalcolours=[];
+        a.coords.forEach((val,i)=>{
+            finalcoords.push(a.coords[i]+(b.coords[i]-a.coords[i])*t);
+        });
+        a.colours.forEach((val,i)=>{
+            finalcolours.push(AnimatedPath.tweenHex(a.colours[i],b.colours[i],t));
+        });
+        return {
+            type: a.type,
+            coords:finalcoords,
+            stops:a.stops,
+            colours:finalcolours
+        };
     }
     /**
      * Tweens between two hex colours
@@ -184,6 +217,13 @@ class AnimatedPath
         {
             return "#000000";
         }
+        let aa = 255;
+        let ba = 255;
+        if(a.length>=9)
+        {
+            aa=parseInt(a.substring(7,9),16);
+            ba=parseInt(b.substring(7,9),16);
+        }
         let ar = parseInt(a.substring(1,3),16);
         let ag = parseInt(a.substring(3,5),16);
         let ab = parseInt(a.substring(5,7),16);
@@ -193,18 +233,20 @@ class AnimatedPath
         let R = ar + (br-ar)*t;
         let G = ag + (bg-ag)*t;
         let B = ab + (bb-ab)*t;
-        return AnimatedPath.rgbToHex(Math.floor(R), Math.floor(G), Math.floor(B));
+        let A = aa + (ba-aa)*t;
+        return AnimatedPath.rgbToHex(Math.floor(R), Math.floor(G), Math.floor(B), Math.floor(A));
     }
     /**
      * Converts 3 values into hexadecimal RGB
      * @param {number} r 
      * @param {number} g 
      * @param {number} b 
+     * @param {number} a
      * @returns 
      */
-    static rgbToHex(r, g, b) 
+    static rgbToHex(r, g, b, a=255) 
     {
-        return "#" + AnimatedPath.componentToHex(r) + AnimatedPath.componentToHex(g) + AnimatedPath.componentToHex(b);
+        return "#" + AnimatedPath.componentToHex(r) + AnimatedPath.componentToHex(g) + AnimatedPath.componentToHex(b) + AnimatedPath.componentToHex(a);
     }
     /**
      * Converts a single value to hex.
@@ -234,7 +276,11 @@ class AnimatedPath
         frames.forEach((f)=>{
             // also save the paths in parallel for processing
             paths.push(f.path);
-            result.frames.push({"time": f.time, "fill":f.fill,"rotation":(f.rotation ?? 0)});
+            result.frames.push({
+                "time": f.time, 
+                "fill":f.fill,
+                "rotation":(f.rotation ?? 0)
+                });
         });
         let chunked = [];
         // chunk the paths
@@ -261,7 +307,6 @@ class AnimatedPath
                 "values": f0.values
                 });
             result.length = 1;
-            console.log(result);
         }
         return result;
     }
@@ -378,7 +423,7 @@ class VectorAnimation
             // generate the SVG path commands from the path and the keyframe values
             let strpath = AnimatedPath.stitch(path.path, values);
             // tween fill
-            let fill = AnimatedPath.tweenFill(frame.fa, frame.fb, frame.t);
+            let fill = AnimatedPath.tweenFill(ctx,frame.fa, frame.fb, frame.t);
             // render the path in its fill colour
             ctx.fillStyle = fill;
             // rotate
