@@ -314,8 +314,9 @@ class GameSceneDash extends GameScene
             this.pause();
         }
         let baddies = this.gameObjects.filter((e)=>e.type=="hostile");
+        let pickups = this.gameObjects.filter((e)=>e.type=="pickup");
         // check if stage is cleared
-        if(this.stage.finished && baddies.length==0)
+        if(this.stage.finished && baddies.length==0 && pickups.length==0)
         {
             this.levelDone();
         }
