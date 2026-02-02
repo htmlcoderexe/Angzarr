@@ -122,13 +122,12 @@ class Player extends Actor
                 this.shootingCoolDown=0;
             }
             // spawn a bullet at player's location
-            let bb = new Projectile();
+            let bb = Projectile.fromTemplate(ProjectileData.projectiles.basic2);
             bb.x=this.x;
             bb.y=this.y;
             // make it home towards the point straight ahead of the player
             bb.targetX=this.x;
             bb.targetY =-1;
-            bb.speed = 1200;
             this.scene.addObject(bb);
         }
     }

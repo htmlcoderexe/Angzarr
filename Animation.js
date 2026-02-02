@@ -183,6 +183,15 @@ class AnimatedPath
                     }
                     return grad;
                 }
+                case "radial":
+                {
+                    let grad = ctx.createRadialGradient(...graddef.coords);
+                    for(let i=0;i<graddef.stops.length;i++)
+                    {
+                        grad.addColorStop(graddef.stops[i],graddef.colours[i]);
+                    }
+                    return grad;
+                }
             }
         }
 
@@ -191,16 +200,20 @@ class AnimatedPath
     {
         let finalcoords=[];
         let finalcolours=[];
+        let finalstops = [];
         a.coords.forEach((val,i)=>{
             finalcoords.push(a.coords[i]+(b.coords[i]-a.coords[i])*t);
         });
         a.colours.forEach((val,i)=>{
             finalcolours.push(AnimatedPath.tweenHex(a.colours[i],b.colours[i],t));
         });
+        a.stops.forEach((val,i)=>{
+            finalstops.push(a.stops[i]+(b.stops[i]-a.stops[i])*t);
+        });
         return {
             type: a.type,
             coords:finalcoords,
-            stops:a.stops,
+            stops:finalstops,
             colours:finalcolours
         };
     }

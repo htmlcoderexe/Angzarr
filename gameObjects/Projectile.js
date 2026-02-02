@@ -11,48 +11,13 @@ class Projectile extends GameObject
     Damage dealt by this projectile on hitting a target
      */
     damage = 4;
-    test1 = {
-        "idle": [[
-            {
-                fill: "#FFFFFF",
-                time: 0.0,
-                path: "M 0 30 C -15 -20 15 -20 0 30 z"
-            }
-        ]]
-    };
-    test2 = {
-        "idle": [[
-            {
-                fill: {
-                    type: "linear",
-                    coords: [0, -5, 0, 30],
-                    stops: [0,1],
-                    colours: ["#FFFF00FF","#FF780030"]
-                },
-                time: 0.0,
-                path: "M 0 30 C -15 -20 15 -20 0 30 z"
-            }
-        ]]
-    };
-    constructor()
+    constructor(shape)
     {
         super("bullet");
         // default oblong projectile
         this.hitbox = new Rectangle(-5,-5,10,30);
         this.originalHitbox = new Rectangle(-5,-5,10,30);
-        this.sprite=VectorSprite.fromRawObject(this.test2);
-    }
-    draw(ctx)
-    {
-        super.draw(ctx);
-            return;
-        // define a trail fading from yellow to orange
-        // #TODO: something less hardcoded
-        const grad = ctx.createLinearGradient(this.x,this.y-5,this.x,this.y+30);
-        grad.addColorStop(0, "rgb(255 255 0)");
-        grad.addColorStop(1,"rgb(255 120 0 / 0.2)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(this.x-5,this.y-5,10,30);
+        this.sprite=VectorSprite.fromRawObject(shape);
     }
     /**
      * Defines what happens when this collides with an entity
@@ -74,5 +39,14 @@ class Projectile extends GameObject
         {
             this.isDead=true;
         }
+    }
+    static fromTemplate(template)
+    {
+        let result = new Projectile(ProjectileData.graphics[template.sprite]);
+        result.hitbox = new Rectangle(...template.rect);
+        result.speed = template.speed;
+        result.damage = template.damage;
+
+        return result;
     }
 }
