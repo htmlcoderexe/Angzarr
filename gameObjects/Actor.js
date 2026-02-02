@@ -28,7 +28,8 @@ class Actor extends GameObject
     {
         super(type);
         // creates the VectorSprite to be rendered
-        this.sprite=VectorSprite.fromRawObject(shape);
+        if(shape)
+            this.sprite=VectorSprite.fromRawObject(shape);
     }
     /**
      * Updates the entity state

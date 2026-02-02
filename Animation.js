@@ -195,12 +195,29 @@ class AnimatedPath
         let B = ab + (bb-ab)*t;
         return AnimatedPath.rgbToHex(Math.floor(R), Math.floor(G), Math.floor(B));
     }
+    /**
+     * Converts 3 values into hexadecimal RGB
+     * @param {number} r 
+     * @param {number} g 
+     * @param {number} b 
+     * @returns 
+     */
     static rgbToHex(r, g, b) 
     {
         return "#" + AnimatedPath.componentToHex(r) + AnimatedPath.componentToHex(g) + AnimatedPath.componentToHex(b);
     }
+    /**
+     * Converts a single value to hex.
+     * @param {number} c 
+     * @returns 
+     */
     static componentToHex(c) 
     {
+        if(c<0 || c > 255)
+        {
+            console.warn("Invalid RGB component value <"+c+">.")
+            c=0;
+        }
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
@@ -310,7 +327,13 @@ class VectorAnimation
      * Colour used for the fade effect
      */
     fade_fill="";
+    /**
+     * Keeps track of the amount of time the animation has looped so far.
+     */
     loop_count = 0;
+    /**
+     * Shorthand check whether the animation has looped at least once.
+     */
     finished = false;
     /**
      * Creates a new instance of an animation given a list of animated paths and a name
@@ -397,12 +420,19 @@ class VectorAnimation
         // if a is not 1, this sets a fake "start" time to start out the effect at the desired intensity
         this.fade_start=time / a;
     }
+    /**
+     * Copies fade effect values from another animation.
+     * @param {VectorAnimation} other 
+     */
     cloneFadeParams(other)
     {
         this.fade_fill=other.fade_fill;
         this.fade_start=other.fade_start;
         this.fade_time=other.fade_time;
     }
+    /**
+     * Resets all runtime values of the animation to defaults.
+     */
     reset()
     {
         this.loop_count=0;
@@ -423,8 +453,17 @@ class VectorSprite
      * Contains the VectorAnimations, referenced by name
      */
     animations = {};
+    /**
+     * Currently playing animation.
+     */
     currentAnimation=null;
+    /**
+     * The animation to be played at the start or when the current animation finishes.
+     */
     default_animation="idle";
+    /**
+     * The amount of times the current animation is to be looped.
+     */
     loop_count=0;
     /**
      * Creates a new instance given a set of animations
@@ -438,6 +477,12 @@ class VectorSprite
         });
         this.play(this.default_animation);
     }
+    /**
+     * Sets the sprite to play an animation, optionally a fixed number of times before switching to the default animation.
+     * @param {string} name Animation name.
+     * @param {number} loopcount Amount of times to loop the animation, default is 0 which loops the animation indefinitely.
+     * @returns 
+     */
     play(name,loopcount=0)
     {
         if(!this.animations[name])
@@ -445,13 +490,24 @@ class VectorSprite
             console.error("Animation <"+name+"> not found in sprite.");
             return;
         }
-        let old = this.currentAnimation;
+        // set and init the requested animation
         this.currentAnimation=this.animations[name];
         this.currentAnimation.reset();
-        if(old)
-            this.currentAnimation.cloneFadeParams(old);
         this.loop_count = loopcount;
+        // copy ongoing information if possible like fade timers
+        let old = this.currentAnimation;
+        if(old)
+        {
+            this.currentAnimation.cloneFadeParams(old);
+        }
     }
+    
+    /**
+     * Applies a fading colour tint effect to the sprite.
+     * @param {string} colour - colour to use, in decimal "R G B" format
+     * @param {number} time - seconds before the effect fully fades out
+     * @param {number} a - intensity of the effect at the start from 0 to 1, where 1 is solid colour 
+     */
     applyFade(colour, time, a=1)
     {
         if(this.currentAnimation)
@@ -459,8 +515,15 @@ class VectorSprite
             this.currentAnimation.applyFade(colour,time,a);
         }
     }
+    /**
+     * Updates the state of the sprite: animation, loop counts etc
+     * @param {number} dT 
+     * @returns 
+     */
     update(dT)
     {
+        if(!this.currentAnimation)
+            return;
         this.currentAnimation.update(dT);
         if(this.loop_count==0)
         {
@@ -472,8 +535,14 @@ class VectorSprite
         }
 
     }
+    /**
+     * Renders the sprite on the given canvas.
+     * @param {CanvasRenderingContext2D} ctx 
+     */
     draw(ctx)
     {
+        if(!this.currentAnimation)
+            return;
         this.currentAnimation.draw(ctx);
     }
     /**
