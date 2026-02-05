@@ -31,6 +31,13 @@ class Actor extends GameObject
         if(shape)
             this.sprite=VectorSprite.fromRawObject(shape);
     }
+    refresh()
+    {
+        this.HP=this.MaxHP;
+        this.abilities.forEach((a)=>{
+            a.refresh();
+        });
+    }
     /**
      * Updates the entity state
      * @param {number} dT - elapsed time

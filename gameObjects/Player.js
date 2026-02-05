@@ -86,7 +86,8 @@ class Player extends Actor
     upgrades={
         rof:1,
         cap:1,
-        bat:1
+        bat:1,
+        hp:1
     };
     /**
      * Creates a new Player with default settings.

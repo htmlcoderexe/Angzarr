@@ -189,7 +189,6 @@ class UIRenderer
             }
             // can't really do anything otherwise, the colours have been drawn at least
         }
-        
     }
     /**
      * Draws a rectangle of a given colour with a fancy outline

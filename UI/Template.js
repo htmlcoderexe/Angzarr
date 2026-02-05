@@ -111,8 +111,13 @@ const UI_TEMPLATES = {
                     },
                     {
                         description:"More charge",
-                        cost: 1,
+                        cost: 25,
                         bonus: "cap"
+                    },
+                    {
+                        description:"More health",
+                        cost: 15,
+                        bonus: "hp"
                     },
                     {
                         description:"Faster charge",
@@ -220,6 +225,12 @@ const UI_TEMPLATES = {
                         case "bat":
                         {
                             player.abilities[0].base_recharge+=0.5;
+                            break;
+                        }
+                        case "hp":
+                        {
+                            player.MaxHP+=1;
+                            player.HP+=1;
                             break;
                         }
                     }

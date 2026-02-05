@@ -90,7 +90,11 @@ class Ability
             }
         }
     }
-
+    refresh()
+    {
+        this.charge=this.maxcharge;
+        this.cdtimer=0;
+    }
     update(dT)
     {
         // add charge

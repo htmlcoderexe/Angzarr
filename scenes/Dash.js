@@ -74,6 +74,7 @@ class GameSceneDash extends GameScene
     {
         super();
         this.player = player ?? new Player();
+        this.player.refresh();
         this.addObject(this.player);
         this.player.x = this.shortSide/2;
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
@@ -211,6 +212,7 @@ class GameSceneDash extends GameScene
         });
         
         this.uimgr.draw(ctx,"game");
+        UIRenderer.drawGauge(ctx, 10,10,120,32,this.player.HP, this.player.MaxHP,"255 30 30",true);
         if(this.paused)
         {
             ctx.save();
@@ -297,7 +299,33 @@ class GameSceneDash extends GameScene
         baddies.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
-                // this kills the player
+                if(enemy.type=="bullet")
+                {
+                    enemy.hit(this.player);
+                }
+                if(enemy.type=="hostile")
+                {
+                    let hpdiff = this.player.HP - enemy.HP;
+                    if(hpdiff>0)
+                    {
+                        enemy.die();
+                        this.player.HP-=enemy.HP;
+                    }
+                    else
+                    {
+                        this.player.HP=0;
+                    }
+                }
+            }
+        });
+        if(this.player.HP<=0)
+        {
+            this.gameOver();
+        }
+    }
+    gameOver()
+    {
+        // this kills the player
                 if(this.hiscore==this.score)
                 {
                     this.uimgr.message("HIGH SCORE","#FF6020",0.25,9999);
@@ -320,8 +348,6 @@ class GameSceneDash extends GameScene
                 this.uimgr.activeLayer="system";
                 this.uimgr.add(retrybt);
                 this.paused=true;
-            }
-        });
     }
     /**
      * Stuff that depends on player's speed
