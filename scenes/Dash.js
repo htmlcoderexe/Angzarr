@@ -116,7 +116,7 @@ class GameSceneDash extends GameScene
         this.hiscoredisplay=hiscoredspl;
         hiscoredspl.clickHandler=()=>{
             window.gameManager.debug=!window.gameManager.debug;
-            console.warn("debug "+window.gameManager.debug?"en":"dis"+abled);
+            console.warn("debug "+(window.gameManager.debug?"en":"dis")+"abled");
         };
         this.uimgr.add(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
@@ -191,7 +191,7 @@ class GameSceneDash extends GameScene
         if(e.key=="z")
         {
             window.gameManager.debug=!window.gameManager.debug;
-            console.warn("debug "+window.gameManager.debug?"en":"dis"+abled);            
+            console.warn("debug "+(window.gameManager.debug?"en":"dis")+"abled");            
         }
     }
     drawBg(ctx)

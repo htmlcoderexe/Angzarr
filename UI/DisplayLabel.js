@@ -29,8 +29,4 @@ class DisplayLabel extends UIElement
         // very convenient yes
         UIRenderer.drawScreenBox(ctx,this.hitbox.x, this.hitbox.y,this.hitbox.width,this.hitbox.height, this.text,this.colour);
     }
-    click()
-    {
-        
-    }
 }
