@@ -78,7 +78,7 @@ class UIRenderer
                         aw = w-1;
                         ah = step-1-spacing;
                     }
-                if(i<(total-filled))
+                if((!horisontal && (i<total-filled)) || (horisontal && (i>filled)))
                 { 
                     // here, a highlight is created by first drawing
                     // the highlight colour at full size
