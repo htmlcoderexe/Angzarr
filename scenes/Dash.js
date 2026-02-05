@@ -119,26 +119,26 @@ class GameSceneDash extends GameScene
         this.uimgr.add(this.stageProgressBox);
 
         let testStage = [
-            {x:50,y:50,offset:0, type:"eye_swarm"},
-            {x:350,y:50,offset:0, type:"eye_swarm"},
-            {x:50,y:50,offset:1000, type:"basic_l1"},
-            {x:350,y:50,offset:1000, type:"static_spinner"},
-            {x:50,y:50,offset:2000, type:"static_spinner"},
-            {x:200,y:150,offset:2000, type:"eye_swarm"},
-            {x:350,y:50,offset:2000, type:"static_spinner"},
-            {x:50,y:50,offset:3000, type:"eye_swarm"},
-            {x:350,y:50,offset:3000, type:"eye_swarm"},
-            {x:50,y:150,offset:4000, type:"static_spinner"},
-            {x:350,y:150,offset:4000, type:"static_spinner"},
-            {x:50,y:50,offset:5000, type:"eye_swarm"},
-            {x:350,y:50,offset:5000, type:"eye_swarm"},
-            {x:50,y:50,offset:6000, type:"static_spinner"},
-            {x:150,y:50,offset:6500, type:"eye_swarm"},
-            {x:250,y:50,offset:7000, type:"eye_swarm"},
-            {x:350,y:50,offset:7500, type:"static_spinner"},
-            {x:50,y:50,offset:8000, type:"eye_swarm"},
-            {x:200,y:50,offset:8000, type:"static_spinner"},
-            {x:350,y:50,offset:8000, type:"eye_swarm"}
+            {x:50,y:0,offset:0, type:"eye_swarm"},
+            {x:350,y:0,offset:0, type:"eye_swarm"},
+            {x:50,y:0,offset:1000, type:"basic_l1"},
+            {x:350,y:0,offset:1000, type:"static_spinner"},
+            {x:50,y:0,offset:2000, type:"static_spinner"},
+            {x:200,y:0,offset:2000, type:"eye_swarm"},
+            {x:350,y:0,offset:2000, type:"static_spinner"},
+            {x:50,y:0,offset:3000, type:"eye_swarm"},
+            {x:350,y:0,offset:3000, type:"basic_l1"},
+            {x:50,y:0,offset:4000, type:"static_spinner"},
+            {x:350,y:0,offset:4000, type:"static_spinner"},
+            {x:50,y:0,offset:5000, type:"eye_swarm"},
+            {x:350,y:0,offset:5000, type:"eye_swarm"},
+            {x:50,y:0,offset:6000, type:"static_spinner"},
+            {x:150,y:0,offset:6500, type:"eye_swarm"},
+            {x:250,y:0,offset:7000, type:"eye_swarm"},
+            {x:350,y:0,offset:7500, type:"static_spinner"},
+            {x:50,y:0,offset:8000, type:"basic_l1"},
+            {x:200,y:0,offset:8000, type:"static_spinner"},
+            {x:350,y:0,offset:8000, type:"basic_l1"}
         ];
         let fullStage= [];
         let offset_tally=testStage[testStage.length-1].offset+1000;
@@ -239,6 +239,7 @@ class GameSceneDash extends GameScene
         });
         // #TODO: less hardcoding
         let bullets = this.gameObjects.filter((e)=>e.type=="bullet" && e.friendly==true);
+        let enemy_bullets = this.gameObjects.filter((e)=>e.type=="bullet" && e.friendly==false);
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
         // yea ask every bullet hey did you hit something
         bullets.forEach((bb)=>{
@@ -283,6 +284,7 @@ class GameSceneDash extends GameScene
         }
         this.hiscoredisplay.text= String(this.hiscore).padStart(6,'0');
         // this.scoredisplay.text = Math.round(this.speedMultiplier*100);
+        baddies.push(...enemy_bullets);
         baddies.forEach((enemy)=>{
             if(enemy.hitbox.testRect(this.player.hitbox))
             {

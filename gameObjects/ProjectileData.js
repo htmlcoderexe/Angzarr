@@ -70,7 +70,7 @@ class ProjectileData
         basic2: {
             sprite: "basic_orb",
             rect: [-10,-10,10,10],
-            speed: 900,
+            speed: 200,
             damage: 6,
             trajectory: "straight"
         }
