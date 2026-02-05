@@ -1,3 +1,16 @@
+const ABILITY_DATA = {
+    do_projectile: function() {
+        
+            // spawn a bullet at player's location
+            let bb = Projectile.fromTemplate(ProjectileData.projectiles.basic2);
+            bb.x=this.x;
+            bb.y=this.y;
+            bb.friendly=false;
+            bb.ai_behaviour = OBJ_BEHAVIOURS.aim;
+            this.scene.addObject(bb);
+    }
+}
+
 /**
  * The ability uses up all available charge.
  */

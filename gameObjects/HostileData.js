@@ -68,6 +68,18 @@ class HostileData
                     }
                 ]
             ]
+        },
+        attacker:{
+            "idle": [
+                [
+                    {
+                        time: 0,
+                        rotation: 0,
+                        fill: "#A04020",
+                        path: "M 0 -15 A 15 15 0 0 1 15 -5 H 35 A 40 40 0 0 0 15 -35 C 12 -35 12 -45 15 -45 C 60 -45 60 45 15 45 C 12 45 12 35 15 35 A 40 40 0 0 0 35 5 H 15 C 15 11 -15 11 -15 5 H -35 A 40 40 0 0 0 -15 35 C -13 35 -12 45 -15 45 C -60 45 -60 -45 -15 -45 C -12 -45 -12 -35 -15 -35 A 40 40 0 0 0 -35 -5 H -15 A 15 15 0 0 1 0 -15"
+                    }
+                ]
+            ]
         }
     };
     static hostiles = {
@@ -86,6 +98,14 @@ class HostileData
             speed: 150,
             movement_reference: "screen",
             behaviour: "home_and_ram"
+        },
+        basic_l1: {
+            sprite: "attacker",
+            rect: [-25,-25,50,50],
+            health: 10,
+            speed: 150,
+            movement_reference: "screen",
+            behaviour: "wander_top_shoot"
         }
     };
 }

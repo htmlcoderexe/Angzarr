@@ -14,6 +14,62 @@ const RELATIVE_MOVEMENT_GRAVITY = 2;
 const STAGE_DEFAULT_SPEED = 500;
 
 const GRAVITY_DEFAULT = 25;
+
+const OBJ_BEHAVIOURS = {
+        constant_speed: {
+            default: function(dT) {
+                this.targetX = this.x;
+                this.targetY = 10000;
+            }
+        },
+        home_and_ram: {
+            default: function(dT) {
+                this.targetX = this.scene.player.x;
+                this.targetY = this.scene.player.y;
+            }
+        },
+        aim: {
+            default: function(dT) {
+                this.targetX = this.scene.player.x;
+                this.targetY = this.scene.player.y;
+            // move the object towards the target
+            // calculate distances in X and Y
+            const xDiff = this.targetX-this.x;
+            const yDiff = this.targetY-this.y;
+            // get the angle pointing towards target
+            const axisAngle = Math.atan2(yDiff,xDiff);
+            this.targetX=Math.cos(axisAngle)*10000;
+            this.targetY=Math.sin(axisAngle)*10000;
+                this.ai_state = "on_the_way";
+            },
+            on_the_way: function(dT) {
+
+            },
+            reached_target: function(dT) {
+
+            }
+        },
+        wander_top_shoot: {
+            default: function(dT) {
+                let mw=this.scene.shortSide;
+                let mh=this.scene.longSide;
+                let x=Math.random()*mw;
+                let y=Math.random()*(mh*0.3);
+                this.targetX = x
+                this.targetY = y;
+                this.ai_state = "on_the_way";
+            },
+            on_the_way: function(dT) {
+                if(this.abilities && this.abilities[0])
+                {
+                    this.abilities[0].use();
+                }
+            },
+            reached_target: function(dT) {
+                this.ai_state="default";
+            }
+        }
+    }
 /**
  * Represents an object in the game that can be drawn and updated.
  */
@@ -69,6 +125,8 @@ class GameObject
     Contains the VectorSprite used to represent the entity on the playing field.
      */
     sprite = null;
+    ai_state ="";
+    ai_behaviour = null;
     /**
      * Creates an instance of the object given type
      * @param {string} type - the type of the object.
@@ -113,6 +171,17 @@ class GameObject
         // don't do anything if object is dead
         if(this.isDead)
             return;
+        if(this.ai_behaviour)
+        {
+                console.log(this.ai_behaviour);
+            let action = this.ai_behaviour[this.ai_state];
+            if(!action)
+                action = this.ai_behaviour.default;
+            if(action)
+            {
+                action.call(this,dT);
+            }
+        }
         if(this.screenMovement==RELATIVE_MOVEMENT_STATIC)
         {
             // move the object towards the target
@@ -137,6 +206,10 @@ class GameObject
                 this.x=this.targetX;
                 this.y=this.targetY;
                 this.movementVector={x:0,y:0};
+                if(this.ai_state=="on_the_way")
+                {
+                    this.ai_state="reached_target";
+                }
             }
         }
         else if(this.screenMovement==RELATIVE_MOVEMENT_STAGE)

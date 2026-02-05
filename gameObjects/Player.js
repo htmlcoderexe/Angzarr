@@ -122,7 +122,7 @@ class Player extends Actor
                 this.shootingCoolDown=0;
             }
             // spawn a bullet at player's location
-            let bb = Projectile.fromTemplate(ProjectileData.projectiles.basic2);
+            let bb = Projectile.fromTemplate(ProjectileData.projectiles.basic1);
             bb.x=this.x;
             bb.y=this.y;
             // make it home towards the point straight ahead of the player

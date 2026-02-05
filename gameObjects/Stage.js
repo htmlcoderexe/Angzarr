@@ -50,6 +50,8 @@ class Stage
             let testmob = Hostile.fromTemplate(HostileData.hostiles[item.type]);
             testmob.x=x;
             testmob.y=y;
+            testmob.targetX=x;
+            testmob.targetY=y;
             let so = new SpawnObject(o,testmob);
             result.push(so);
         });

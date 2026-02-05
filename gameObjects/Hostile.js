@@ -15,8 +15,8 @@ class Hostile extends Actor
     {
         super.update(dT);
         // home in on the player #TODO: dynamic behaviours
-        this.targetX = this.scene.player.x;
-        this.targetY = this.scene.player.y;
+        //this.targetX = this.scene.player.x;
+        //this.targetY = this.scene.player.y;
     }
     static fromTemplate(template)
     {
@@ -26,6 +26,30 @@ class Hostile extends Actor
         result.hitbox = new Rectangle(...template.rect);
         result.originalHitbox = new Rectangle(...template.rect);
         result.speed=template.speed;
+        result.ai_behaviour=OBJ_BEHAVIOURS[template.behaviour];
+        result.abilities = [];
+        let a1 = ABILITY_DATA.do_projectile.bind(result);
+        let aa1 = new Ability(result);
+        aa1.maxcharge=1;
+        aa1.chargeused=1;
+        aa1.base_recharge=0.5;
+        aa1.apply=a1;
+        result.abilities[0]=aa1;
+        let mvmt = RELATIVE_MOVEMENT_STATIC;
+        switch(template.movement_reference)
+        {
+            case "stage":
+            {
+                mvmt=RELATIVE_MOVEMENT_STAGE;
+                break;
+            }
+            case "gravity":
+            {
+                mvmt=RELATIVE_MOVEMENT_GRAVITY;
+                break;
+            }
+        }
+        result.screenMovement=mvmt;
         return result;
     }
 }

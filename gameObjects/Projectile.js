@@ -6,7 +6,7 @@ class Projectile extends GameObject
     /**
     Determines if the projectile harms enemies or the player ('s allies)
      */
-    friendly = false;
+    friendly = true;
     /**
     Damage dealt by this projectile on hitting a target
      */

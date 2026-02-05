@@ -121,7 +121,7 @@ class GameSceneDash extends GameScene
         let testStage = [
             {x:50,y:50,offset:0, type:"eye_swarm"},
             {x:350,y:50,offset:0, type:"eye_swarm"},
-            {x:50,y:50,offset:1000, type:"eye_swarm"},
+            {x:50,y:50,offset:1000, type:"basic_l1"},
             {x:350,y:50,offset:1000, type:"static_spinner"},
             {x:50,y:50,offset:2000, type:"static_spinner"},
             {x:200,y:150,offset:2000, type:"eye_swarm"},
@@ -238,7 +238,7 @@ class GameSceneDash extends GameScene
             
         });
         // #TODO: less hardcoding
-        let bullets = this.gameObjects.filter((e)=>e.type=="bullet");
+        let bullets = this.gameObjects.filter((e)=>e.type=="bullet" && e.friendly==true);
         let beams = this.gameObjects.filter((e)=>e.type=="beam");
         // yea ask every bullet hey did you hit something
         bullets.forEach((bb)=>{
