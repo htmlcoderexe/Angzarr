@@ -111,7 +111,7 @@ const UI_TEMPLATES = {
                     },
                     {
                         description:"More charge",
-                        cost: 25,
+                        cost: 1,
                         bonus: "cap"
                     },
                     {
