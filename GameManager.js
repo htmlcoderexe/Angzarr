@@ -16,6 +16,10 @@ class GameManager
      */
     prevTime = null;
     /**
+    
+     */
+    debug = false;
+    /**
      * Updates the game state and requests next update.
      * @param {number} timestamp - The timestamp given by the frame, used for calculating elapsed time.
      */

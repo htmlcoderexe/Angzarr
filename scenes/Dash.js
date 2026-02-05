@@ -114,6 +114,10 @@ class GameSceneDash extends GameScene
         this.uimgr.add(scoredspl);
         const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
         this.hiscoredisplay=hiscoredspl;
+        hiscoredspl.clickHandler=()=>{
+            window.gameManager.debug=!window.gameManager.debug;
+            console.warn("debug "+window.gameManager.debug?"en":"dis"+abled);
+        };
         this.uimgr.add(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
         this.uimgr.add(this.stageProgressBox);
@@ -183,6 +187,11 @@ class GameSceneDash extends GameScene
         if(e.key==" ")
         {
             this.player.abilities[0].use();
+        }
+        if(e.key=="z")
+        {
+            window.gameManager.debug=!window.gameManager.debug;
+            console.warn("debug "+window.gameManager.debug?"en":"dis"+abled);            
         }
     }
     drawBg(ctx)
