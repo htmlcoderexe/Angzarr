@@ -127,6 +127,7 @@ class GameObject
     sprite = null;
     ai_state ="";
     ai_behaviour = null;
+    layer = "main";
     /**
      * Creates an instance of the object given type
      * @param {string} type - the type of the object.

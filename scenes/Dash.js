@@ -197,17 +197,23 @@ class GameSceneDash extends GameScene
     }
     drawBg(ctx)
     {
-
-    }
-    draw(ctx)
-    {
-        this.drawBg(ctx);
+        
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         // clear the sky 
         // should this not be this "BG" that the empty method above is supposed to "draw"?
         ctx.fillStyle="#000030";
         ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
-        this.gameObjects.forEach((obj)=>{
+       
+        let bgs = this.gameObjects.filter((e)=>e.layer=="bg");
+        bgs.forEach((obj)=>{
+            obj.draw(ctx);
+        });
+    }
+    draw(ctx)
+    {
+        this.drawBg(ctx); 
+        let actives = this.gameObjects.filter((e)=>e.layer!="bg");
+        actives.forEach((obj)=>{
             obj.draw(ctx);
         });
         
@@ -358,7 +364,7 @@ class GameSceneDash extends GameScene
     doSpeedStuff(dT)
     {
         // spawn stars with about 10% base chance
-        if(Math.random()<0.1*this.speedMultiplier)
+        if(Math.random()<0.5*this.speedMultiplier)
         {
             let star = new BgStar();
             // random displacement across the field

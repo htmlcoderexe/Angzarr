@@ -14,16 +14,17 @@ class BgStar extends GameObject
     constructor()
     {
         super();
+        this.layer="bg";
         this.screenMovement=RELATIVE_MOVEMENT_STAGE;
         // randomise speeds, sizes and colours
         this.speed = Math.random()*200;
-        this.size = 8 +(Math.random()*4);
+        this.size = 3;//8 +(Math.random()*4);
         // keep this in a small range for various pastel colours
-        let r = 200 + Math.random()*55;
-        let g = 200 + Math.random()*55;
-        let b = 200 + Math.random()*55;
+        let r = 230 + Math.random()*25;
+        let g = 230 + Math.random()*25;
+        let b = 230 + Math.random()*25;
         // add random transparency to make some look more faded from distance
-        let a = 0.1+ Math.random()*0.5;
+        let a = 1;// 0.9+ Math.random()*0.05;
         this.colour = "rgb("+ r + " "+g+" " +b+ " / " + a +")";
     }
     draw(ctx)
