@@ -15,6 +15,8 @@ class Actor extends GameObject
     Entity's full hitpoints.
      */
     MaxHP = 10;
+    stats = new StatBlock();
+    effects = [];
     /**
     List of abilities usable by the entity.
      */
@@ -30,13 +32,16 @@ class Actor extends GameObject
         // creates the VectorSprite to be rendered
         if(shape)
             this.sprite=VectorSprite.fromRawObject(shape);
+        
     }
     refresh()
     {
+        this.MaxHP=this.stats.calculateStat("HP");
         this.HP=this.MaxHP;
         this.abilities.forEach((a)=>{
             a.refresh();
         });
+        console.log("refreshed", this);
     }
     /**
      * Updates the entity state
@@ -48,6 +53,9 @@ class Actor extends GameObject
         this.abilities.forEach((a)=>{
             a.update(dT);
         });
+        this.MaxHP=this.stats.calculateStat("HP");
+        this.HP+=this.stats.calculateStat("HPRegen")*dT;
+        this.HP=Math.min(this.MaxHP,this.HP);
         if(this.HP<=0)
             this.die();
         super.update(dT);

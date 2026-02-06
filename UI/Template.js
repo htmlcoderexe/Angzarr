@@ -229,8 +229,8 @@ const UI_TEMPLATES = {
                         }
                         case "hp":
                         {
-                            player.MaxHP+=1;
-                            player.HP+=1;
+                            const hpup=new StatEntry("HP",1,1,STAT_EQUIP);
+                            player.stats.add(hpup);
                             break;
                         }
                     }
