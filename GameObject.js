@@ -174,7 +174,6 @@ class GameObject
             return;
         if(this.ai_behaviour)
         {
-                console.log(this.ai_behaviour);
             let action = this.ai_behaviour[this.ai_state];
             if(!action)
                 action = this.ai_behaviour.default;
