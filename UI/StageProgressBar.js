@@ -10,24 +10,47 @@ class StageProgressBar extends UIElement
     draw(ctx)
     {
         super.draw(ctx);
-        ctx.fillStyle="#00A000";
+        ctx.translate(this.hitbox.x,this.hitbox.y);
+        const endsize=12;
+        const startsize=12
+        const end = endsize;
+        const start = this.hitbox.height-startsize;
+        const pos = (1-this.progress)*(start-end);
+        const centre=this.hitbox.width/2;
+        const linewidth=4;
+        ctx.fillStyle="#40A0FF";
+        // line
         ctx.fillRect(
-            this.hitbox.x+6,
-            this.hitbox.y
-            ,12,this.hitbox.height);
-        ctx.fillStyle="#FFA000";
-        ctx.fillRect(
-            this.hitbox.x,
-            this.hitbox.y+((this.hitbox.height-48)*(1-this.progress)+24),
-            24,24);
-        ctx.fillStyle="#FF0000";
-        ctx.fillRect(
-            this.hitbox.x,
-            this.hitbox.y,
-            24,24);
-        ctx.fillRect(
-            this.hitbox.x,
-            this.hitbox.y+this.hitbox.height-24
-            ,24,24);
+            centre-linewidth/2,
+            end,
+            linewidth,
+            this.hitbox.height-endsize-startsize);
+        ctx.beginPath();
+        // finish marker
+        ctx.fillStyle="#FF1010";
+        ctx.arc(centre,
+            end-endsize/2,
+            endsize/2+2,
+            0,Math.PI*2,true
+        );
+        ctx.fill();
+        ctx.beginPath();
+        // start marker
+        ctx.fillStyle="#00AF60";
+        ctx.arc(centre,
+            start-startsize/2,
+            endsize/2,
+            0,Math.PI*2,true
+        );
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle="#FF6000";
+        ctx.moveTo(centre,pos-6);
+        ctx.lineTo(centre+9,pos+18);
+        ctx.lineTo(centre,pos+9);
+        ctx.lineTo(centre-9,pos+18);
+        ctx.closePath();
+        ctx.fill();
+        ctx.resetTransform();
     }
 }

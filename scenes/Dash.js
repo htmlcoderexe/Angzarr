@@ -30,11 +30,6 @@ class GameSceneDash extends GameScene
             80),
             "Continue"
         );
-        unpausebt.clickHandler=()=>{
-            this.uimgr.message("","#000000");
-            this.uimgr.remove(unpausebt);
-            this.paused=false;
-        };
         this.uimgr.add(unpausebt,"system");
         let titlebt = new UIButton(new Rectangle(
             this.shortSide/2-240/2,
@@ -45,6 +40,12 @@ class GameSceneDash extends GameScene
         );
         titlebt.clickHandler=()=>{
             window.gameManager.currentScene = new GameSceneTitle();
+        };
+        unpausebt.clickHandler=()=>{
+            this.uimgr.message("","#000000");
+            this.uimgr.remove(unpausebt);
+            this.uimgr.remove(titlebt);
+            this.paused=false;
         };
         this.uimgr.add(titlebt,"system");
     }
@@ -81,6 +82,44 @@ class GameSceneDash extends GameScene
         this.uimgr.activeLayer="system";
         this.uimgr.add(shopbt);
         this.paused=true;
+    }
+    generateArcadeStage(level)
+    {
+
+        let testStage = [
+            {x:50,y:0,offset:0, type:"eye_swarm"},
+            {x:350,y:0,offset:0, type:"eye_swarm"},
+            {x:50,y:0,offset:1000, type:"basic_l1"},
+            {x:350,y:0,offset:1000, type:"static_spinner"},
+            {x:50,y:0,offset:2000, type:"static_spinner"},
+            {x:200,y:0,offset:2000, type:"eye_swarm"},
+            {x:350,y:0,offset:2000, type:"static_spinner"},
+            {x:50,y:0,offset:3000, type:"eye_swarm"},
+            {x:350,y:0,offset:3000, type:"basic_l1"},
+            {x:50,y:0,offset:4000, type:"static_spinner"},
+            {x:350,y:0,offset:4000, type:"static_spinner"},
+            {x:50,y:0,offset:5000, type:"eye_swarm"},
+            {x:350,y:0,offset:5000, type:"eye_swarm"},
+            {x:50,y:0,offset:6000, type:"static_spinner"},
+            {x:150,y:0,offset:6500, type:"eye_swarm"},
+            {x:250,y:0,offset:7000, type:"eye_swarm"},
+            {x:350,y:0,offset:7500, type:"static_spinner"},
+            {x:50,y:0,offset:8000, type:"basic_l1"},
+            {x:200,y:0,offset:8000, type:"static_spinner"},
+            {x:350,y:0,offset:8000, type:"basic_l1"}
+        ];
+        let fullStage= [];
+        let offset_tally=testStage[testStage.length-1].offset+1000;
+        for(let i=0;i<this.player.level;i++)
+        {
+            for(let j=0;j<testStage.length;j++)
+            {
+                let row = testStage[j];
+                let newRow = {x:row.x,y:row.y,type:row.type,offset:row.offset+i*offset_tally};
+                fullStage.push(newRow);
+            }
+        }
+        return fullStage;
     }
     constructor(mode="arcade",player = null)
     {
@@ -123,53 +162,20 @@ class GameSceneDash extends GameScene
                 this.pause();
             };
         this.uimgr.add(pBt);
-        const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
+        const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-180,10,170,45),"000000");
         this.scoredisplay=scoredspl;
         this.uimgr.add(scoredspl);
-        const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,10,170,45),"000000");
+        const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
         this.hiscoredisplay=hiscoredspl;
-        hiscoredspl.clickHandler=()=>{
+        scoredspl.clickHandler=()=>{
             window.gameManager.debug=!window.gameManager.debug;
             console.warn("debug "+(window.gameManager.debug?"en":"dis")+"abled");
         };
-        this.uimgr.add(hiscoredspl);
-        this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-64,150,32,300));
+        //this.uimgr.add(hiscoredspl);
+        this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-24,150,18,400));
         this.uimgr.add(this.stageProgressBox);
 
-        let testStage = [
-            {x:50,y:0,offset:0, type:"eye_swarm"},
-            {x:350,y:0,offset:0, type:"eye_swarm"},
-            {x:50,y:0,offset:1000, type:"basic_l1"},
-            {x:350,y:0,offset:1000, type:"static_spinner"},
-            {x:50,y:0,offset:2000, type:"static_spinner"},
-            {x:200,y:0,offset:2000, type:"eye_swarm"},
-            {x:350,y:0,offset:2000, type:"static_spinner"},
-            {x:50,y:0,offset:3000, type:"eye_swarm"},
-            {x:350,y:0,offset:3000, type:"basic_l1"},
-            {x:50,y:0,offset:4000, type:"static_spinner"},
-            {x:350,y:0,offset:4000, type:"static_spinner"},
-            {x:50,y:0,offset:5000, type:"eye_swarm"},
-            {x:350,y:0,offset:5000, type:"eye_swarm"},
-            {x:50,y:0,offset:6000, type:"static_spinner"},
-            {x:150,y:0,offset:6500, type:"eye_swarm"},
-            {x:250,y:0,offset:7000, type:"eye_swarm"},
-            {x:350,y:0,offset:7500, type:"static_spinner"},
-            {x:50,y:0,offset:8000, type:"basic_l1"},
-            {x:200,y:0,offset:8000, type:"static_spinner"},
-            {x:350,y:0,offset:8000, type:"basic_l1"}
-        ];
-        let fullStage= [];
-        let offset_tally=testStage[testStage.length-1].offset+1000;
-        for(let i=0;i<this.player.level;i++)
-        {
-            for(let j=0;j<testStage.length;j++)
-            {
-                let row = testStage[j];
-                let newRow = {x:row.x,y:row.y,type:row.type,offset:row.offset+i*offset_tally};
-                fullStage.push(newRow);
-            }
-        }
-        let objs = Stage.load(fullStage);
+        let objs = Stage.load(this.generateArcadeStage(this.player.level));
         this.stage= new Stage(this,objs);
     }
     handlePrimaryPointerMove(e)
