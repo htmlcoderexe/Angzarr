@@ -18,6 +18,7 @@ class GameSceneDash extends GameScene
     hiscore=0;
     stage;
     stageProgressBox;
+    mode;
     pause()
     {
         this.paused=true;
@@ -35,6 +36,17 @@ class GameSceneDash extends GameScene
             this.paused=false;
         };
         this.uimgr.add(unpausebt,"system");
+        let titlebt = new UIButton(new Rectangle(
+            this.shortSide/2-240/2,
+            this.longSide*0.60+100,
+            240,
+            80),
+            "Exit"
+        );
+        titlebt.clickHandler=()=>{
+            window.gameManager.currentScene = new GameSceneTitle();
+        };
+        this.uimgr.add(titlebt,"system");
     }
     levelDone()
     {
@@ -50,7 +62,7 @@ class GameSceneDash extends GameScene
             // pass the player here to keep progress
             this.uimgr.message("","#000000");
             this.player.level++;
-            window.gameManager.currentScene = new GameSceneDash(this.player);
+            window.gameManager.currentScene = new GameSceneDash(this.mode,this.player);
         };
         this.uimgr.activeLayer="system";
         this.uimgr.add(retrybt);
@@ -70,9 +82,10 @@ class GameSceneDash extends GameScene
         this.uimgr.add(shopbt);
         this.paused=true;
     }
-    constructor(player = null)
+    constructor(mode="arcade",player = null)
     {
         super();
+        this.mode=mode;
         this.player = player ?? new Player();
         this.player.refresh();
         this.addObject(this.player);
@@ -349,7 +362,7 @@ class GameSceneDash extends GameScene
                     "Retry"
                 );
                 retrybt.clickHandler=()=>{
-                    window.gameManager.currentScene = new GameSceneDash();
+                    window.gameManager.currentScene = new GameSceneDash(this.mode);
                 };
                 this.uimgr.activeLayer="system";
                 this.uimgr.add(retrybt);

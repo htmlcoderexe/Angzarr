@@ -12,7 +12,7 @@ function Init()
     document.addEventListener("keydown",(e)=>window.gameManager.handleKeyDown(e));
     canvas.addEventListener("keypress",(e)=>window.gameManager.handleKeyPress(e));
     window.gameManager.ctx = canvas.getContext("2d");
-    window.gameManager.currentScene = new GameSceneDash();
+    window.gameManager.currentScene = new GameSceneTitle();
     window.gameManager.currentScene.longSide = canvas.height;
     window.gameManager.currentScene.shortSide = canvas.width;
     document.addEventListener("visibilitychange", () => {
