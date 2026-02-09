@@ -53,6 +53,15 @@ class Actor extends GameObject
         this.abilities.forEach((a)=>{
             a.update(dT);
         });
+        this.effects.forEach((e)=>{
+            e.update(dT);
+            if(e.expired)
+            {
+                e.remove(this);
+                
+            }
+        });
+        this.effects=this.effects.filter((e)=>e.expired);
         this.MaxHP=this.stats.calculateStat("HP");
         this.HP+=this.stats.calculateStat("HPRegen")*dT;
         this.HP=Math.min(this.MaxHP,this.HP);
@@ -76,5 +85,14 @@ class Actor extends GameObject
         }
         // apply a red flash effect
         this.sprite.applyFade("255 0 0",0.5);
+    }
+    applyEffect(effect,ttl=-1)
+    {
+        this.effects.push(effect);
+        if(ttl!=-1)
+        {
+            effect.ttl=ttl;
+        }
+        effect.apply(this);
     }
 }
