@@ -3,16 +3,21 @@ class Effect
     ttl=0;
     expired = false;
     stateffects=[];
+    constructor(boosts,ttl)
+    {
+        this.stateffects.push(...boosts);
+        this.ttl=ttl;
+    }
     apply(target)
     {
         this.stateffects.forEach((e)=>{
-            target.statblock.add(e);
+            target.stats.add(e);
         });
     }
     remove(target)
     {
         this.stateffects.forEach((e)=>{
-            target.statblock.remove(e);
+            target.stats.remove(e);
         });
     }
     update(dT)

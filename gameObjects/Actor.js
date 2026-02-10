@@ -95,4 +95,10 @@ class Actor extends GameObject
         }
         effect.apply(this);
     }
+    applyBoost(stat, flat, multiplier, ttl)
+    {
+        let boost = new StatEntry(stat,flat,multiplier,STAT_EFFECT);
+        let effect = new Effect([boost],ttl);
+        this.applyEffect(effect);
+    }
 }
