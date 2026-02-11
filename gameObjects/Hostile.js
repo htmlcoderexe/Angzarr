@@ -22,6 +22,9 @@ class Hostile extends Actor
     static doDrops(table)
     {
         const result = [];
+        table.forEach((entry)=>{
+            
+        });
     }
     static fromTemplate(template)
     {
