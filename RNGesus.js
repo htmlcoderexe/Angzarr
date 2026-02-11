@@ -1,0 +1,7 @@
+class RNGesus
+{
+    die(sides)
+    {
+        
+    }
+}

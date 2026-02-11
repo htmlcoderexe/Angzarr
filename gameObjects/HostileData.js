@@ -82,6 +82,18 @@ class HostileData
             ]
         }
     };
+    static dropTables = {
+        arcade: 
+            [
+                {
+                    count: 1,
+                    roll: "1d4",
+                    offset: 0,
+                    pickup: "basic_coin"
+                }
+            ]
+        
+    }
     static hostiles = {
         static_spinner: {
             sprite: "spinner",

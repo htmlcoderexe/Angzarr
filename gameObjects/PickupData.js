@@ -94,4 +94,14 @@ class PickupData
             ]
         }
     };
+    static pickups = {
+        basic_coin:
+        {
+            sprite: "coin",
+            item: null,
+            coins: 1,
+            effect: null,
+            gravity: true
+        }
+    }
 }

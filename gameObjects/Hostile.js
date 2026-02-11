@@ -3,6 +3,7 @@
  */
 class Hostile extends Actor
 {
+    dropTable = "arcade";
     constructor(gfx=null)
     {
         super(gfx, "hostile"); 
@@ -17,6 +18,10 @@ class Hostile extends Actor
         // home in on the player #TODO: dynamic behaviours
         //this.targetX = this.scene.player.x;
         //this.targetY = this.scene.player.y;
+    }
+    static doDrops(table)
+    {
+        const result = [];
     }
     static fromTemplate(template)
     {
