@@ -12,15 +12,21 @@ class SpawnObject extends StageObject
         // offset the object exactly
         this.spawn.y+=diff;
         this.spawn.onDeath=()=>{
-            
-                for(let i=0;i<Math.random()*4;i++)
+                let dtable = HostileData.dropTables[this.spawn.dropTable];
+                if(dtable)
                 {
-                    let p = new Pickup();
-                    p.x=this.spawn.x;
-                    p.y=this.spawn.y;
-                    p.movementVector.y=-5;
-                    p.movementVector.x=-2+Math.random()*4;
-                    scene.addObject(p);
+                    let drops = Hostile.doDrops(dtable);
+                    for(let i=0;i<drops.length;i++)
+                    {
+                        let ptpl = PickupData.pickups[drops[i]];
+                        if(ptpl)
+                        {
+                            let p = Pickup.fromTemplate(ptpl)
+                            p.x=this.spawn.x;
+                            p.y=this.spawn.y;
+                            scene.addObject(p);
+                        }
+                    }
                 }
         };
         scene.addObject(this.spawn);

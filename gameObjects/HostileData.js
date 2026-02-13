@@ -88,7 +88,6 @@ class HostileData
                 {
                     count: 1,
                     roll: "1d4",
-                    offset: 0,
                     pickup: "basic_coin"
                 }
             ]

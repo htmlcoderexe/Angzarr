@@ -23,8 +23,19 @@ class Hostile extends Actor
     {
         const result = [];
         table.forEach((entry)=>{
-            
+            for(let i=0;i<entry.count;i++)
+            {
+                let amount = RNGesus.roll(entry.roll);
+                if(amount>0)
+                {
+                    for(let j=0;j<amount;j++)
+                    {
+                        result.push(entry.pickup);
+                    }
+                }
+            }
         });
+        return result;
     }
     static fromTemplate(template)
     {
