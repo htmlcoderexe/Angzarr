@@ -593,6 +593,10 @@ class VectorSprite
             this.currentAnimation.current_time=time;
         }
     }
+    randomPhase()
+    {
+        this.setTime(Math.random()*this.getLength());
+    }
     getTime()
     {
         if(this.currentAnimation)

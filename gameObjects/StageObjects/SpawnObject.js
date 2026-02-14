@@ -24,6 +24,7 @@ class SpawnObject extends StageObject
                             let p = Pickup.fromTemplate(ptpl)
                             p.x=this.spawn.x;
                             p.y=this.spawn.y;
+                            p.sprite.randomPhase();
                             scene.addObject(p);
                         }
                     }

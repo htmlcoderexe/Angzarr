@@ -89,6 +89,11 @@ class HostileData
                     count: 1,
                     roll: "1d4",
                     pickup: "basic_coin"
+                },
+                {
+                    count: 2,
+                    roll: "1d4-2",
+                    pickup: "basic_essence"
                 }
             ]
         

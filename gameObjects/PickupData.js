@@ -138,6 +138,14 @@ class PickupData
             coins: 1,
             effect: null,
             gravity: true
+        },
+        basic_essence:
+        {
+            sprite: "essence",
+            item: null,
+            coins: 1,
+            effect: null,
+            gravity: true
         }
     }
 }
