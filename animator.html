@@ -67,13 +67,22 @@ function draw(ts)
         window.ts = ts;
     }
     let dT= (ts-window.ts)/1000;
-    let a = window.vecSprite.animations[window.sel_a.value];
-    a.update(dT);
+    //let a = window.vecSprite.animations[window.sel_a.value];
+    //a.update(dT);
+    if(!window.paused)
+        window.vecSprite.update(dT);
     window.ctx.resetTransform();
     window.ctx.clearRect(0,0,400,400);
     window.ctx.translate(200,200);
-    a.draw(window.ctx);
+    window.vecSprite.draw(window.ctx);
     window.ts = ts;
+    
+    window.scrubber.max=window.vecSprite.getLength();
+    window.scrubber.value=window.vecSprite.getTime();
+    let rnd = window.vecSprite.getTime()*10;
+    rnd = Math.round(rnd);
+    rnd/=10;
+    window.scrubtime.innerText = rnd + "/" + window.vecSprite.getLength();
     requestAnimationFrame(draw);
 }
 
@@ -115,47 +124,69 @@ function reloadGUI()
 }
 function loadGUI()
 {
-window.sel_a.addEventListener("change",(e)=>{
-    window.sel_p.innerHTML="";
-    for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
-    {
-        let opt = document.createElement("option");
-        opt.append(i);
-        window.sel_p.appendChild(opt);
-    }
-    window.sel_p.selectedIndex=0;
-    window.sel_p.dispatchEvent(new Event("change"));
-});
-window.sel_p.addEventListener("change",(e)=>{
-    window.sel_f.innerHTML="";
-    for(let i=0;i<window.sprite[window.sel_a.value][window.sel_p.value].length;i++)
-    {
-        let opt = document.createElement("option");
-        opt.append(i);
-        window.sel_f.appendChild(opt);
-    }
-    window.sel_f.selectedIndex=0;
-    window.sel_f.dispatchEvent(new Event("change"));
-});
-window.sel_f.addEventListener("change",(e)=>{
-    for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
-    {
-        let pframe = window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value];
-        window.pathbox.value = pframe.path;
-        window.pathtime.value = pframe.time;
-    }
-});
-window.pathbox.addEventListener("input",(e)=>{
-    window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].path=window.pathbox.value;
-    toVecAnimation();
-});
+    window.paused=false;
+    window.sel_a.addEventListener("change",(e)=>{
+        window.sel_p.innerHTML="";
+        for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
+        {
+            let opt = document.createElement("option");
+            opt.append(i);
+            window.sel_p.appendChild(opt);
+        }
+        window.sel_p.selectedIndex=0;
+        window.sel_p.dispatchEvent(new Event("change"));
+    });
+    window.sel_p.addEventListener("change",(e)=>{
+        window.sel_f.innerHTML="";
+        for(let i=0;i<window.sprite[window.sel_a.value][window.sel_p.value].length;i++)
+        {
+            let opt = document.createElement("option");
+            opt.append(i);
+            window.sel_f.appendChild(opt);
+        }
+        window.sel_f.selectedIndex=0;
+        window.sel_f.dispatchEvent(new Event("change"));
+    });
+    window.sel_f.addEventListener("change",(e)=>{
+        for(let i=0;i<window.sprite[window.sel_a.value].length;i++)
+        {
+            let pframe = window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value];
+            window.pathbox.value = pframe.path;
+            window.pathtime.value = pframe.time;
+            window.pathrot.value = pframe.rotation;
+            window.pathfill.value = pframe.fill;
+            window.vecSprite.setTime(pframe.time);
+        }
+    });
+    window.scrubber.addEventListener("input",(e)=>{
+        window.vecSprite.setTime(window.scrubber.value);
+    });
+    window.pathbox.addEventListener("input",(e)=>{
+        window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].path=window.pathbox.value;
+        toVecAnimation();
+    });
+    window.pathrot.addEventListener("input",(e)=>{
+        window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].rotation=window.pathrot.value;
+        toVecAnimation();
+    });
+    window.pathfill.addEventListener("input",(e)=>{
+        window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].fill=window.pathfill.value;
+        toVecAnimation();
+    });
+    window.pathtime.addEventListener("input",(e)=>{
+        window.sprite[window.sel_a.value][window.sel_p.value][window.sel_f.value].time=window.pathtime.value;
+        toVecAnimation();
+    });
 }
 
 
 
 </script>
-<canvas width="400" height="400" id="view"></canvas>
-<input type="number" id="frametime" step="0.1" /><br /><textarea class="bigtext" id="currentpath" ></textarea>
+<canvas width="400" height="400" id="view"></canvas><br />
+<input type="range" min="0" max="1" step="0.1" id="scrubber" width="300" /><button onclick="window.paused=!window.paused">*</button><span id="scrubtime"></span><br />
+Time: <input type="number" id="frametime" step="0.1" /> 
+Rotation: <input type="number" id="framerot" step="1" />
+Fill: <input type="color" id="framefill" /><br /><textarea class="bigtext" id="currentpath" ></textarea>
 <div>
     <input id="newAnimName" />
     <button onclick="addAnimation()";>New animation</button>
@@ -179,10 +210,14 @@ window.sel_p = document.getElementById("paths");
 window.sel_f = document.getElementById("frames");
 window.pathbox = document.getElementById("currentpath");
 window.pathtime = document.getElementById("frametime");
+window.pathrot = document.getElementById("framerot");
+window.pathfill = document.getElementById("framefill");
+window.scrubber = document.getElementById("scrubber");
+
 //console.log(window.stored);
+toVecAnimation();
 loadGUI();
 reloadGUI();
-toVecAnimation();
 console.log(window.vecSprite);
 requestAnimationFrame(draw);
 /*

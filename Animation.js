@@ -585,6 +585,30 @@ class VectorSprite
             this.currentAnimation.applyFade(colour,time,a);
         }
     }
+    setTime(time)
+    {
+        if(this.currentAnimation)
+        {
+            time = Math.max(0,Math.min(time,this.currentAnimation.length));
+            this.currentAnimation.current_time=time;
+        }
+    }
+    getTime()
+    {
+        if(this.currentAnimation)
+        {
+            return this.currentAnimation.current_time;
+        }
+        return 0;
+    }
+    getLength()
+    {
+        if(this.currentAnimation)
+        {
+            return this.currentAnimation.length;
+        }
+        return 1;
+    }
     /**
      * Updates the state of the sprite: animation, loop counts etc
      * @param {number} dT 
