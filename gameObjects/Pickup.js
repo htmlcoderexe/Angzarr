@@ -30,9 +30,9 @@ class Pickup extends GameObject
             result.movementVector.y=-5;
             result.movementVector.x=-2+Math.random()*4;
         }
-        result.coins=template.coins;
-        // result.item = 
-        // result.effect = 
+        result.coins=template.coins??0;
+        result.item = template.item; 
+        result.effect = template.effect;
         return result;
     }
 }

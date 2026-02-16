@@ -302,7 +302,12 @@ class GameSceneDash extends GameScene
             if(enemy.hitbox.testRect(this.player.hitbox))
             {
                 this.player.currentScore++;
-                this.player.coins++;
+                this.player.coins+=enemy.coins;
+                if(enemy.item)
+                {
+                    let dropItem = InventoryItem.fromTemplate(ItemData.items[enemy.item]);
+                    console.log(dropItem);
+                }
                 enemy.die();
             }
         });
