@@ -4,10 +4,6 @@
 class Actor extends GameObject
 {
     /**
-    Contains the data used to draw the object, such as curves and animations.
-     */
-    basicshape ={};
-    /**
     Entity's current hitpoints.
      */
     HP = 10;
@@ -30,8 +26,7 @@ class Actor extends GameObject
     {
         super(type);
         // creates the VectorSprite to be rendered
-        if(shape)
-            this.sprite=VectorSprite.fromRawObject(shape);
+        this.sprite=shape;
         
     }
     refresh()

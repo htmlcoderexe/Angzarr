@@ -39,7 +39,7 @@ class Hostile extends Actor
     }
     static fromTemplate(template)
     {
-        let result = new Hostile(HostileData.graphics[template.sprite]);
+        let result = new Hostile(GraphicsData.get(template.sprite));
         result.MaxHP=template.health;
         result.HP=template.health;
         result.hitbox = new Rectangle(...template.rect);

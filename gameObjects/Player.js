@@ -3,75 +3,7 @@
  */
 class Player extends Actor
 {
-    /**
-    Stores the graphics used for the player's ship.
-    This is an object with string properties, each property name corresponds
-    to an animation name, the "default" one is called "idle".
-    Each animation contains an array of parts.
-    Each part contains an array of keyframes.
-    Each keyframe is an object with properties "time", "fill" and "path".
-    "fill" is a hexadecimal colour.
-    "path" is a path in the SVG path format.
-     */
-    // #TODO: store this elsewhere especially if adding customisation
-    static anim ={
-        "idle": [
-            [
-                {
-                    "time": 0,
-                    "fill": "#FFAF00",
-                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
-                },
-                {
-                    "time": 0.2,
-                    "fill": "#FFAF00",
-                    "path": "m 0,80 c 6,-0 14,-35 14,-40 h -28 c 0,5 8,40 14,40 z"
-                },
-                {
-                    "time": 0.4,
-                    "fill": "#FFAF00",
-                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
-                },
-                {
-                    "time": 0.6,
-                    "fill": "#FFAF00",
-                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
-                },
-                {
-                    "time": 0.8,
-                    "fill": "#FFAF00",
-                    "path": "m 0,80 c 6,-0 14,-25 14,-40 h -28 c 0,15 8,40 14,40 z"
-                }
-            ],
-            [
-                {
-                    "time": 0,
-                    "fill": "#FF6000",
-                    "path": "m -0 -48 c -19.2 16.8 -12 36 -24 52.8 c -33.6 36 -28.8 24 -16.8 84 c -4.8 -24 9.6 -40.8 21.6 -40.8 h 38.4 c 12 0 26.4 16.8 21.6 40.8 c 12 -60 16.8 -48 -16.8 -84 c -12 -16.8 -4.8 -36 -24 -52.8"
-                },
-                {
-                    "time": 0.2,
-                    "fill": "#FF6000",
-                    "path": "m -0 -48 c -19.2 16.8 -12 36 -24 52.8 c -33.6 36 -28.8 24 -16.8 84 c -4.8 -24 9.6 -40.8 21.6 -40.8 h 38.4 c 12 0 26.4 16.8 21.6 40.8 c 12 -60 16.8 -48 -16.8 -84 c -12 -16.8 -4.8 -36 -24 -52.8"
-                },
-                {
-                    "time": 0.4,
-                    "fill": "#FF6000",
-                    "path": "m -0 -48 c -19.2 16.8 -12 36 -24 52.8 c -33.6 36 -28.8 24 -16.8 84 c -4.8 -24 9.6 -40.8 21.6 -40.8 h 38.4 c 12 0 26.4 16.8 21.6 40.8 c 12 -60 16.8 -48 -16.8 -84 c -12 -16.8 -4.8 -36 -24 -52.8"
-                },
-                {
-                    "time": 0.6,
-                    "fill": "#FF6000",
-                    "path": "m -0 -48 c -19.2 16.8 -12 36 -24 52.8 c -33.6 36 -28.8 24 -16.8 84 c -4.8 -24 9.6 -40.8 21.6 -40.8 h 38.4 c 12 0 26.4 16.8 21.6 40.8 c 12 -60 16.8 -48 -16.8 -84 c -12 -16.8 -4.8 -36 -24 -52.8"
-                },
-                {
-                    "time": 0.8,
-                    "fill": "#FF6000",
-                    "path": "m -0 -48 c -19.2 16.8 -12 36 -24 52.8 c -33.6 36 -28.8 24 -16.8 84 c -4.8 -24 9.6 -40.8 21.6 -40.8 h 38.4 c 12 0 26.4 16.8 21.6 40.8 c 12 -60 16.8 -48 -16.8 -84 c -12 -16.8 -4.8 -36 -24 -52.8"
-                }
-            ]
-        ]
-    };
+    
     /**
     main "gun" fire rate; #TODO: better structure
      */
@@ -94,7 +26,7 @@ class Player extends Actor
      */
     constructor()
     {
-        super(Player.anim, "player");
+        super(GraphicsData.get("ship_scout"), "player");
         // this is the speed in pixels/sec for following the controls.
         this.speed=1200.00;
         // define hitboxes

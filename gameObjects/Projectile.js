@@ -17,7 +17,7 @@ class Projectile extends GameObject
         // default oblong projectile
         this.hitbox = new Rectangle(-5,-5,10,30);
         this.originalHitbox = new Rectangle(-5,-5,10,30);
-        this.sprite=VectorSprite.fromRawObject(shape);
+        this.sprite=shape;
     }
     /**
      * Defines what happens when this collides with an entity
@@ -42,7 +42,7 @@ class Projectile extends GameObject
     }
     static fromTemplate(template)
     {
-        let result = new Projectile(ProjectileData.graphics[template.sprite]);
+        let result = new Projectile(GraphicsData.get(template.sprite));
         result.hitbox = new Rectangle(...template.rect);
         result.speed = template.speed;
         result.damage = template.damage;

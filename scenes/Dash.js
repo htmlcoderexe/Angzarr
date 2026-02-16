@@ -392,35 +392,5 @@ class GameSceneDash extends GameScene
             star.y=1;
             this.addObject(star);
         }
-        // spawn baddies with about 1% base chance
-        if(false && Math.random()<0.01*this.speedMultiplier)
-        {
-            let enemy = new Hostile();
-            // random spread across
-            enemy.x=Math.random()*window.gameManager.ctx.canvas.width;
-            // somewhere near the top
-            enemy.y=50+Math.random()*50;
-            // go right for the player
-            // not really needed as they already do that in their updates?
-            // not all of them?
-            // this code is shit but it works for now
-            enemy.targetX=this.player.x;
-            enemy.targetY=this.player.y;
-            this.addObject(enemy);
-            // toasted baddies drop points?
-            enemy.onDeath=()=>{
-                
-                for(let i=0;i<Math.random()*4;i++)
-                {
-                    let p = new Pickup();
-                    p.x=enemy.x;
-                    p.y=enemy.y;
-                    p.movementVector.y=-5;
-                    p.movementVector.x=-2+Math.random()*4;
-                    this.addObject(p);
-                }
-                
-            };
-        }
     }
 }

@@ -1,0 +1,6 @@
+class ItemData
+{
+    static graphics = {
+        
+    }
+}

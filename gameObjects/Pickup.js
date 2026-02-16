@@ -11,19 +11,12 @@ class Pickup extends GameObject
         super("pickup");
         this.hitbox = new Rectangle(-50,-50,100,100);
         this.originalHitbox = new Rectangle(-50,-50,100,100);
-        if(sprite)
-        {
-             this.sprite=VectorSprite.fromRawObject(sprite);
-        }
-        else
-        {
-             this.sprite=VectorSprite.fromRawObject(PickupData.graphics.coin);
-        }
+        this.sprite=sprite ?? GraphicsData.get("pickup_coin");
        
     }
     static fromTemplate(template)
     {
-        const sprite = PickupData.graphics[template.sprite];
+        const sprite = GraphicsData.get(template.sprite);
         const result = new Pickup(sprite);
         // still
         if(!template.gravity)
