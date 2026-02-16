@@ -169,7 +169,7 @@ class AnimatedPath
         {
             return AnimatedPath.tweenHex(a,b,t);
         }
-        if(a.type)
+        if(a.type || b.type)
         {
             let graddef = AnimatedPath.tweenGradient(a,b,t);
             switch(graddef.type)
@@ -201,17 +201,51 @@ class AnimatedPath
         let finalcoords=[];
         let finalcolours=[];
         let finalstops = [];
-        a.coords.forEach((val,i)=>{
-            finalcoords.push(a.coords[i]+(b.coords[i]-a.coords[i])*t);
-        });
-        a.colours.forEach((val,i)=>{
-            finalcolours.push(AnimatedPath.tweenHex(a.colours[i],b.colours[i],t));
-        });
-        a.stops.forEach((val,i)=>{
-            finalstops.push(a.stops[i]+(b.stops[i]-a.stops[i])*t);
-        });
+        let finaltype = a.type;
+        // if both are gradients
+        if(a.coords && b.coords)
+        {
+            if(a.type!=b.type)
+            {
+                console.warn("Gradient type mismatch in neighbouring frames: <"+a.type+"> vs <"+b.type+">");
+            }
+            a.coords.forEach((val,i)=>{
+                finalcoords.push(a.coords[i]+(b.coords[i]-a.coords[i])*t);
+            });
+            a.colours.forEach((val,i)=>{
+                finalcolours.push(AnimatedPath.tweenHex(a.colours[i],b.colours[i],t));
+            });
+            a.stops.forEach((val,i)=>{
+                finalstops.push(a.stops[i]+(b.stops[i]-a.stops[i])*t);
+            });            
+        }
+        // do coercion
+        else
+        {
+            let coords = a.coords ?? b.coords;
+            let stops = a.stops ?? b.stops;
+            let colours = a.colours ?? b.colours;
+            let backcolours = [];
+            let flatcolour = typeof a == 'string' ? a : b;
+            colours.forEach((val)=>{
+                backcolours.push(flatcolour);
+            });
+            let acolours = a.colours? colours:backcolours;
+            let bcolours = b.colours? colours:backcolours;
+            finaltype= a.type ?? b.type;
+            coords.forEach((val)=>{
+                finalcoords.push(val);
+            });
+            stops.forEach((val)=>{
+                finalstops.push(val);
+            });
+            colours.forEach((val,i)=>{
+                finalcolours.push(AnimatedPath.tweenHex(acolours[i],bcolours[i],t));
+            });
+        }
+
         return {
-            type: a.type,
+            type: finaltype,
             coords:finalcoords,
             stops:finalstops,
             colours:finalcolours
@@ -226,17 +260,21 @@ class AnimatedPath
      */
     static tweenHex(a,b,t)
     {
-        if(a[0]!="#")
+        if(a[0]!="#" || b[0]!="#")
         {
             return "#000000";
         }
-        let aa = 255;
-        let ba = 255;
-        if(a.length>=9)
+        if(a.length<9)
         {
-            aa=parseInt(a.substring(7,9),16);
-            ba=parseInt(b.substring(7,9),16);
+            a+="FF";
         }
+        if(b.length<9)
+        {
+            b+="FF";
+        }
+        let aa=parseInt(a.substring(7,9),16);
+        let ba=parseInt(b.substring(7,9),16);
+        
         let ar = parseInt(a.substring(1,3),16);
         let ag = parseInt(a.substring(3,5),16);
         let ab = parseInt(a.substring(5,7),16);
