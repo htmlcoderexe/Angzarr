@@ -306,7 +306,9 @@ class GameSceneDash extends GameScene
                 if(enemy.item)
                 {
                     let dropItem = InventoryItem.fromTemplate(ItemData.items[enemy.item]);
+                    this.player.inventory.add(dropItem);
                     console.log(dropItem);
+                    console.log(this.player.inventory);
                 }
                 enemy.die();
             }

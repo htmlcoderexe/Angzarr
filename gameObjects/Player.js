@@ -21,6 +21,7 @@ class Player extends Actor
         bat:1,
         hp:1
     };
+    inventory=null;
     /**
      * Creates a new Player with default settings.
      */
@@ -32,6 +33,7 @@ class Player extends Actor
         // define hitboxes
         this.hitbox = new Rectangle(-10,-10,20,20);
         this.originalHitbox = new Rectangle(-10,-10,20,20);
+        this.inventory= new Inventory(32);
     }
     update(dT)
     {
