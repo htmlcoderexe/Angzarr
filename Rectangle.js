@@ -70,4 +70,13 @@ class Rectangle
             && this.y <= rect.y + rect.height
             && this.y + this.height > rect.y;
     }
+    /**
+     * Lets you do something like "...rect" to any function taking x,y,w,h as params
+     */
+    *[Symbol.iterator]() {
+        yield this.x;
+        yield this.y;
+        yield this.width;
+        yield this.height;
+    }
 }

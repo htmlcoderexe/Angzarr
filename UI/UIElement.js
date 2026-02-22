@@ -18,7 +18,7 @@ class UIElement
     clickHandler = ()=>{};
     constructor(rekt)
     {
-        this.hitbox= new Rectangle(rekt.x,rekt.y,rekt.width,rekt.height);
+        this.hitbox= new Rectangle(...rekt);
     }
     /**
      * Updates the element's state
