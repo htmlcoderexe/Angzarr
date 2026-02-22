@@ -1,10 +1,10 @@
 class GraphicsData
 {
-    static get(name)
+    static get(name,palette)
     {
         if(GraphicsData.graphics[name])
         {
-            return VectorSprite.fromRawObject(GraphicsData.graphics[name]);
+            return VectorSprite.fromRawObject(GraphicsData.graphics[name],palette);
         }
         // #TODO: default graphic if not found!
     }

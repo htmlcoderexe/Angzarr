@@ -332,7 +332,6 @@ class AnimatedPath
             if(typeof fill =="number")
             {
                 let fillvalue = palette[fill] ?? "#000000";
-                console.log("Fill #"+fill + " is <"+fillvalue+">");
                 fill = fillvalue;
             }
             result.frames.push({
@@ -697,11 +696,11 @@ class VectorSprite
      * @param {array} obj 
      * @returns 
      */
-    static fromRawObject(obj)
+    static fromRawObject(obj,palette)
     {
         let anims = [];
-        // set the palette
-        let palette = obj['__palette'] ?? VectorSprite.DEFAULT_PALETTE;
+        // set the palette: if one is given, use that, else use the built-in, else use default grayscale
+        palette = palette ?? obj['__palette'] ?? VectorSprite.DEFAULT_PALETTE;
         // get every animation by name
         for(const [key, value] of Object.entries(obj)) 
         {

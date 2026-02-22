@@ -88,7 +88,7 @@ class GameSceneDash extends GameScene
 
         let testStage = [
             {x:50,y:0,offset:0, type:"eye_swarm"},
-            {x:350,y:0,offset:0, type:"eye_swarm"},
+            {x:350,y:0,offset:0, type:"eye_swarm2"},
             {x:50,y:0,offset:1000, type:"basic_l1"},
             {x:350,y:0,offset:1000, type:"static_spinner"},
             {x:50,y:0,offset:2000, type:"static_spinner"},

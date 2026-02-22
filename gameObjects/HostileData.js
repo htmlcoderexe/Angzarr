@@ -33,6 +33,15 @@ class HostileData
             movement_reference: "screen",
             behaviour: "home_and_ram"
         },
+        eye_swarm2: {
+            sprite: "mob_blinking_eye",
+            palette: ["#104010","#FF0000","#3F0000"],
+            rect: [-25,-25,50,50],
+            health: 10,
+            speed: 150,
+            movement_reference: "screen",
+            behaviour: "home_and_ram"
+        },
         basic_l1: {
             sprite: "mob_attacker",
             rect: [-25,-25,50,50],
