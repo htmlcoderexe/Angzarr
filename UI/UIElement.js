@@ -13,6 +13,7 @@ class UIElement
     originalHitbox = new Rectangle(0,0,1,1);
     children = [];
     parent = null;
+    uimgr = null;
     layer = "system";
     id="";
     clickHandler = ()=>{};
@@ -58,8 +59,9 @@ class UIElement
     {
         this.children.push(control);
         control.parent=this;
-        console.log("added ");
-        console.log(control);
+        control.uimgr = this.uimgr;
+        //console.log("added ");
+        //console.log(control);
     }
     find(id)
     {
@@ -127,7 +129,8 @@ class UIElement
     click(x,y)
     {
         // just call the clickhandler for now
-        this.clickHandler(x,y);
+        console.log(this);
+        return this.clickHandler(x,y);
     }
 
 

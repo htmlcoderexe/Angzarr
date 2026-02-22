@@ -11,7 +11,6 @@ class GameSceneDash extends GameScene
      */
     normalSpeedSpot = 0.33;
     movingship = false;
-    uimgr;
     scoredisplay;
     hiscoredisplay;
     score=0;
@@ -52,9 +51,9 @@ class GameSceneDash extends GameScene
         if(this.player.inventory)
         {
            
-            let ii = new InventoryDisplay(this.player.inventory,40,150,5);
-            this.uimgr.add(ii,"system");
-            
+            //let ii = new InventoryDisplay(40,150,this.player.inventory,4);
+            //this.uimgr.add(ii,"system");
+            UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,this.longSide*0.30],this.player.inventory);
         }
     }
     levelDone()
@@ -140,7 +139,6 @@ class GameSceneDash extends GameScene
         this.player.y = this.longSide - (this.longSide*this.normalSpeedSpot);
         this.player.targetX=this.player.x;
         this.player.targetY=this.player.y;
-        this.uimgr=new GUIManager(this.shortSide,this.longSide);
         this.uimgr.activeLayer="game";
         this.hiscore=localStorage.getItem("bestScore");
         let lazor;
@@ -186,37 +184,25 @@ class GameSceneDash extends GameScene
         let objs = Stage.load(this.generateArcadeStage(this.player.level));
         this.stage= new Stage(this,objs);
     }
-    handlePrimaryPointerMove(e)
+    handlePrimaryPointerMove(x,y)
     {
         // aim the plaier towards new pointer location
-        this.player.targetX=e.offsetX;
-        this.player.targetY = e.offsetY;
+        this.player.targetX=x;
+        this.player.targetY = y;
         // make stuff go slower when pulling back and faster when pushing forward
-        this.speedMultiplier = (this.longSide-e.offsetY)/this.longSide/this.normalSpeedSpot;
+        this.speedMultiplier = (this.longSide-y)/this.longSide/this.normalSpeedSpot;
         this.speedMultiplier=Math.min(1.5,(Math.max(0.7,this.speedMultiplier)));
         //console.log(e);
     }
-    handlePrimaryPointerClick(e)
-    {
-        let handled = this.uimgr.handleClick(e);
-    }
-    handleSecondaryPointerClick(e)
-    {
-        let handled = this.uimgr.handleClick(e);
-    }
-    handleSecondaryPointerUp(e)
-    {
-        let handled = this.uimgr.handleClick(e);
-    }
-    handleKeyDown(e)
+    keyDown(k)
     {
         
         console.log("Dash keydown");
-        if(e.key==" ")
+        if(k==" ")
         {
             this.player.abilities[0].use();
         }
-        if(e.key=="z")
+        if(k=="z")
         {
             window.gameManager.debug=!window.gameManager.debug;
             console.warn("debug "+(window.gameManager.debug?"en":"dis")+"abled");            

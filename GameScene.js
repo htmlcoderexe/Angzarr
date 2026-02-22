@@ -20,6 +20,7 @@ class GameScene
      */
     paused = false;
     visible = true;
+    uimgr = null;
     /**
     * Contains the scene's objects.
     */
@@ -45,6 +46,7 @@ class GameScene
         // sideways scrolling?
         this.shortSide= window.innerWidth;
         this.longSide=window.innerHeight;
+        this.uimgr=new GUIManager(this.shortSide,this.longSide);
     }
     /**
      * Updates the scene.
@@ -66,7 +68,7 @@ class GameScene
      * Handles primary pointer movement.
      * @param {PointerEvent} e - event from DOM 
      */
-    handlePrimaryPointerMove(e)
+    handlePrimaryPointerMove(x,y)
     {
 
     }
@@ -74,7 +76,7 @@ class GameScene
      * Handles secondary pointer movement.
      * @param {PointerEvent} e - event from DOM 
      */
-    handleSecondaryPointerMove(e)
+    handleSecondaryPointerMove(x,y)
     {
 
     }
@@ -110,45 +112,53 @@ class GameScene
     {
 
     }
+    click(x,y){}
     /**
      * Handles primary pointer click.
      * @param {PointerEvent} e - event from DOM 
      */
-    handlePrimaryPointerClick(e)
+    handlePrimaryPointerClick(x,y)
     {
+        this.click?.(x,y);
 
     }
+    clickSecondary(x,y){}
     /**
      * Handles secondary pointer click.
      * @param {PointerEvent} e - event from DOM 
      */
-    handleSecondaryPointerClick(e)
+    handleSecondaryPointerClick(x,y)
     {
-
+        let handled = this.uimgr.handleClick(x,y);
+        if(handled)
+            return;
+        this.clickSecondary?.(x,y);
     }
-    
+    keyDown(key){}
     /**
      * Handles keydown event.
      * @param {PointerEvent} e - event from DOM 
      */
     handleKeyDown(e)
     {
-
+        this.keyDown?.(e.key);
     }
+    keyUp(key) {}
     /**
      * Handles keyup event.
      * @param {PointerEvent} e - event from DOM 
      */
     handleKeyUp(e)
     {
-
+        this.keyUp?.(e.key);
     }
+    keyPress(key) {}
     /**
      * Handles keypress event.
      * @param {PointerEvent} e - event from DOM 
      */
     handleKeyPress(e)
     {
-
+        this.keyPress?.(e.key);
     }
 }

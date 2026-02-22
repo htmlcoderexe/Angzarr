@@ -1,6 +1,7 @@
 class ItemDisplay extends UIElement
 {
     #_item = null;
+    inventoryIndex =0;
     get item() 
     {
         return this.#_item;
@@ -49,4 +50,10 @@ class ItemDisplay extends UIElement
             this.item.inventorySprite.update(dt);
         }
     }
+    clickHandler=(x,y)=>
+    {
+        this.parent.selectedIndex = this.inventoryIndex;
+        console.log(x,y,this.parent,this.inventoryIndex);
+        return true;
+    };
 }

@@ -19,6 +19,12 @@ class GameManager
     
      */
     debug = false;
+    pointer1Down = false;
+    pointer2Down = false;
+    prevPointer1 = [0,0];
+    prevPointer2 = [0,0];
+    downPointer1 = [0,0];
+    downPointer1 = [0,0];
     /**
      * Updates the game state and requests next update.
      * @param {number} timestamp - The timestamp given by the frame, used for calculating elapsed time.
@@ -53,11 +59,29 @@ class GameManager
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
-            this.currentScene.handlePrimaryPointerMove(e);
+            let x = e.offsetX;
+            let ox =this.prevPointer1[0];
+            let dx=x-ox;
+            let y = e.offsetY;
+            let oy=this.prevPointer1[1];
+            let dy=y-oy;
+            if(this.pointer1Down)
+                this.currentScene.uimgr.handleSwipe(ox,oy,dx,dy);
+            this.prevPointer1=[x,y];
+            this.currentScene.handlePrimaryPointerMove(x,y);
         }
         else
         {
-            this.currentScene.handleSecondaryPointerMove(e);
+            let x = e.offsetX;
+            let ox =this.prevPointer2[0];
+            let dx=x-ox;
+            let y = e.offsetY;
+            let oy=this.prevPointer2[1];
+            let dy=y-oy;
+            if(this.pointer2Down)
+                this.currentScene.uimgr.handleSwipe(ox,oy,dx,dy);
+            this.prevPointer2=[x,y];
+            this.currentScene.handleSecondaryPointerMove(x,y);
         }
         e.preventDefault();
     }
@@ -70,10 +94,56 @@ class GameManager
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
+            this.pointer1Down=false;
+            let x = e.offsetX;
+            let ox =this.downPointer1[0];
+            let dx=x-ox;
+            let y = e.offsetY;
+            let oy=this.downPointer1[1];
+            let dy=y-oy;
+            let handled = false;
+            if(dx!=0 || dy!=0)
+            {
+                handled = this.currentScene.uimgr.handleDrag(ox,oy,dx,dy);
+            }
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
+            handled = this.currentScene.uimgr.handleClick(x,y);
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
             this.currentScene.handlePrimaryPointerUp(e);
         }
         else
         {
+            this.pointer2Down=false;
+            let x = e.offsetX;
+            let ox =this.downPointer2[0];
+            let dx=x-ox;
+            let y = e.offsetY;
+            let oy=this.downPointer2[1];
+            let dy=y-oy;
+            let handled = false;
+            if(dx!=0 || dy!=0)
+            {
+                handled = this.currentScene.uimgr.handleDrag(ox,oy,dx,dy);
+            }
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
+            handled = this.currentScene.uimgr.handleClick(x,y);
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
             this.currentScene.handleSecondaryPointerUp(e);
         }
         e.preventDefault();
@@ -85,6 +155,20 @@ class GameManager
      */
     handlePointerDown(e)
     {
+        // this distinguishes second (and so on) touch on touch devices
+        if(e.isPrimary)
+        {
+            this.pointer1Down=true;
+            this.downPointer1=[e.offsetX,e.offsetY];
+            this.currentScene.handlePrimaryPointerDown(e);
+        }
+        else
+        {
+            this.pointer2Down=true;
+            this.downPointer2=[e.offsetX,e.offsetY];
+            this.currentScene.handleSecondaryPointerDown(e);
+        }
+        e.preventDefault();
 
     }
     /**
@@ -96,11 +180,11 @@ class GameManager
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
-            this.currentScene.handlePrimaryPointerClick(e);
+            this.currentScene.handlePrimaryPointerClick(e.offsetX,e.offsetY);
         }
         else
         {
-            this.currentScene.handleSecondaryPointerClick(e);
+            this.currentScene.handleSecondaryPointerClick(e.offsetX,e.offsetY);
         }
         e.preventDefault();
 

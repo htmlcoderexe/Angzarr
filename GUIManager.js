@@ -23,6 +23,10 @@ class GUIManager
     w=1;
     h=1;
     hitbox = new Rectangle(0,0,1,1);
+    get uimgr()
+    {
+        return this;
+    }
     constructor(w,h)
     {
         this.w=w;
@@ -50,6 +54,7 @@ class GUIManager
             layer = this.activeLayer;
         component.layer=layer;
         component.parent = this;
+        component.uimgr = this;
         this.components.push(component);
     }
     remove(component)
@@ -136,6 +141,35 @@ class GUIManager
             }
         }
     }
+    pickElement(x,y)
+    {
+        let sysonly = this.components.filter((c)=>c.layer=="system");
+        // check all UI elements
+        if(sysonly) 
+        for(let i = sysonly.length-1;i>=0;i--)
+        {
+            let c = sysonly[i];
+            const target = c.checkhit(x,y);
+            // if an element is found, click it and set the flag
+            if(target)
+            {
+                return target;
+            }
+
+        }
+        // check all UI elements 
+        for(let i = this.components.length-1;i>=0;i--)
+        {
+            let c = this.components[i];
+            const target = c.checkhit(x,y);
+            // if an element is found, click it and set the flag
+            if(target)
+            {
+                return target;
+            }
+
+        }
+    }
     handlePrimaryPointerMove(e)
     {
 
@@ -169,23 +203,25 @@ class GUIManager
      * @param {PointerEvent} e 
      * @returns true if a UI element received the click, false otherwise
      */
-    handleClick(e)
+    handleClick(x,y)
     {
         let handled = false;
         // check all UI elements 
-        for(let i = this.components.length-1;i>=0;i--)
+        let target = this.pickElement(x,y);
+        if(target)
         {
-            let c = this.components[i];
-            const target = c.checkhit(e.offsetX,e.offsetY);
-            // if an element is found, click it and set the flag
-            if(target)
-            {
-                target.click(e.offsetX-target.hitbox.x,e.offsetY-target.hitbox.y);
-                return true;
-            }
-
+            return target.click(x-target.hitbox.x,y-target.hitbox.y);
         }
         return handled;
+    }
+    handleDrag(x1,y1,x2,y2)
+    {
+        console.log("DRAG EVENT:",arguments);
+    }
+    handleSwipe(x,y,dx,dy)
+    {
+        console.log("SWIPE EVENT:",arguments);
+
     }
     handleKeyDown(e)
     {

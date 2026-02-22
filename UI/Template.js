@@ -7,6 +7,10 @@ class UITemplate
         {
             return false;
         }
+        for(let i =0;i<tpl.params.length;i++)
+        {
+            uimgr.contextParams[tpl.params[i]]=params[i];
+        }
         // console.log(...arguments);
         let controls = [];
         for(let i= 0; i<tpl.controls.length;i++)
@@ -26,10 +30,6 @@ class UITemplate
             {
                 console.warn("Failed to add event <" + eventname + "> to control <" + control + ">");
             }
-        }
-        for(let i =0;i<tpl.params.length;i++)
-        {
-            uimgr.contextParams[tpl.params[i]]=params[i];
         }
         if(tpl.init)
         {
@@ -61,12 +61,25 @@ class UITemplate
                 result = new AbilitySlot(rekt,...params);
                 break;
             }
+            case "inventory":
+            {
+                result = new InventoryDisplay(rekt.x,rekt.y,...params);
+                break;
+            }
         }
         return result;
     }
     static InstantiateControl(control, parent,offset=[0,0])
     {
         let params = control.params;
+        for(let i=0;i<params.length;i++)
+        {
+            let p=params[i];
+            if(typeof p =="string" && p[0]=="$")
+            {
+                params[i]=parent.uimgr.contextParams[p.substring(1)];
+            }
+        }
         let basex = offset[0];
         if(control.halign=="centre")
         {
@@ -79,6 +92,12 @@ class UITemplate
         let h = control.h;
         let rekt = new Rectangle(x,y,w,h);
         let result = UITemplate.ControlFactory(control.type,rekt,params);
+        if(control.w==0 && control.halign=="centre")
+        {
+            result.hitbox=new Rectangle(x-result.hitbox.width/2,y,result.hitbox.width,result.hitbox.height);
+            result.originalHitbox=new Rectangle(x-result.originalHitbox.width/2,y,result.hitbox.width,result.hitbox.height);
+            //result.originalHitbox.x-=result.originalHitbox.w/2;
+        }
         result.id=control.id;
         if(control.children)
             for(let i=0;i<control.children.length;i++)
@@ -91,181 +110,213 @@ class UITemplate
 
 
 const UI_TEMPLATES = {
-    arcade_shop:
-    {
-        controls: [
-            {
-                type:"selector",
-                id: "shopselector",
-                halign: "centre",
-                x:0,
-                y:0,
-                w: 360,
-                h: 180,
-                params: [
-                [
-                    {
-                        description:"More bullets",
-                        cost: 20,
-                        bonus: "rof"
-                    },
-                    {
-                        description:"More charge",
-                        cost: 25,
-                        bonus: "cap"
-                    },
-                    {
-                        description:"More health",
-                        cost: 15,
-                        bonus: "hp"
-                    },
-                    {
-                        description:"Faster charge",
-                        cost: 40,
-                        bonus: "bat"
-                    }]
-                ],
-                children: 
-                [
-                    {
-                        type:"button",
-                        id: "buybut",
-                        halign:"centre",
-                        x:-63,
-                        y: 120,
-                        w: 110,
-                        h: 50,
-                        params: [
-                            "Buy", "green"
-                        ]
-                    },
-                    {
-                        type:"button",
-                        id: "donebut",
-                        halign:"centre",
-                        x: 63,
-                        y: 120,
-                        w: 110,
-                        h: 50,
-                        params: [
-                            "Done"
-                        ]
-                    },
-                    {
-                        type:"label",
-                        id:"coinsdisplay",
-                        halign:"centre",
-                        x: 0,
-                        y: -60,
-                        w: 170,
-                        h: 45,
-                        params: [
-                            "000000"
-                        ]
-                    },
-                    {
-                        type:"label",
-                        id:"itemdisplay",
-                        halign:"centre",
-                        x: 0,
-                        y: 10,
-                        w: 240,
-                        h: 45,
-                        params: [
-                            ""
-                        ]
-                    },
-                    {
-                        type:"label",
-                        id:"costdisplay",
-                        halign:"centre",
-                        x: 0,
-                        y: 63,
-                        w: 170,
-                        h: 45,
-                        params: [
-                            "0000"
-                        ]
-                    }
-                ]
-            }
-        ],
-        event_handlers:
-        [
-            {
-                control: "donebut",
-                event: "click",
-                handler: ()=>{
-                    $destroy($id('shopselector'));
+arcade_shop:
+{
+    controls: [
+        {
+            type:"selector",
+            id: "shopselector",
+            halign: "centre",
+            x:0,
+            y:0,
+            w: 360,
+            h: 180,
+            params: [
+            [
+                {
+                    description:"More bullets",
+                    cost: 20,
+                    bonus: "rof"
+                },
+                {
+                    description:"More charge",
+                    cost: 25,
+                    bonus: "cap"
+                },
+                {
+                    description:"More health",
+                    cost: 15,
+                    bonus: "hp"
+                },
+                {
+                    description:"Faster charge",
+                    cost: 40,
+                    bonus: "bat"
+                }]
+            ],
+            children: 
+            [
+                {
+                    type:"button",
+                    id: "buybut",
+                    halign:"centre",
+                    x:-63,
+                    y: 120,
+                    w: 110,
+                    h: 50,
+                    params: [
+                        "Buy", "green"
+                    ]
+                },
+                {
+                    type:"button",
+                    id: "donebut",
+                    halign:"centre",
+                    x: 63,
+                    y: 120,
+                    w: 110,
+                    h: 50,
+                    params: [
+                        "Done"
+                    ]
+                },
+                {
+                    type:"label",
+                    id:"coinsdisplay",
+                    halign:"centre",
+                    x: 0,
+                    y: -60,
+                    w: 170,
+                    h: 45,
+                    params: [
+                        "000000"
+                    ]
+                },
+                {
+                    type:"label",
+                    id:"itemdisplay",
+                    halign:"centre",
+                    x: 0,
+                    y: 10,
+                    w: 240,
+                    h: 45,
+                    params: [
+                        ""
+                    ]
+                },
+                {
+                    type:"label",
+                    id:"costdisplay",
+                    halign:"centre",
+                    x: 0,
+                    y: 63,
+                    w: 170,
+                    h: 45,
+                    params: [
+                        "0000"
+                    ]
                 }
-            },
-            {
-                control: "buybut",
-                event: "click",
-                handler: ()=>{
-                    let opt = $id('shopselector').options[$id('shopselector').selectedIndex];
-                    let player = $param('player');
-                    let adjusted_cost = opt.cost * player.upgrades[opt.bonus];
-                    if(adjusted_cost>player.coins)
-                    {
-                        return;
-                    }
-                    switch(opt.bonus)
-                    {
-                        case "rof":
-                        {
-                            player.bullets_per_sec+=1;
-                            break;
-                        }
-                        case "cap":
-                        {
-                            player.abilities[0].maxcharge+=1;
-                            break;
-                        }
-                        case "bat":
-                        {
-                            player.abilities[0].base_recharge+=0.5;
-                            break;
-                        }
-                        case "hp":
-                        {
-                            const hpup=new StatEntry("HP",1,1,STAT_EQUIP);
-                            player.stats.add(hpup);
-                            break;
-                        }
-                    }
-                    player.coins-=adjusted_cost;
-                    player.upgrades[opt.bonus]++;
-                    $id('shopselector').changedHandler();
-
-                }
-            },
-            {
-                control: "shopselector",
-                event: "change",
-                handler: ()=>{
-                    let opt = $id('shopselector').options[$id('shopselector').selectedIndex];
-                    let player = $param('player');
-                    let adjusted_cost = opt.cost * player.upgrades[opt.bonus];
-                    if(adjusted_cost>player.coins)
-                    {
-                        $id("buybut").colourScheme="grey";
-                    }
-                    else
-                    {
-                        $id("buybut").colourScheme="green";
-                    }
-                    $id("itemdisplay").text=opt.description;
-                    $id("costdisplay").text=String(adjusted_cost).padStart(4,"0");
-                    $id("coinsdisplay").text=String(player.coins).padStart(6,"0");
-                }
-            }
-        ],
-        params:[
-            "player"
-        ],
-        init:()=>{            
-            $id('shopselector').changedHandler();
+            ]
         }
+    ],
+    event_handlers:
+    [
+        {
+            control: "donebut",
+            event: "click",
+            handler: ()=>{
+                $destroy($id('shopselector'));
+            }
+        },
+        {
+            control: "buybut",
+            event: "click",
+            handler: ()=>{
+                let opt = $id('shopselector').options[$id('shopselector').selectedIndex];
+                let player = $param('player');
+                let adjusted_cost = opt.cost * player.upgrades[opt.bonus];
+                if(adjusted_cost>player.coins)
+                {
+                    return;
+                }
+                switch(opt.bonus)
+                {
+                    case "rof":
+                    {
+                        player.bullets_per_sec+=1;
+                        break;
+                    }
+                    case "cap":
+                    {
+                        player.abilities[0].maxcharge+=1;
+                        break;
+                    }
+                    case "bat":
+                    {
+                        player.abilities[0].base_recharge+=0.5;
+                        break;
+                    }
+                    case "hp":
+                    {
+                        const hpup=new StatEntry("HP",1,1,STAT_EQUIP);
+                        player.stats.add(hpup);
+                        break;
+                    }
+                }
+                player.coins-=adjusted_cost;
+                player.upgrades[opt.bonus]++;
+                $id('shopselector').changedHandler();
+
+            }
+        },
+        {
+            control: "shopselector",
+            event: "change",
+            handler: ()=>{
+                let opt = $id('shopselector').options[$id('shopselector').selectedIndex];
+                let player = $param('player');
+                let adjusted_cost = opt.cost * player.upgrades[opt.bonus];
+                if(adjusted_cost>player.coins)
+                {
+                    $id("buybut").colourScheme="grey";
+                }
+                else
+                {
+                    $id("buybut").colourScheme="green";
+                }
+                $id("itemdisplay").text=opt.description;
+                $id("costdisplay").text=String(adjusted_cost).padStart(4,"0");
+                $id("coinsdisplay").text=String(player.coins).padStart(6,"0");
+            }
+        }
+    ],
+    params:[
+        "player"
+    ],
+    init:()=>{            
+        $id('shopselector').changedHandler();
     }
+},
+inventory_test: {
+    controls: [
+        {
+            type: "inventory",
+            id: "inv_view",
+            halign:"centre",
+            x:0,
+            y:0,
+            w:0,
+            h:0,
+            params: [
+                "$inventory",
+                4
+            ]
+        }
+    ],
+    event_handlers: [
+        {
+            control: "inv_view",
+            event: "select",
+            handler: (index)=>{
+                console.log("Selected item #"+(index+1));
+            }
+        }
+    ],
+    params:[
+        "inventory"
+    ],
+    init:()=>{
+
+    }
+}
 };
