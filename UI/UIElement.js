@@ -16,7 +16,14 @@ class UIElement
     uimgr = null;
     layer = "system";
     id="";
+    get h() {
+        return this.originalHitbox.height;
+    }
+    get w() {
+        return this.originalHitbox.width;  
+    }
     clickHandler = ()=>{};
+    swipeHandler = ()=>{};
     constructor(rekt)
     {
         this.hitbox= new Rectangle(...rekt);
@@ -65,16 +72,16 @@ class UIElement
     }
     find(id)
     {
-        console.log(id,this.id);
+        //console.log(id,this.id);
         if(this.id==id)
             {
-                console.log("FUCK <",id,"> FOUND");
+                //console.log("FUCK <",id,"> FOUND");
                 return this;
             }
         let result = null;
         this.children.forEach((c)=>{
             let result2 = c.find(id);
-            console.log(id,result2);
+            //console.log(id,result2);
             if(result2)
                 result = result2;
         });
@@ -92,18 +99,7 @@ class UIElement
         if(this.hitbox.testPoint(x,y))
         {
             // if any sub-controls, check each
-            if(this.children.length>0)
-            {
-                for(let i =0;i<this.children.length;i++)
-                {
-                    // recursion! if something got hit, it will either return itself or get even more specific.
-                    const child = this.children[i].checkhit(x-this.hitbox.x,y-this.hitbox.y);
-                    if(child)
-                    {
-                        return child;
-                    }
-                }
-            }
+            
             // either there are no sub-controls, or none got hit
             return this;
         }
@@ -129,8 +125,46 @@ class UIElement
     click(x,y)
     {
         // just call the clickhandler for now
-        console.log(this);
-        return this.clickHandler(x,y);
+        let handled = this.clickHandler?.(x,y);
+        if(!handled && this.children.length>0)
+        {               
+            for(let i =0;i<this.children.length;i++)
+            {
+                // recursion! if something got hit, it will either return itself or get even more specific.
+                const child = this.children[i].checkhit(x,y);
+                if(child)
+                {
+                    let handled2 = child.click?.(x-child.hitbox.x,y-child.hitbox.y);
+                    if(handled2)
+                        return true;
+                }
+            }
+        }
+        return handled;
+    }
+    /**
+     * Clicks the control.
+     * @param {PointerEvent} e 
+     */
+    swipe(x,y,dx,dy)
+    {
+        // just call the clickhandler for now
+        let handled = this.swipeHandler?.(x,y,dx,dy);
+        if(!handled && this.children.length>0)
+        {               
+            for(let i =0;i<this.children.length;i++)
+            {
+                // recursion! if something got hit, it will either return itself or get even more specific.
+                const child = this.children[i].checkhit(x,y);
+                if(child)
+                {
+                    let handled2 = child.swipe?.(x-child.hitbox.x,y-child.hitbox.y);
+                    if(handled2)
+                        return true;
+                }
+            }
+        }
+        return handled;
     }
 
 

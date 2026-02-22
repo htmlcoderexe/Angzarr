@@ -71,7 +71,6 @@ class UISelector extends UIElement
             }
             return true;
         }
-        super.click(e);
-        return true;
+        return super.click(x,y);
     }
 }

@@ -15,11 +15,10 @@ class UITemplate
         let controls = [];
         for(let i= 0; i<tpl.controls.length;i++)
         {
-            controls.push(UITemplate.InstantiateControl(tpl.controls[i], uimgr,offset));
-        }
-        controls.forEach((c)=>{
+            let c = UITemplate.InstantiateControl(tpl.controls[i], uimgr,offset);
             uimgr.add(c);
-        });
+            controls.push(c);
+        }
         
         for(let i= 0; i<tpl.event_handlers.length;i++)
         {
@@ -61,6 +60,11 @@ class UITemplate
                 result = new AbilitySlot(rekt,...params);
                 break;
             }
+            case "scroll":
+            {
+                result = new ScrollPane(rekt,...params);
+                break;
+            }
             case "inventory":
             {
                 result = new InventoryDisplay(rekt.x,rekt.y,...params);
@@ -72,11 +76,13 @@ class UITemplate
     static InstantiateControl(control, parent,offset=[0,0])
     {
         let params = control.params;
+        console.warn(...arguments);
         for(let i=0;i<params.length;i++)
         {
             let p=params[i];
             if(typeof p =="string" && p[0]=="$")
             {
+                console.warn(parent);
                 params[i]=parent.uimgr.contextParams[p.substring(1)];
             }
         }
@@ -99,6 +105,7 @@ class UITemplate
             //result.originalHitbox.x-=result.originalHitbox.w/2;
         }
         result.id=control.id;
+        result.uimgr = parent.uimgr;
         if(control.children)
             for(let i=0;i<control.children.length;i++)
             {
@@ -290,16 +297,29 @@ arcade_shop:
 inventory_test: {
     controls: [
         {
-            type: "inventory",
-            id: "inv_view",
-            halign:"centre",
+            type: "scroll",
+            id: "inv_container",
+            halign: "centre",
             x:0,
             y:0,
-            w:0,
-            h:0,
-            params: [
-                "$inventory",
-                4
+            w: 300,
+            h:300,
+            params: [],
+            children: [
+            {
+                type: "inventory",
+                id: "inv_view",
+                halign:"centre",
+                x:0,
+                y:0,
+                w:0,
+                h:0,
+                params: [
+                    "$inventory",
+                    4
+                ]
+            }
+
             ]
         }
     ],

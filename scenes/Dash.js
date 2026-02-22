@@ -20,7 +20,18 @@ class GameSceneDash extends GameScene
     mode;
     pause()
     {
+        if(this.paused)
+            return;
         this.paused=true;
+
+        if(this.player.inventory)
+        {
+           
+            //let ii = new InventoryDisplay(40,150,this.player.inventory,4);
+            //this.uimgr.add(ii,"system");
+            this.uimgr.activeLayer="system";
+            UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,120],this.player.inventory);
+        }
         this.uimgr.message("GAME PAUSED","#00C010",0.5,9999);
         let unpausebt = new UIButton(new Rectangle(
             this.shortSide/2-240/2,
@@ -41,20 +52,16 @@ class GameSceneDash extends GameScene
             window.gameManager.currentScene = new GameSceneTitle();
         };
         unpausebt.clickHandler=()=>{
+            
+            console.warn("BEGIN removing shit");
             this.uimgr.message("","#000000");
             this.uimgr.remove(unpausebt);
             this.uimgr.remove(titlebt);
+            this.uimgr.remove($id('inv_container'));
+            console.warn("removed shit");
             this.paused=false;
         };
         this.uimgr.add(titlebt,"system");
-
-        if(this.player.inventory)
-        {
-           
-            //let ii = new InventoryDisplay(40,150,this.player.inventory,4);
-            //this.uimgr.add(ii,"system");
-            UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,this.longSide*0.30],this.player.inventory);
-        }
     }
     levelDone()
     {

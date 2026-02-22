@@ -35,7 +35,6 @@ class GUIManager
         console.log(w,h,this.w,this.h);
         window.$id=(id)=>{
             
-            console.error(id);
             return this.find(id);
         };
         window.$destroy=(id)=>this.remove(id);
@@ -59,14 +58,15 @@ class GUIManager
     }
     remove(component)
     {
+        console.log("REMOVING ",component);
         this.components=this.components.filter((c)=>c!=component);
     }
     find(id)
     {
         let result = null;
         this.components.forEach((c)=>{
-            console.log("checking "+id);
-            console.log(c);
+            //console.log("checking "+id);
+            //console.log(c);
             let result2 = c.find(id);
             if(result2)
                 result = result2;
@@ -210,17 +210,24 @@ class GUIManager
         let target = this.pickElement(x,y);
         if(target)
         {
-            return target.click(x-target.hitbox.x,y-target.hitbox.y);
+            target.click?.(x-target.hitbox.x,y-target.hitbox.y);
         }
         return handled;
     }
     handleDrag(x1,y1,x2,y2)
     {
-        console.log("DRAG EVENT:",arguments);
+
     }
     handleSwipe(x,y,dx,dy)
     {
-        console.log("SWIPE EVENT:",arguments);
+        let handled = false;
+        // check all UI elements 
+        let target = this.pickElement(x,y);
+        if(target)
+        {
+            target.swipe?.(x-target.hitbox.x,y-target.hitbox.y,dx,dy);
+        }
+        return handled;
 
     }
     handleKeyDown(e)

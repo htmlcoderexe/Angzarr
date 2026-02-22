@@ -25,6 +25,8 @@ class GameManager
     prevPointer2 = [0,0];
     downPointer1 = [0,0];
     downPointer1 = [0,0];
+    p1control = null;
+    p2control = null;
     /**
      * Updates the game state and requests next update.
      * @param {number} timestamp - The timestamp given by the frame, used for calculating elapsed time.
@@ -111,11 +113,15 @@ class GameManager
                 e.preventDefault();
                 return;
             }
-            handled = this.currentScene.uimgr.handleClick(x,y);
-            if(handled)
+            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            if(eup==this.p1control)
             {
-                e.preventDefault();
-                return;
+                handled = this.currentScene.uimgr.handleClick(x,y);
+                if(handled)
+                {
+                    e.preventDefault();
+                    return;
+                }
             }
             this.currentScene.handlePrimaryPointerUp(e);
         }
@@ -138,11 +144,16 @@ class GameManager
                 e.preventDefault();
                 return;
             }
-            handled = this.currentScene.uimgr.handleClick(x,y);
-            if(handled)
+            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            if(eup==this.p2control)
             {
-                e.preventDefault();
-                return;
+                handled = this.currentScene.uimgr.handleClick(x,y);
+                if(handled)
+                {
+                    e.preventDefault();
+                    return;
+                }
+
             }
             this.currentScene.handleSecondaryPointerUp(e);
         }
@@ -160,12 +171,14 @@ class GameManager
         {
             this.pointer1Down=true;
             this.downPointer1=[e.offsetX,e.offsetY];
+            this.p1control=this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
             this.currentScene.handlePrimaryPointerDown(e);
         }
         else
         {
             this.pointer2Down=true;
             this.downPointer2=[e.offsetX,e.offsetY];
+            this.p2control=this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
             this.currentScene.handleSecondaryPointerDown(e);
         }
         e.preventDefault();
@@ -181,10 +194,34 @@ class GameManager
         if(e.isPrimary)
         {
             this.currentScene.handlePrimaryPointerClick(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            if(eup!=this.p1control)
+            {
+                e.preventDefault();
+                return;
+            }
+            let handled = this.currentScene.uimgr.handleClick(e.offsetX,e.offsetY);
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
         }
         else
         {
             this.currentScene.handleSecondaryPointerClick(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            if(eup!=this.p2control)
+            {
+                e.preventDefault();
+                return;
+            }
+            let handled = this.currentScene.uimgr.handleClick(e.offsetX,e.offsetY);
+            if(handled)
+            {
+                e.preventDefault();
+                return;
+            }
         }
         e.preventDefault();
 
