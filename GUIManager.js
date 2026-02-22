@@ -101,6 +101,7 @@ class GUIManager
                 }
             }
         }
+        this.components.forEach((c)=>{c.update(dT);});
     }
     /**
      * Draws UI elements on the screen

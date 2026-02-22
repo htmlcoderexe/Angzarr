@@ -48,6 +48,14 @@ class GameSceneDash extends GameScene
             this.paused=false;
         };
         this.uimgr.add(titlebt,"system");
+
+        if(this.player.inventory)
+        {
+           
+            let ii = new InventoryDisplay(this.player.inventory,40,150,5);
+            this.uimgr.add(ii,"system");
+            
+        }
     }
     levelDone()
     {
