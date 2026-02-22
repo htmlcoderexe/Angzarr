@@ -319,7 +319,7 @@ class AnimatedPath
      * @param {Array} frames 
      * @returns 
      */
-    static fromKeyFrames(frames)
+    static fromKeyFrames(frames,palette)
     {
         let result = new AnimatedPath();
         let paths = [];
@@ -327,9 +327,17 @@ class AnimatedPath
         frames.forEach((f)=>{
             // also save the paths in parallel for processing
             paths.push(f.path);
+            let fill = f.fill;
+            // palette colours
+            if(typeof fill =="number")
+            {
+                let fillvalue = palette[fill] ?? "#000000";
+                console.log("Fill #"+fill + " is <"+fillvalue+">");
+                fill = fillvalue;
+            }
             result.frames.push({
                 "time": f.time, 
-                "fill":f.fill,
+                "fill":fill,
                 "rotation":(f.rotation ?? 0)
                 });
         });
@@ -557,6 +565,9 @@ class VectorAnimation
  */
 class VectorSprite
 {
+
+    static DEFAULT_PALETTE = ["#000000","#FFFFFF","#7F7F7F","#3F3F3F","#BFBFBF"];
+
     /**
      * Contains the VectorAnimations, referenced by name
      */
@@ -689,13 +700,18 @@ class VectorSprite
     static fromRawObject(obj)
     {
         let anims = [];
+        // set the palette
+        let palette = obj['__palette'] ?? VectorSprite.DEFAULT_PALETTE;
         // get every animation by name
         for(const [key, value] of Object.entries(obj)) 
         {
+            if(key=="__palette")
+                continue;
             let paths = [];
             // create an AnimatedPath out of every path in the array and add
             value.forEach((p,i)=>{
-                paths.push(AnimatedPath.fromKeyFrames(p));
+                let path = AnimatedPath.fromKeyFrames(p,palette);
+                paths.push(path);
             });
             // create an animation out of each set of paths and add to animations
             anims.push(new VectorAnimation(paths, key));
