@@ -10,34 +10,31 @@ class UISelector extends UIElement
         this.options=options;
     }
     changedHandler=()=>{};
-    draw(ctx)
+    drawControl(ctx)
     {
-        let x=this.hitbox.x;
-        let y=this.hitbox.y;
         let w=this.hitbox.width;
         let h=this.hitbox.height;
-        UIRenderer.drawFrame(ctx, x+this.arrowWidth+15,y,w-this.arrowWidth*2-30,h);
+        UIRenderer.drawFrame(ctx, this.arrowWidth+15,0,w-this.arrowWidth*2-30,h);
         // left arrow
         ctx.fillStyle="#802000"
         if(this.selectedIndex>0)
         {
             ctx.beginPath();
-            ctx.moveTo(x, y+h/2);
-            ctx.lineTo(x+this.arrowWidth, y+this.arrowPadding);
-            ctx.lineTo(x+this.arrowWidth, y+h-this.arrowPadding);
+            ctx.moveTo(0, 0+h/2);
+            ctx.lineTo(this.arrowWidth, this.arrowPadding);
+            ctx.lineTo(this.arrowWidth, h-this.arrowPadding);
             ctx.closePath();
             ctx.fill();
         }
         if(this.selectedIndex<this.options.length-1)
         {
             ctx.beginPath();
-            ctx.moveTo(x+w, y+h/2);
-            ctx.lineTo(x+w-this.arrowWidth, y+this.arrowPadding);
-            ctx.lineTo(x+w-this.arrowWidth, y+h-this.arrowPadding);
+            ctx.moveTo(w, h/2);
+            ctx.lineTo(w-this.arrowWidth, this.arrowPadding);
+            ctx.lineTo(w-this.arrowWidth, h-this.arrowPadding);
             ctx.closePath();
             ctx.fill();
         }
-        super.draw(ctx);
     }
     addEventListener(event, handler)
     {
@@ -53,10 +50,8 @@ class UISelector extends UIElement
         }
         return false;
     }
-    click(e)
+    click(x,y)
     {
-        let x = e.offsetX-this.hitbox.x;
-        let y = e.offsetY-this.hitbox.y;
         if(x<60)
         {
             // left arrow click

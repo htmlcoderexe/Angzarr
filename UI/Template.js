@@ -64,7 +64,7 @@ class UITemplate
         }
         return result;
     }
-    static InstantiateControl(control, parent,offset)
+    static InstantiateControl(control, parent,offset=[0,0])
     {
         let params = control.params;
         let basex = offset[0];
@@ -83,7 +83,7 @@ class UITemplate
         if(control.children)
             for(let i=0;i<control.children.length;i++)
             {
-                result.add(UITemplate.InstantiateControl(control.children[i],result,[x,y]));
+                result.add(UITemplate.InstantiateControl(control.children[i],result));
             }
         return result;
     }

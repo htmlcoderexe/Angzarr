@@ -20,9 +20,8 @@ class InventoryDisplay extends UIElement
                 this.add(ii);
             }
     }
-    draw(ctx)
+    drawControl(ctx)
     {
-        UIRenderer.drawFrame(ctx,...this.hitbox);
-        super.draw(ctx);
+        UIRenderer.drawFrame(ctx,0,0,this.hitbox.width,this.hitbox.height);
     }
 }

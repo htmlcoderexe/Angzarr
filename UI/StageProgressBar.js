@@ -7,10 +7,8 @@ class StageProgressBar extends UIElement
     paused = false;
     markers = [];
     
-    draw(ctx)
+    drawControl(ctx)
     {
-        super.draw(ctx);
-        ctx.translate(this.hitbox.x,this.hitbox.y);
         const endsize=12;
         const startsize=12
         const end = endsize;
@@ -51,6 +49,5 @@ class StageProgressBar extends UIElement
         ctx.lineTo(centre-9,pos+18);
         ctx.closePath();
         ctx.fill();
-        ctx.resetTransform();
     }
 }

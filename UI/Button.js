@@ -20,19 +20,15 @@ class UIButton extends UIElement
         this.text = text;
         this.colourScheme=colour;
     }
-    draw(ctx)
+    drawControl(ctx)
     {
-        super.draw(ctx);
         let scheme = null;
         if(this.colourScheme!="" && UIButton.colourSchemes[this.colourScheme])
         {
             scheme = UIButton.colourSchemes[this.colourScheme];
         }
         UIRenderer.drawButton(ctx,
-            this.hitbox.x,
-            this.hitbox.y,
-            this.hitbox.width,
-            this.hitbox.height,
+            0,0,this.hitbox.width,this.hitbox.height,
             this.text,
             scheme);
     }

@@ -19,6 +19,7 @@ class UIElement
     constructor(rekt)
     {
         this.hitbox= new Rectangle(...rekt);
+        this.originalHitbox = new Rectangle(...rekt);
     }
     /**
      * Updates the element's state
@@ -37,14 +38,21 @@ class UIElement
      */
     draw(ctx)
     {
+        ctx.translate(this.originalHitbox.x,this.originalHitbox.y);
+        this.drawControl(ctx);
         // this might be needed later to properly offset child controls?
         // ctx.translate(this.hitbox.x,this.hitbox.y);
         // base implementation just recursively draws children
         this.children.forEach((c)=>{
             c.draw(ctx);
         });
+        ctx.translate(-this.originalHitbox.x,-this.originalHitbox.y);
         
         
+    }
+    drawControl(ctx)
+    {
+
     }
     add(control)
     {
@@ -87,7 +95,7 @@ class UIElement
                 for(let i =0;i<this.children.length;i++)
                 {
                     // recursion! if something got hit, it will either return itself or get even more specific.
-                    const child = this.children[i].checkhit(x,y);
+                    const child = this.children[i].checkhit(x-this.hitbox.x,y-this.hitbox.y);
                     if(child)
                     {
                         return child;
@@ -116,10 +124,10 @@ class UIElement
      * Clicks the control.
      * @param {PointerEvent} e 
      */
-    click(e)
+    click(x,y)
     {
         // just call the clickhandler for now
-        this.clickHandler();
+        this.clickHandler(x,y);
     }
 
 

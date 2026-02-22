@@ -18,10 +18,9 @@ class ItemDisplay extends UIElement
         super([x,y,64,64]);
         this.item = item;
     }
-    draw(ctx)
+    drawControl(ctx)
     {
-        UIRenderer.drawFrame(ctx, ...this.hitbox);
-        ctx.translate(this.hitbox.x,this.hitbox.y);
+        UIRenderer.drawFrame(ctx, 0,0,this.hitbox.width,this.hitbox.height);
         if(this.item)
         {
             if(this.item.count>1)
@@ -40,9 +39,8 @@ class ItemDisplay extends UIElement
             }
             ctx.translate(32,32);
             this.item.inventorySprite.draw(ctx);
+            ctx.translate(-32,-32);
         }
-        ctx.resetTransform();
-        super.draw(ctx);
     }
     update(dt)
     {

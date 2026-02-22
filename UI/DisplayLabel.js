@@ -23,10 +23,9 @@ class DisplayLabel extends UIElement
             this.colour=colour;
         this.text=text;
     }
-    draw(ctx)
+    drawControl(ctx)
     {
-        super.draw(ctx);
         // very convenient yes
-        UIRenderer.drawScreenBox(ctx,this.hitbox.x, this.hitbox.y,this.hitbox.width,this.hitbox.height, this.text,this.colour);
+        UIRenderer.drawScreenBox(ctx,0,0,this.hitbox.width,this.hitbox.height, this.text,this.colour);
     }
 }

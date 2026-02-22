@@ -180,7 +180,7 @@ class GUIManager
             // if an element is found, click it and set the flag
             if(target)
             {
-                target.click(e);
+                target.click(e.offsetX-target.hitbox.x,e.offsetY-target.hitbox.y);
                 return true;
             }
 
