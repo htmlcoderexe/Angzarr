@@ -54,7 +54,7 @@ class InventoryItem
     {
         let result = new InventoryItem();
         // mandatory properties from template
-        result.inventorySprite = GraphicsData.get(tpl.sprite);
+        result.inventorySprite = GraphicsData.get(tpl.sprite,tpl.palette);
         result.name = tpl.name;
         result.description = tpl.description;
         result.type = tpl.type;
