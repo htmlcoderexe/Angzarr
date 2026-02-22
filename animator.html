@@ -107,7 +107,7 @@ function loadFromText()
 function reloadGUI()
 {   
     window.sel_a.innerHTML="";
-    for(const [key, value] of Object.entries(window.sprite)) 
+    for(const [key, value] of Object.entries(window.vecSprite.animations)) 
     {
         let opt = document.createElement("option");
         opt.append(key);

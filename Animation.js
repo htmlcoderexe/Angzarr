@@ -587,12 +587,16 @@ class VectorSprite
      * Creates a new instance given a set of animations
      * @param {VectorAnimation[]} animations 
      */
-    constructor(animations)
+    constructor(animations,params)
     {
         // add each animation by its name
         animations.forEach((a)=>{
             this.animations[a.name] = a;
         });
+        if(params)
+        {
+            this.default_animation= params.default_animation ?? this.default_animation;
+        }
         this.play(this.default_animation);
     }
     /**
@@ -701,11 +705,21 @@ class VectorSprite
         let anims = [];
         // set the palette: if one is given, use that, else use the built-in, else use default grayscale
         palette = palette ?? obj['__palette'] ?? VectorSprite.DEFAULT_PALETTE;
+        let params = {default_animation:"idle"};
         // get every animation by name
         for(const [key, value] of Object.entries(obj)) 
         {
             if(key=="__palette")
+            {
+                console.log("Found palette: "+value);
                 continue;
+            }
+            if(key=="__default")
+            {
+                console.log("Set default: "+value);
+                params.default_animation=value;
+                continue;
+            }
             let paths = [];
             // create an AnimatedPath out of every path in the array and add
             value.forEach((p,i)=>{
@@ -716,6 +730,7 @@ class VectorSprite
             anims.push(new VectorAnimation(paths, key));
         }
         // create and return the vector sprite
-        return new VectorSprite(anims);
+        let result = new VectorSprite(anims,params);
+        return result;
     }
 }
