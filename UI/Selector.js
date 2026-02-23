@@ -8,8 +8,29 @@ class UISelector extends UIElement
     {
         super(rekt);
         this.options=options;
+        this.addEventListener("click",(x,y)=>
+        {
+            if(x<60)
+            {
+                // left arrow click
+                if(this.selectedIndex>0)
+                {
+                    this.selectedIndex--;
+                    this.raiseEvent("change",this.selectedIndex);
+                }
+                return true;
+            }
+            if(x>this.hitbox.width-60)
+            {
+                if(this.selectedIndex<this.options.length-1)
+                {
+                    this.selectedIndex++;
+                    this.raiseEvent("change",this.selectedIndex);
+                }
+                return true;
+            }
+        });
     }
-    changedHandler=()=>{};
     drawControl(ctx)
     {
         let w=this.hitbox.width;
@@ -35,42 +56,5 @@ class UISelector extends UIElement
             ctx.closePath();
             ctx.fill();
         }
-    }
-    addEventListener(event, handler)
-    {
-        if(super.addEventListener(event,handler))
-            return true;
-        switch(event)
-        {
-            case "change":
-            {
-                this.changedHandler=handler;
-                return true;
-            }
-        }
-        return false;
-    }
-    click(x,y)
-    {
-        if(x<60)
-        {
-            // left arrow click
-            if(this.selectedIndex>0)
-            {
-                this.selectedIndex--;
-                this.changedHandler();
-            }
-            return true;
-        }
-        if(x>this.hitbox.width-60)
-        {
-            if(this.selectedIndex<this.options.length-1)
-            {
-                this.selectedIndex++;
-                this.changedHandler();
-            }
-            return true;
-        }
-        return super.click(x,y);
     }
 }

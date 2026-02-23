@@ -22,8 +22,8 @@ class UIElement
     get w() {
         return this.originalHitbox.width;  
     }
-    clickHandler = ()=>{};
-    swipeHandler = ()=>{};
+    eventHandlers = {};
+    eventFilters = {};
     constructor(rekt)
     {
         this.hitbox= new Rectangle(...rekt);
@@ -109,58 +109,90 @@ class UIElement
             return null;
         }
     }
+    /**
+     * Attaches a handler to a specific event.
+     * @param {string} event Event to be handled
+     * @param {callback} handler Event handler. If this returns true, 
+     * the element's children, if any, will not be receiving the event.
+     */
     addEventListener(event, handler)
     {
-        if(event=="click")
+        if(!this.eventHandlers[event])
         {
-            this.clickHandler=handler;
-            return true;
+            this.eventHandlers[event]= [];
         }
-        return false;
+        this.eventHandlers[event].push(handler);
+        console.log("Event listener for <"+event+"> installed");
     }
     /**
-     * Clicks the control.
-     * @param {PointerEvent} e 
+     * Adds a parameter filter for a specific event.
+     * The filter function modifies incoming event args
+     * before they are passed onto child elements.
+     * Multiple filters may be installed and are run in order of installation.
+     * @param {string} event Event to install the filter for
+     * @param {callback} handler Filter function. This must return an array 
+     * containing the entire set of args, whether or not any have been modified.
      */
-    click(x,y)
+    addEventFilter(event, handler)
     {
-        // just call the clickhandler for now
-        let handled = this.clickHandler?.(x,y);
+        if(!this.eventFilters[event])
+        {
+            this.eventFilters[event]= [];
+        }
+        this.eventFilters[event].push(handler);
+        console.log("Event filter for <"+event+"> installed");
+    }
+    /**
+     * Calls any event handlers installed, 
+     * filters the parameters with available filters 
+     * and attempts to propagate event to child elements.
+     * @param {string} name event name
+     * @param  {...any} params event args
+     * @returns 
+     */
+    raiseEvent(name, ...params)
+    {
+        console.log("Event <"+name+"> triggered with params", params);
+        let handled = false;
+        // check for event handlers on this element
+        if(this.eventHandlers[name])
+        {
+            // run all handlers, if any of them return true,
+            // consider the event handled
+            this.eventHandlers[name].forEach((handler)=>{
+                handled = handled || handler(...params);
+            });
+            console.log(this.eventHandlers[name].length+" event handlers processed.");
+        }
+        // if not yet handled, pass event to children
         if(!handled && this.children.length>0)
-        {               
-            for(let i =0;i<this.children.length;i++)
+        {
+            // run any filters on the params
+            if(this.eventFilters[name])
             {
-                // recursion! if something got hit, it will either return itself or get even more specific.
-                const child = this.children[i].checkhit(x,y);
-                if(child)
-                {
-                    let handled2 = child.click?.(x-child.hitbox.x,y-child.hitbox.y);
-                    if(handled2)
-                        return true;
-                }
+                this.eventFilters[name].forEach((handler)=>{
+                    params = handler(...params);
+                });
+                console.log(this.eventFilters[name].length+" event filters processed.");
             }
-        }
-        return handled;
-    }
-    /**
-     * Clicks the control.
-     * @param {PointerEvent} e 
-     */
-    swipe(x,y,dx,dy)
-    {
-        // just call the clickhandler for now
-        let handled = this.swipeHandler?.(x,y,dx,dy);
-        if(!handled && this.children.length>0)
-        {               
-            for(let i =0;i<this.children.length;i++)
+            // not all events have x,y but if they do it will be the first 2
+            if(params.length>=2)
             {
-                // recursion! if something got hit, it will either return itself or get even more specific.
-                const child = this.children[i].checkhit(x,y);
-                if(child)
+                let x = params[0];
+                let y = params[1];
+                // basically check if any child elements accept the event
+                for(let i =0;i<this.children.length;i++)
                 {
-                    let handled2 = child.swipe?.(x-child.hitbox.x,y-child.hitbox.y);
-                    if(handled2)
-                        return true;
+                    const child = this.children[i].checkhit(x,y);
+                    if(child)
+                    {
+                        // pass the event, modifying x,y relative to the target
+                        params[0]=x-child.hitbox.x;
+                        params[1]=y-child.hitbox.y;
+                        let handled2 = child.raiseEvent(name, ...params);
+                        if(handled2)
+                            return true;
+                    }
                 }
             }
         }

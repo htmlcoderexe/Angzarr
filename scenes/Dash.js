@@ -48,10 +48,10 @@ class GameSceneDash extends GameScene
             80),
             "Exit"
         );
-        titlebt.clickHandler=()=>{
+        titlebt.addEventListener("click",()=>{
             window.gameManager.currentScene = new GameSceneTitle();
-        };
-        unpausebt.clickHandler=()=>{
+        });
+        unpausebt.addEventListener("click",()=>{
             
             console.warn("BEGIN removing shit");
             this.uimgr.message("","#000000");
@@ -60,7 +60,7 @@ class GameSceneDash extends GameScene
             this.uimgr.remove($id('inv_container'));
             console.warn("removed shit");
             this.paused=false;
-        };
+        });
         this.uimgr.add(titlebt,"system");
     }
     levelDone()
@@ -73,12 +73,12 @@ class GameSceneDash extends GameScene
             80),
             "Continue"
         );
-        retrybt.clickHandler=()=>{
+        retrybt.addEventListener("click",()=>{
             // pass the player here to keep progress
             this.uimgr.message("","#000000");
             this.player.level++;
             window.gameManager.currentScene = new GameSceneDash(this.mode,this.player);
-        };
+        });
         this.uimgr.activeLayer="system";
         this.uimgr.add(retrybt);
         let shopbt = new UIButton(new Rectangle(
@@ -89,10 +89,10 @@ class GameSceneDash extends GameScene
             "Shop"
         );
         shopbt.colourScheme="green";
-        shopbt.clickHandler=()=>{
+        shopbt.addEventListener("click",()=>{
             this.uimgr.activeLayer="system";
             UITemplate.ShowTemplate(this.uimgr,"arcade_shop",[0,this.longSide*0.60],this.player);
-        };
+        });
         this.uimgr.activeLayer="system";
         this.uimgr.add(shopbt);
         this.paused=true;
@@ -171,19 +171,19 @@ class GameSceneDash extends GameScene
                 64,64
             ),"||"
         );
-        pBt.clickHandler=()=>{
+        pBt.addEventListener("click",()=>{
                 this.pause();
-            };
+            });
         this.uimgr.add(pBt);
         const scoredspl= new DisplayLabel(new Rectangle(this.shortSide-180,10,170,45),"000000");
         this.scoredisplay=scoredspl;
         this.uimgr.add(scoredspl);
         const hiscoredspl= new DisplayLabel(new Rectangle(this.shortSide-220,65,170,45),"000000");
         this.hiscoredisplay=hiscoredspl;
-        scoredspl.clickHandler=()=>{
+        scoredspl.addEventListener("click",()=>{
             window.gameManager.debug=!window.gameManager.debug;
             console.warn("debug "+(window.gameManager.debug?"en":"dis")+"abled");
-        };
+        });
         //this.uimgr.add(hiscoredspl);
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-24,150,18,400));
         this.uimgr.add(this.stageProgressBox);
@@ -375,9 +375,9 @@ class GameSceneDash extends GameScene
                     80),
                     "Retry"
                 );
-                retrybt.clickHandler=()=>{
+                retrybt.addEventListener("click",()=>{
                     window.gameManager.currentScene = new GameSceneDash(this.mode);
-                };
+                });
                 this.uimgr.activeLayer="system";
                 this.uimgr.add(retrybt);
                 this.paused=true;

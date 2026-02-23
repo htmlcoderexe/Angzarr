@@ -18,6 +18,12 @@ class ItemDisplay extends UIElement
     {
         super([x,y,64,64]);
         this.item = item;
+        this.addEventListener("click",(x,y)=>
+        {
+            this.parent.selectedIndex = this.inventoryIndex;
+            console.log(x,y,this.parent,this.inventoryIndex);
+            return true;
+        });
     }
     drawControl(ctx)
     {
@@ -50,10 +56,4 @@ class ItemDisplay extends UIElement
             this.item.inventorySprite.update(dt);
         }
     }
-    clickHandler=(x,y)=>
-    {
-        this.parent.selectedIndex = this.inventoryIndex;
-        console.log(x,y,this.parent,this.inventoryIndex);
-        return true;
-    };
 }

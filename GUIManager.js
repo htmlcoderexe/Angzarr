@@ -210,12 +210,20 @@ class GUIManager
         let target = this.pickElement(x,y);
         if(target)
         {
-            target.click?.(x-target.hitbox.x,y-target.hitbox.y);
+            target.raiseEvent("click", x-target.hitbox.x,y-target.hitbox.y);
         }
         return handled;
     }
     handleDrag(x1,y1,x2,y2)
     {
+        let handled = false;
+        // check all UI elements 
+        let target = this.pickElement(x1,y1);
+        if(target)
+        {
+            target.raiseEvent("drag",x1-target.hitbox.x,y1-target.hitbox.y,x2,y2);
+        }
+        return handled;
 
     }
     handleSwipe(x,y,dx,dy)
@@ -225,7 +233,7 @@ class GUIManager
         let target = this.pickElement(x,y);
         if(target)
         {
-            target.swipe?.(x-target.hitbox.x,y-target.hitbox.y,dx,dy);
+            target.raiseEvent("swipe",x-target.hitbox.x,y-target.hitbox.y,dx,dy);
         }
         return handled;
 

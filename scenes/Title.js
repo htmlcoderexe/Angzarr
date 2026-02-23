@@ -29,9 +29,9 @@ class GameSceneTitle extends GameScene
             80),
             "Play"
         );
-        playbt.clickHandler=()=>{
+        playbt.addEventListener("click",()=>{
             window.gameManager.currentScene = new GameSceneDash("rpg");
-        };
+        });
         this.uimgr.add(playbt,"system");
     }
     update(dT)
