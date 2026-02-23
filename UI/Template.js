@@ -360,7 +360,7 @@ inventory_test: {
                 type: "text",
                 id: "lipsum",
                 halign: "centre",
-                x:140,
+                x:0,
                 y:50,
                 w:280,
                 h:0,

@@ -1,3 +1,6 @@
+const TEXT_ALIGN_CENTRE = 0;
+const TEXT_ALIGN_LEFT = 1;
+const TEXT_ALIGN_RIGHT = 2;
 class WrappedText extends UIElement
 {
     lines = [];
@@ -5,6 +8,7 @@ class WrappedText extends UIElement
     linespace=1;
     lineheight=1;
     fill="#FFFFFF";
+    align = TEXT_ALIGN_LEFT;
     constructor(rekt,text)
     {
         super(rekt);
@@ -42,9 +46,36 @@ class WrappedText extends UIElement
     {
         ctx.font = this.font;
         ctx.fillStyle=this.fill;
+        ctx.textBaseline="top";
+        let multiplier = 0;
+        switch(this.align)
+        {
+            case TEXT_ALIGN_CENTRE:
+            {
+                multiplier=1;
+                ctx.textAlign="center";
+                break;
+            }
+            case TEXT_ALIGN_LEFT:
+            {
+                multiplier =0;
+                ctx.textAlign="left";
+                break;
+            }
+            case TEXT_ALIGN_RIGHT:
+            {
+                multiplier = 2;
+                ctx.textAlign="right";
+                break;
+            }
+        }
+        ctx.translate(this.w/2*multiplier,0);
+        let linesDrawn = 0;
         this.lines.forEach((l,i)=>{
             ctx.fillText(l,0,0);
             ctx.translate(0,this.lineheight);
+            linesDrawn=i+1;
         });
+        ctx.translate(this.w/2*multiplier,-this.lineheight*linesDrawn);
     }
 }
