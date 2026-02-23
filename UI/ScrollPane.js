@@ -2,8 +2,8 @@ class ScrollPane extends UIElement
 {
     offsetY =0;
     momentum = 0;
-    maxrate=20;
-    friction=10;
+    maxrate=15;
+    friction=0.4;
     moverate=1;
     lastswipe=0;
     diff=0;
@@ -14,21 +14,14 @@ class ScrollPane extends UIElement
         if(this.diff<0)
         {
             this.diff=0;
-        }
-        const prev = this.momentum;
-        if(this.momentum<0)
-        {
-            this.momentum+=dT*this.friction;
-        }
-        else if(this.momentum>0)
-        {
-            this.momentum-=dT*this.friction;
-        }
-        if(this.momentum*prev<0)
+        } 
+        this.momentum*=Math.pow(this.friction,dT);
+        console.log(this.momentum);
+        if(Math.abs(this.momentum)<0.5)
         {
             this.momentum=0;
         }
-        this.offsetY+=dT*this.momentum*this.moverate;
+        this.offsetY+=this.momentum*this.moverate;
         if(this.offsetY+this.diff<0)
             this.offsetY= -this.diff;
         if(this.offsetY>0)
@@ -74,7 +67,7 @@ class ScrollPane extends UIElement
                 this.offsetY=0;
             });
         this.addEventListener("drag",(x,y,dx,dy)=>{
-            this.momentum=dy;
+            this.momentum=Math.min(this.lastswipe,this.maxrate);
             return true;
         });
     }

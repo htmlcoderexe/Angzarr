@@ -9,9 +9,10 @@ class WrappedText extends UIElement
     lineheight=1;
     fill="#FFFFFF";
     align = TEXT_ALIGN_LEFT;
-    constructor(rekt,text)
+    constructor(rekt,text="Lorem ipsum dolor sit on ur mums face lmao gottem") // default test string courtesy of xochi
     {
         super(rekt);
+
         this.addText(text);
     }
     addText(text, newline=false)
