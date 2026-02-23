@@ -33,16 +33,16 @@ class ItemDisplay extends UIElement
             if(this.item.count>1)
             {
                 // font, #TODO: replace with something cooler, Geo font looks nice
-                ctx.font = "bold 16px sans-serif";
+                ctx.font = "bold 16px roboto";
                 // braindead centering logic at 3AM
                 //ctx.textAlign="center";
                 ctx.textBaseline="bottom";
                 // draw the shit
-                ctx.lineWidth = 1;
+                ctx.lineWidth = 2;
                 ctx.strokeStyle="#000000";
                 ctx.fillStyle="#FFFFFF";
-                ctx.fillText(this.item.count,12,64-3);
                 ctx.strokeText(this.item.count,12,64-3);
+                ctx.fillText(this.item.count,12,64-3);
             }
             ctx.translate(32,32);
             this.item.inventorySprite.draw(ctx);
