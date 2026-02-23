@@ -109,6 +109,18 @@ class UIElement
             return null;
         }
     }
+    getChildrenBBox()
+    {
+        let mX =0;
+        let mY=0;
+        this.children.forEach((c)=>{
+            let nx = c.hitbox.x+c.hitbox.width;
+            let ny = c.hitbox.y+c.hitbox.height;
+            mX=Math.max(mX,nx);
+            mY=Math.max(mY,ny);
+        });
+        return [mX,mY];
+    }
     /**
      * Attaches a handler to a specific event.
      * @param {string} event Event to be handled

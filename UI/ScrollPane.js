@@ -6,8 +6,15 @@ class ScrollPane extends UIElement
     friction=10;
     moverate=1;
     lastswipe=0;
+    diff=0;
     update(dT)
     {
+        let contentHeight = this.getChildrenBBox()[1];
+        this.diff = contentHeight-this.h;
+        if(this.diff<0)
+        {
+            this.diff=0;
+        }
         const prev = this.momentum;
         if(this.momentum<0)
         {
@@ -22,11 +29,11 @@ class ScrollPane extends UIElement
             this.momentum=0;
         }
         this.offsetY+=dT*this.momentum*this.moverate;
-            if(this.offsetY+this.h<0)
-                this.offsetY= -this.h;
-            if(this.offsetY>0)
-                this.offsetY=0;
-    }
+        if(this.offsetY+this.diff<0)
+            this.offsetY= -this.diff;
+        if(this.offsetY>0)
+            this.offsetY=0;
+}
     draw(ctx)
     {
         
@@ -61,12 +68,11 @@ class ScrollPane extends UIElement
             this.momentum=0;
             this.offsetY+=dy;
             this.lastswipe=dy;
-            if(this.offsetY+this.h<0)
-                this.offsetY= -this.h;
+            if(this.offsetY+this.diff<0)
+                this.offsetY= -this.diff;
             if(this.offsetY>0)
                 this.offsetY=0;
-            return true;
-        });
+            });
         this.addEventListener("drag",(x,y,dx,dy)=>{
             this.momentum=dy;
             return true;
