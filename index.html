@@ -50,9 +50,20 @@
 <body>
 <canvas id="mainscreen"></canvas>
 <script>
-    let buttonFont = new FontFace('geo', 'url(https://fonts.gstatic.com/s/geo/v23/CSRz4zRZluflKHpn.woff2)');
-    let counterFont = new FontFace('sixtyfour',"url(https://fonts.gstatic.com/s/sixtyfour/v3/OD5vuMCT1numDm3nakXtp2h4jg463t9haG_3mBkVsV20uFT3BAE5f43flSU.woff2)");
-    Promise.all([buttonFont.load(),counterFont.load()]).then((fonts)=>{
+    let fontsToLoad = [
+        ['geo','url(https://fonts.gstatic.com/s/geo/v23/CSRz4zRZluflKHpn.woff2)'],
+        ['sixtyfour',"url(https://fonts.gstatic.com/s/sixtyfour/v3/OD5vuMCT1numDm3nakXtp2h4jg463t9haG_3mBkVsV20uFT3BAE5f43flSU.woff2)"],
+        ['roboto','url(https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2)'],
+        ['roboto','url(https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMaxKUBGEe.woff2)']
+    ];
+    //let buttonFont = new FontFace('geo', 'url(https://fonts.gstatic.com/s/geo/v23/CSRz4zRZluflKHpn.woff2)');
+    //let counterFont = new FontFace('sixtyfour',"url(https://fonts.gstatic.com/s/sixtyfour/v3/OD5vuMCT1numDm3nakXtp2h4jg463t9haG_3mBkVsV20uFT3BAE5f43flSU.woff2)");
+    let promises = [];
+    fontsToLoad.forEach((f)=>{
+        let ff = new FontFace(...f);
+        promises.push(ff.load());
+    });
+    Promise.all(promises).then((fonts)=>{
         fonts.forEach((font)=>{
             document.fonts.add(font);
         });
