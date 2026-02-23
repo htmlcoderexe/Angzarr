@@ -71,17 +71,23 @@ class GameManager
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
+            // generate the swipe event from current position
+            // and the previous position of this pointer 
             let x = e.offsetX;
             let ox =this.prevPointer1[0];
             let dx=x-ox;
             let y = e.offsetY;
             let oy=this.prevPointer1[1];
             let dy=y-oy;
+            // only actually trigger the swipe if pointer currently down
             if(this.pointer1Down)
                 this.currentScene.uimgr.handleSwipe(ox,oy,dx,dy);
+            // store this position for next time
             this.prevPointer1=[x,y];
             this.currentScene.handlePrimaryPointerMove(x,y);
         }
+        // same but for secondary pointer
+        // that's how you get multitouch well "dual" touch or whatever
         else
         {
             let x = e.offsetX;
@@ -106,7 +112,10 @@ class GameManager
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
+            // drop the pointer down state
             this.pointer1Down=false;
+            // generate the drag event from current position
+            // and the position this pointer went down on
             let x = e.offsetX;
             let ox =this.downPointer1[0];
             let dx=x-ox;
@@ -114,6 +123,7 @@ class GameManager
             let oy=this.downPointer1[1];
             let dy=y-oy;
             let handled = false;
+            // see if anything handles the drag event this generates
             if(dx!=0 || dy!=0)
             {
                 handled = this.currentScene.uimgr.handleDrag(ox,oy,dx,dy);
@@ -123,6 +133,9 @@ class GameManager
                 e.preventDefault();
                 return;
             }
+            // check if the control the pointer went up on is the same
+            // the pointer previously went down on
+            // if yes, generate a click for the UI manager
             let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
             if(eup==this.p1control)
             {
@@ -133,8 +146,10 @@ class GameManager
                     return;
                 }
             }
+            // if still here, pass the pointerup to the scene
             this.currentScene.handlePrimaryPointerUp(e);
         }
+        // same stuff for secondary
         else
         {
             this.pointer2Down=false;
@@ -177,11 +192,19 @@ class GameManager
     handlePointerDown(e)
     {
         // this distinguishes second (and so on) touch on touch devices
+        // basically it records the UI control the pointer went down on, if any
+        // this will be checked in the corresponding pointerUp handler to generate
+        // the click event for the UI
         if(e.isPrimary)
         {
+            // also set the pointer down state
             this.pointer1Down=true;
+            // and the location where the pointer went down
             this.downPointer1=[e.offsetX,e.offsetY];
             this.p1control=this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            // yeah in theory should be some possibility for UI to intercept down event
+            // but that's too hairy for now and most of the time
+            // the artificial swipe event does whatever was needed anyway
             this.currentScene.handlePrimaryPointerDown(e);
         }
         else
@@ -200,38 +223,17 @@ class GameManager
      */
     handlePointerClick(e)
     {
+        // fuck this, we get twice the clicks because of the pointerup event
+        // so UI clicks happen in the PointerUp event
+        // this will just pass the click event to the rest of the scene
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
             this.currentScene.handlePrimaryPointerClick(e.offsetX,e.offsetY);
-            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
-            if(eup!=this.p1control)
-            {
-                e.preventDefault();
-                return;
-            }
-            let handled = this.currentScene.uimgr.handleClick(e.offsetX,e.offsetY);
-            if(handled)
-            {
-                e.preventDefault();
-                return;
-            }
         }
         else
         {
             this.currentScene.handleSecondaryPointerClick(e.offsetX,e.offsetY);
-            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
-            if(eup!=this.p2control)
-            {
-                e.preventDefault();
-                return;
-            }
-            let handled = this.currentScene.uimgr.handleClick(e.offsetX,e.offsetY);
-            if(handled)
-            {
-                e.preventDefault();
-                return;
-            }
         }
         e.preventDefault();
 

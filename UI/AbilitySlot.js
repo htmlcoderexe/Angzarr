@@ -16,6 +16,7 @@ class AbilitySlot extends UIElement
     {
         super(rekt);
         this.ability=ability;
+        this.addEventListener("click",(x,y)=>{this.ability.use();});
     }
     drawControl(ctx)
     {
@@ -32,14 +33,5 @@ class AbilitySlot extends UIElement
                 Math.floor(this.ability.charge),this.ability.maxcharge,
                 "0 255 50");
         }
-    }
-    click(x,y)
-    {
-        // that's it!
-        // the click will tell the ability that someone wants to use it
-        // the ability might get used or might not
-        // but either way we don't care
-        // whatever happens to the ability will be easily seen when the control gets drawn
-        this.ability.use();
     }
 }
