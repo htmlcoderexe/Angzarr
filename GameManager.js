@@ -52,6 +52,16 @@ class GameManager
         // ensures rendering matches refresh rate
         requestAnimationFrame((t)=>this.update(t));
     }
+    sizeText(text, font)
+    {
+        if(!this.ctx)
+            return [1,1];
+        this.ctx.font = font;
+        let metrics = this.ctx.measureText(text);
+        let strw = metrics.actualBoundingBoxRight + metrics.actualBoundingBoxLeft;
+        let strh = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+        return [strw,strh];
+    }
     /**
      * Handles pointer (touch, mouse) movement
      * @param {PointerEvent} e - the event from DOM

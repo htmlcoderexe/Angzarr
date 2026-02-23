@@ -65,6 +65,11 @@ class UITemplate
                 result = new ScrollPane(rekt,...params);
                 break;
             }
+            case "text":
+            {
+                result = new WrappedText(rekt,...params);
+                break;
+            }
             case "inventory":
             {
                 result = new InventoryDisplay(rekt.x,rekt.y,...params);
@@ -294,7 +299,7 @@ arcade_shop:
         $id('shopselector').changedHandler();
     }
 },
-inventory_test: {
+inventory_test2: {
     controls: [
         {
             type: "scroll",
@@ -331,6 +336,43 @@ inventory_test: {
                 console.log("Selected item #"+(index+1));
             }
         }
+    ],
+    params:[
+        "inventory"
+    ],
+    init:()=>{
+
+    }
+},
+inventory_test: {
+    controls: [
+        {
+            type: "scroll",
+            id: "inv_container",
+            halign: "centre",
+            x:0,
+            y:0,
+            w: 300,
+            h:300,
+            params: [],
+            children: [
+            {
+                type: "text",
+                id: "lipsum",
+                halign: "centre",
+                x:140,
+                y:50,
+                w:280,
+                h:0,
+                params: [
+                    "Lorem ipsum dolor sit amet bla bla your mom's face or something I guess lol"
+                ]
+            }
+
+            ]
+        }
+    ],
+    event_handlers: [
     ],
     params:[
         "inventory"
