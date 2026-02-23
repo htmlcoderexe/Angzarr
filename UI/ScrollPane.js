@@ -1,7 +1,32 @@
 class ScrollPane extends UIElement
 {
     offsetY =0;
-
+    momentum = 0;
+    maxrate=20;
+    friction=10;
+    moverate=1;
+    lastswipe=0;
+    update(dT)
+    {
+        const prev = this.momentum;
+        if(this.momentum<0)
+        {
+            this.momentum+=dT*this.friction;
+        }
+        else if(this.momentum>0)
+        {
+            this.momentum-=dT*this.friction;
+        }
+        if(this.momentum*prev<0)
+        {
+            this.momentum=0;
+        }
+        this.offsetY+=dT*this.momentum*this.moverate;
+            if(this.offsetY+this.h<0)
+                this.offsetY= -this.h;
+            if(this.offsetY>0)
+                this.offsetY=0;
+    }
     draw(ctx)
     {
         
@@ -26,16 +51,25 @@ class ScrollPane extends UIElement
         ctx.clip();
         ctx.translate(-this.originalHitbox.x,-this.originalHitbox.y);
     }
-    swipeHandler=(x,y,dx,dy)=>{
-        this.offsetY+=dy;
-        if(this.offsetY+this.h<0)
-            this.offsetY= -this.h;
-        if(this.offsetY>0)
-            this.offsetY=0;
-        return true;
-    };
-    click(x,y)
+    constructor(rekt)
     {
-        super.click(x,y-this.offsetY);
+        super(rekt);
+        this.addEventFilter("click",(x,y)=>{
+            return [x,y-this.offsetY];
+        });
+        this.addEventListener("swipe",(x,y,dx,dy)=>{
+            this.momentum=0;
+            this.offsetY+=dy;
+            this.lastswipe=dy;
+            if(this.offsetY+this.h<0)
+                this.offsetY= -this.h;
+            if(this.offsetY>0)
+                this.offsetY=0;
+            return true;
+        });
+        this.addEventListener("drag",(x,y,dx,dy)=>{
+            this.momentum=dy;
+            return true;
+        });
     }
 }
