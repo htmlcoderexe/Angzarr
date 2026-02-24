@@ -15,7 +15,19 @@ class WrappedText extends UIElement
 
         this.addText(text);
     }
-    addText(text, newline=false)
+    addText(text, newline = false)
+    {
+        let lines = text.split("\n");
+        let first = lines.shift();
+        this.addLine(first,newline);
+        if(lines.length>0)
+        {
+            lines.forEach((l)=>{
+                this.addLine(l,true);
+            });
+        }
+    }
+    addLine(text, newline=false)
     {
         let currentline = "";
         let words = text.split(" ");
