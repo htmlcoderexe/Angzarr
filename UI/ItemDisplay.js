@@ -14,7 +14,7 @@ class ItemDisplay extends UIElement
         }
         this.#_item = value;
     }
-    constructor(item,x,y)
+    constructor(x,y,item=undefined)
     {
         super([x,y,64,64]);
         this.item = item;

@@ -2,6 +2,12 @@ class InventoryDisplay extends UIElement
 {
     inventory = null;
     #selected =-1;
+    get selectedItem()
+    {
+        if(this.#selected==-1)
+            return undefined;
+        return this.inventory.items[this.#selected];
+    }
     get selectedIndex()
     {
         return this.#selected;
@@ -11,7 +17,7 @@ class InventoryDisplay extends UIElement
         if(value!=this.#selected)
         {
             this.#selected=value;
-            this.selectHandler?.(value);
+            this.raiseEvent("select",value);
         }
     }
     constructor(x, y,inventory, columns)
@@ -29,7 +35,7 @@ class InventoryDisplay extends UIElement
                 let offset = row*columns+col;
                 if(offset>inventory.capacity)
                     continue;
-                let ii = new ItemDisplay(inventory.items[offset],col*(padding+iwidth)+padding,row*(padding+iwidth)+padding);
+                let ii = new ItemDisplay(col*(padding+iwidth)+padding,row*(padding+iwidth)+padding,inventory.items[offset]);
                 ii.inventoryIndex = offset;
                 this.add(ii);
             }
@@ -37,19 +43,5 @@ class InventoryDisplay extends UIElement
     drawControl(ctx)
     {
         UIRenderer.drawFrame(ctx,0,0,this.hitbox.width,this.hitbox.height);
-    }
-    addEventListener(event, handler)
-    {
-        if(super.addEventListener(event,handler))
-            return true;
-        switch(event)
-        {
-            case "select":
-            {
-                this.selectHandler=handler;
-                return true;
-            }
-        }
-        return false;
     }
 }

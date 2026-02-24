@@ -9,17 +9,40 @@ class WrappedText extends UIElement
     lineheight=1;
     fill="#FFFFFF";
     align = TEXT_ALIGN_LEFT;
+    #text ="";
+    get text() {
+        return this.#text;
+    }
+    set text(value) {
+        this.setText(value);
+    }
     constructor(rekt,text="Lorem ipsum dolor sit on ur mums face lmao gottem") // default test string courtesy of xochi
     {
         super(rekt);
 
+        this.setText(text);
+    }
+    setText(text)
+    {
+        this.lines=[];
+        this.#text = "";
         this.addText(text);
     }
     addText(text, newline = false)
     {
+        if(newline)
+        {
+            this.#text+="\n";
+        }
+        this.#text+=text;
+        // split into lines
         let lines = text.split("\n");
+        // only the first line is affected by the newline param
+        // so do it separately
         let first = lines.shift();
         this.addLine(first,newline);
+        // in case there were multiple lines, add the rest always
+        // with newline true
         if(lines.length>0)
         {
             lines.forEach((l)=>{

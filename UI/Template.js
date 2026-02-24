@@ -60,6 +60,11 @@ class UITemplate
                 result = new AbilitySlot(rekt,...params);
                 break;
             }
+            case "itemslot":
+            {
+                result = new ItemDisplay(rekt.x,rekt.y, ...params);
+                break;
+            }
             case "scroll":
             {
                 result = new ScrollPane(rekt,...params);
@@ -81,6 +86,8 @@ class UITemplate
     static InstantiateControl(control, parent,offset=[0,0])
     {
         let params = control.params;
+        if(!params)
+            params = [];
         console.warn(...arguments);
         for(let i=0;i<params.length;i++)
         {
@@ -296,29 +303,30 @@ arcade_shop:
         "player"
     ],
     init:()=>{            
-        $id('shopselector').changedHandler();
+        $id('shopselector').raiseEvent("change", 0);
     }
 },
-inventory_test2: {
+inventory_test: {
     controls: [
         {
-            type: "scroll",
-            id: "inv_container",
-            halign: "centre",
-            x:0,
-            y:0,
-            w: 300,
-            h:300,
+            type: "itemslot", id: "item_icon",
+            x: 0, y: 0, w: 70, h: 70
+        },
+        {
+            type: "text", id: "item_desc",
+            x:100, y:0, w:200, h:200,
+            params: ["Select an item to view it."]
+        },
+        {
+            type: "scroll", id: "inv_container",
+            halign: "centre", 
+            x:0,y:200, w: 300, h:300,
             params: [],
             children: [
             {
-                type: "inventory",
-                id: "inv_view",
+                type: "inventory", id: "inv_view",
                 halign:"centre",
-                x:0,
-                y:0,
-                w:0,
-                h:0,
+                x:0, y:0, w:0, h:0,
                 params: [
                     "$inventory",
                     4
@@ -333,7 +341,13 @@ inventory_test2: {
             control: "inv_view",
             event: "select",
             handler: (index)=>{
-                console.log("Selected item #"+(index+1));
+                let item = $id('inv_view').selectedItem;
+                if(item)
+                {
+                    $id('item_desc').text = item.description;
+                    $id('item_icon').item = item;
+                }
+
             }
         }
     ],
@@ -344,7 +358,7 @@ inventory_test2: {
 
     }
 },
-inventory_test: {
+inventory_test2: {
     controls: [
         {
             type: "scroll",
