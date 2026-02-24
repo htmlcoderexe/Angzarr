@@ -172,18 +172,8 @@ class UIElement
     {
         console.log("Event <"+name+"> triggered with params", params);
         let handled = false;
-        // check for event handlers on this element
-        if(this.eventHandlers[name])
-        {
-            // run all handlers, if any of them return true,
-            // consider the event handled
-            this.eventHandlers[name].forEach((handler)=>{
-                handled = handled || handler(...params);
-            });
-            console.log(this.eventHandlers[name].length+" event handlers processed.");
-        }
         // if not yet handled, pass event to children
-        if(!handled && this.children.length>0)
+        if(this.children.length>0)
         {
             // run any filters on the params
             if(this.eventFilters[name])
@@ -213,6 +203,16 @@ class UIElement
                     }
                 }
             }
+        }
+        // check for event handlers on this element
+        if(this.eventHandlers[name])
+        {
+            // run all handlers, if any of them return true,
+            // consider the event handled
+            this.eventHandlers[name].forEach((handler)=>{
+                handled = handled || handler(...params);
+            });
+            console.log(this.eventHandlers[name].length+" event handlers processed.");
         }
         return handled;
     }

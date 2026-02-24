@@ -22,7 +22,7 @@ class UITemplate
             controls.push(c);
         }
         container.addEventListener("close",()=>{$destroy(container)});
-        
+        container.addEventListener("click",(x,y)=>{console.log("Outside template click: "+x+","+y);});
         for(let i= 0; i<tpl.event_handlers.length;i++)
         {
             let control = tpl.event_handlers[i].control;
