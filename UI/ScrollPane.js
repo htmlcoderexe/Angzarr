@@ -9,6 +9,7 @@ class ScrollPane extends UIElement
     diff=0;
     update(dT)
     {
+        super.update(dT);
         let contentHeight = this.getChildrenBBox()[1];
         this.diff = contentHeight-this.h;
         if(this.diff<0)
@@ -16,7 +17,6 @@ class ScrollPane extends UIElement
             this.diff=0;
         } 
         this.momentum*=Math.pow(this.friction,dT);
-        console.log(this.momentum);
         if(Math.abs(this.momentum)<0.5)
         {
             this.momentum=0;
