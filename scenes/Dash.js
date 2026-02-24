@@ -20,8 +20,10 @@ class GameSceneDash extends GameScene
     mode;
     pause()
     {
+        console.log("pause triggered");
         if(this.paused)
             return;
+        console.log("game thinks it's unpaused");
         this.paused=true;
         this.uimgr.activeLayer="system";
         UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,this.longSide*0.50],this.player.inventory,this);

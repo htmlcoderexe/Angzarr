@@ -109,6 +109,36 @@ class UIElement
             return null;
         }
     }
+    /**
+     * Givent a point on the screen, find the most specific (nested) control it hits and nest it.
+     * @param {int} x - Screen X
+     * @param {int} y - Screen Y
+     * @returns 
+     */
+    checkhitSpecific(x, y)
+    {
+        // if this control contains the point, check if we can be more specific
+        if(this.hitbox.testPoint(x,y))
+        {
+            // if any sub-controls, check each
+            if(this.children && this.children.length>0)
+            {
+                for(let i =0;i<this.children.length;i++)
+                {
+                    let c = this.children[i].checkhitSpecific(x-this.hitbox.x, y-this.hitbox.y);
+                    if(c)
+                        return c;
+                }
+            }
+            // either there are no sub-controls, or none got hit
+            return this;
+        }
+        // if point outside control, return nothingness
+        else
+        {
+            return null;
+        }
+    }
     top()
     {
         if(!this.parent || this.parent == this.uimgr)
@@ -213,6 +243,8 @@ class UIElement
                 handled = handled || handler(...params);
             });
             console.log(this.eventHandlers[name].length+" event handlers processed.");
+            console.log(this,...params);
+            console.log("^^control and params");
         }
         return handled;
     }

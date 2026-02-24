@@ -130,22 +130,26 @@ class GameManager
             }
             if(handled)
             {
+                this.p1control=null;
                 e.preventDefault();
                 return;
             }
             // check if the control the pointer went up on is the same
             // the pointer previously went down on
             // if yes, generate a click for the UI manager
-            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
+            console.warn(this.p1control, eup);
             if(eup==this.p1control)
             {
                 handled = this.currentScene.uimgr.handleClick(x,y);
                 if(handled)
                 {
+                this.p1control=null;
                     e.preventDefault();
                     return;
                 }
             }
+            this.p1control=null;
             // if still here, pass the pointerup to the scene
             this.currentScene.handlePrimaryPointerUp(e);
         }
@@ -166,20 +170,23 @@ class GameManager
             }
             if(handled)
             {
+                this.p2control=null;
                 e.preventDefault();
                 return;
             }
-            let eup= this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
             if(eup==this.p2control)
             {
                 handled = this.currentScene.uimgr.handleClick(x,y);
                 if(handled)
                 {
+                    this.p2control=null;
                     e.preventDefault();
                     return;
                 }
 
             }
+            this.p2control=null;
             this.currentScene.handleSecondaryPointerUp(e);
         }
         e.preventDefault();
@@ -201,7 +208,7 @@ class GameManager
             this.pointer1Down=true;
             // and the location where the pointer went down
             this.downPointer1=[e.offsetX,e.offsetY];
-            this.p1control=this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            this.p1control=this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
             // yeah in theory should be some possibility for UI to intercept down event
             // but that's too hairy for now and most of the time
             // the artificial swipe event does whatever was needed anyway
@@ -211,7 +218,7 @@ class GameManager
         {
             this.pointer2Down=true;
             this.downPointer2=[e.offsetX,e.offsetY];
-            this.p2control=this.currentScene.uimgr.pickElement(e.offsetX,e.offsetY);
+            this.p2control=this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
             this.currentScene.handleSecondaryPointerDown(e);
         }
         e.preventDefault();

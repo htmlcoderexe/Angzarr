@@ -171,6 +171,35 @@ class GUIManager
 
         }
     }
+    pickElementSpecific(x,y)
+    {
+        let sysonly = this.components.filter((c)=>c.layer=="system");
+        // check all UI elements
+        if(sysonly) 
+        for(let i = sysonly.length-1;i>=0;i--)
+        {
+            let c = sysonly[i];
+            const target = c.checkhitSpecific(x,y);
+            // if an element is found, click it and set the flag
+            if(target)
+            {
+                return target;
+            }
+
+        }
+        // check all UI elements 
+        for(let i = this.components.length-1;i>=0;i--)
+        {
+            let c = this.components[i];
+            const target = c.checkhitSpecific(x,y);
+            // if an element is found, click it and set the flag
+            if(target)
+            {
+                return target;
+            }
+
+        }
+    }
     handlePrimaryPointerMove(e)
     {
 
@@ -206,6 +235,7 @@ class GUIManager
      */
     handleClick(x,y)
     {
+        console.error("handling click!");
         let handled = false;
         // check all UI elements 
         let target = this.pickElement(x,y);

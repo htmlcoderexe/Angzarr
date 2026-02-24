@@ -119,7 +119,6 @@ class GameScene
      */
     handlePrimaryPointerClick(x,y)
     {
-        this.click?.(x,y);
 
     }
     clickSecondary(x,y){}
@@ -129,10 +128,6 @@ class GameScene
      */
     handleSecondaryPointerClick(x,y)
     {
-        let handled = this.uimgr.handleClick(x,y);
-        if(handled)
-            return;
-        this.clickSecondary?.(x,y);
     }
     keyDown(key){}
     /**
