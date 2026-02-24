@@ -243,7 +243,7 @@ arcade_shop:
                 }
                 player.coins-=adjusted_cost;
                 player.upgrades[opt.bonus]++;
-                $id('shopselector').changedHandler();
+                $id('shopselector').raiseEvent("change");
 
             }
         },
@@ -340,7 +340,9 @@ inventory_test: {
             event: "click",
             handler:(x,y)=>{
                 $message("","#000000");
+                console.log("destroying template");
                 $destroy($id('unpausebt').top());
+                console.log("unpausing game");
                 $param('scene').paused=false;
             }
         }
