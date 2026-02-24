@@ -12,13 +12,16 @@ class UITemplate
             uimgr.contextParams[tpl.params[i]]=params[i];
         }
         // console.log(...arguments);
+        let container = new UIElement(uimgr.hitbox);
+        uimgr.add(container);
         let controls = [];
         for(let i= 0; i<tpl.controls.length;i++)
         {
             let c = UITemplate.InstantiateControl(tpl.controls[i], uimgr,offset);
-            uimgr.add(c);
+            container.add(c);
             controls.push(c);
         }
+        container.addEventListener("close",()=>{$destroy(container)});
         
         for(let i= 0; i<tpl.event_handlers.length;i++)
         {
@@ -200,7 +203,7 @@ arcade_shop:
             control: "donebut",
             event: "click",
             handler: ()=>{
-                $destroy($id('shopselector'));
+                $destroy($id('shopselector').top());
             }
         },
         {
@@ -276,30 +279,39 @@ inventory_test: {
     controls: [
         {
             type: "itemslot", id: "item_icon",
-            x: 0, y: 0, w: 70, h: 70
+            x: 0, y: -300, w: 70, h: 70
         },
         {
             type: "text", id: "item_desc",
-            x:100, y:0, w:200, h:200,
+            x:100, y:-300, w:200, h:200,
             params: ["Select an item to view it."]
         },
         {
             type: "scroll", id: "inv_container",
             halign: "centre", 
-            x:0,y:200, w: 300, h:300,
+            x:0,y:-100, w: 300, h:200,
             params: [],
             children: [
             {
                 type: "inventory", id: "inv_view",
                 halign:"centre",
                 x:0, y:0, w:0, h:0,
-                params: [
-                    "$inventory",
-                    4
-                ]
+                params: [ "$inventory", 4 ]
             }
 
             ]
+        },
+        {
+            type: "button", id: "unpausebt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Continue"]
+        },
+        {
+            type: "button", id: "exitbt",
+            halign: "centre",
+            x: 0, y: 220, w: 240, h: 80,
+            params: ["Exit"]
         }
     ],
     event_handlers: [
@@ -315,9 +327,28 @@ inventory_test: {
                 }
 
             }
+        },
+        {
+            control: "exitbt",
+            event: "click",
+            handler:(x,y)=>{
+                window.gameManager.currentScene = new GameSceneTitle();
+            }
+        },
+        {
+            control: "unpausebt",
+            event: "click",
+            handler:(x,y)=>{
+                $message("","#000000");
+                $destroy($id('unpausebt').top());
+                $param('scene').paused=false;
+            }
         }
     ],
-    params:[ "inventory" ]
+    params:[ "inventory","scene" ],
+    init:()=>{
+        $message("GAME PAUSED","#00C010",0.5,9999);
+    }
 },
 inventory_test2: {
     controls: [

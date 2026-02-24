@@ -23,14 +23,15 @@ class GameSceneDash extends GameScene
         if(this.paused)
             return;
         this.paused=true;
-
+        this.uimgr.activeLayer="system";
+        UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,this.longSide*0.50],this.player.inventory,this);
+        return;
         if(this.player.inventory)
         {
            
             //let ii = new InventoryDisplay(40,150,this.player.inventory,4);
             //this.uimgr.add(ii,"system");
             this.uimgr.activeLayer="system";
-            UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,120],this.player.inventory);
         }
         this.uimgr.message("GAME PAUSED","#00C010",0.5,9999);
         let unpausebt = new UIButton(new Rectangle(

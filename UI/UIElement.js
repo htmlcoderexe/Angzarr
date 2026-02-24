@@ -109,6 +109,12 @@ class UIElement
             return null;
         }
     }
+    top()
+    {
+        if(!this.parent || this.parent == this.uimgr)
+            return this;
+        return this.parent;
+    }
     getChildrenBBox()
     {
         let mX =0;

@@ -41,6 +41,7 @@ class GUIManager
         window.$param=(param)=>{
             return this.contextParams[param];
         };
+        window.$message=(t,c,d)=>this.message(t,c,d);
     }
     /**
      * Adds an UI Element to the screen
