@@ -133,13 +133,9 @@ arcade_shop:
 {
     controls: [
         {
-            type:"selector",
-            id: "shopselector",
+            type:"selector", id: "shopselector",
             halign: "centre",
-            x:0,
-            y:0,
-            w: 360,
-            h: 180,
+            x:0, y:0, w: 360, h: 180,
             params: [
             [
                 {
@@ -166,64 +162,34 @@ arcade_shop:
             children: 
             [
                 {
-                    type:"button",
-                    id: "buybut",
+                    type:"button", id: "buybut",
                     halign:"centre",
-                    x:-63,
-                    y: 120,
-                    w: 110,
-                    h: 50,
-                    params: [
-                        "Buy", "green"
-                    ]
+                    x:-63,  y: 120, w: 110, h: 50,
+                    params: [ "Buy", "green" ]
                 },
                 {
-                    type:"button",
-                    id: "donebut",
+                    type:"button", id: "donebut",
                     halign:"centre",
-                    x: 63,
-                    y: 120,
-                    w: 110,
-                    h: 50,
-                    params: [
-                        "Done"
-                    ]
+                    x: 63, y: 120, w: 110,  h: 50,
+                    params: [ "Done" ]
                 },
                 {
-                    type:"label",
-                    id:"coinsdisplay",
+                    type:"label", id:"coinsdisplay",
                     halign:"centre",
-                    x: 0,
-                    y: -60,
-                    w: 170,
-                    h: 45,
-                    params: [
-                        "000000"
-                    ]
+                    x: 0,  y: -60, w: 170, h: 45,
+                    params: [ "000000" ]
                 },
                 {
-                    type:"label",
-                    id:"itemdisplay",
+                    type:"label", id:"itemdisplay",
                     halign:"centre",
-                    x: 0,
-                    y: 10,
-                    w: 240,
-                    h: 45,
-                    params: [
-                        ""
-                    ]
+                    x: 0, y: 10, w: 240, h: 45,
+                    params: [ "" ]
                 },
                 {
-                    type:"label",
-                    id:"costdisplay",
+                    type:"label",  id:"costdisplay",
                     halign:"centre",
-                    x: 0,
-                    y: 63,
-                    w: 170,
-                    h: 45,
-                    params: [
-                        "0000"
-                    ]
+                    x: 0, y: 63,  w: 170, h: 45,
+                    params: [ "0000" ]
                 }
             ]
         }
@@ -351,38 +317,22 @@ inventory_test: {
             }
         }
     ],
-    params:[
-        "inventory"
-    ],
-    init:()=>{
-
-    }
+    params:[ "inventory" ]
 },
 inventory_test2: {
     controls: [
         {
-            type: "scroll",
-            id: "inv_container",
+            type: "scroll", id: "inv_container",
             halign: "centre",
-            x:0,
-            y:0,
-            w: 300,
-            h:300,
+            x:0, y:0,  w: 300,  h:300,
             params: [],
             children: [
             {
-                type: "text",
-                id: "lipsum",
+                type: "text",  id: "lipsum",
                 halign: "centre",
-                x:0,
-                y:50,
-                w:280,
-                h:0,
-                params: [
-                    "Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably\nLorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably\nLorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably "
-                ]
+                x:0, y:50, w:280,  h:0,
+                params: [ "Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably\nLorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably\nLorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably Lorem ipsum dolor sit on ur mums face lmao gottem -- xochi, probably " ]
             }
-
             ]
         }
     ],
@@ -390,9 +340,6 @@ inventory_test2: {
     ],
     params:[
         "inventory"
-    ],
-    init:()=>{
-
-    }
+    ]
 }
 };
