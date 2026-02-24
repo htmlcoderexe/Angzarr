@@ -13,14 +13,12 @@ class GameSceneTitle extends GameScene
 
     }
     logosprite;
-    uimgr;
     gameObjects=[];
     speedMultiplier = 1;
     lifetime=0;
     constructor()
     {
         super();
-        this.uimgr= new GUIManager();
         this.logosprite=VectorSprite.fromRawObject(this.logo);
         let playbt = new UIButton(new Rectangle(
             this.shortSide/2-240/2,
@@ -59,11 +57,10 @@ class GameSceneTitle extends GameScene
     drawBg(ctx)
     {
         
-        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         // clear the sky 
         // should this not be this "BG" that the empty method above is supposed to "draw"?
         ctx.fillStyle="#000030";
-        ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+        ctx.fillRect(0,0,this.shortSide,this.longSide);
        
         let bgs = this.gameObjects.filter((e)=>e.layer=="bg");
         bgs.forEach((obj)=>{
@@ -72,7 +69,6 @@ class GameSceneTitle extends GameScene
     }
     draw(ctx)
     {
-        ctx.resetTransform();
         this.drawBg(ctx); 
         this.uimgr.draw(ctx);
         let yoff=Math.cos(this.lifetime);
@@ -80,6 +76,7 @@ class GameSceneTitle extends GameScene
         yoff-=5;
         ctx.translate(this.shortSide/2,this.longSide/2+yoff);
         this.logosprite.draw(ctx);
+        ctx.translate(-this.shortSide/2,-(this.longSide/2+yoff));
     }
     handlePrimaryPointerClick(e)
     {

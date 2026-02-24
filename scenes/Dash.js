@@ -221,11 +221,10 @@ class GameSceneDash extends GameScene
     drawBg(ctx)
     {
         
-        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         // clear the sky 
         // should this not be this "BG" that the empty method above is supposed to "draw"?
         ctx.fillStyle="#000030";
-        ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+        ctx.fillRect(0,0,this.shortSide,this.longSide);
        
         let bgs = this.gameObjects.filter((e)=>e.layer=="bg");
         bgs.forEach((obj)=>{
@@ -246,7 +245,7 @@ class GameSceneDash extends GameScene
         {
             ctx.save();
             ctx.fillStyle="rgb(0 0 48 / 0.7)";
-            ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            ctx.fillRect(0,0,this.shortSide,this.longSide);
             ctx.restore();
         }
         this.uimgr.draw(ctx,"system");

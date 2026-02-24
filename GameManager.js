@@ -27,6 +27,15 @@ class GameManager
     downPointer1 = [0,0];
     p1control = null;
     p2control = null;
+    scaleFactor=1;
+    /**
+     * Length of the long side of the game screen
+     */
+    longSide =0;
+    /**
+     * Length of the short side of the game screen
+     */
+    shortSide = 0;
     /**
      * Updates the game state and requests next update.
      * @param {number} timestamp - The timestamp given by the frame, used for calculating elapsed time.
@@ -45,6 +54,9 @@ class GameManager
         {
             // the timestamps are in milliseconds, convert to floating point seconds
             this.currentScene.update(dT/1000);
+            this.ctx.resetTransform();
+            this.ctx.clearRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
+            this.ctx.scale(1/this.scaleFactor,1/this.scaleFactor);
             this.currentScene.draw(this.ctx);
         }
         // save the timestamp to calculate elapsed time next round
@@ -68,15 +80,17 @@ class GameManager
      */
     handlePointerMove(e)
     {
+        let ex=e.offsetX*this.scaleFactor;
+        let ey=e.offsetY*this.scaleFactor;
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
             // generate the swipe event from current position
             // and the previous position of this pointer 
-            let x = e.offsetX;
+            let x = ex;
             let ox =this.prevPointer1[0];
             let dx=x-ox;
-            let y = e.offsetY;
+            let y = ey;
             let oy=this.prevPointer1[1];
             let dy=y-oy;
             // only actually trigger the swipe if pointer currently down
@@ -90,10 +104,10 @@ class GameManager
         // that's how you get multitouch well "dual" touch or whatever
         else
         {
-            let x = e.offsetX;
+            let x = ex;
             let ox =this.prevPointer2[0];
             let dx=x-ox;
-            let y = e.offsetY;
+            let y = ey;
             let oy=this.prevPointer2[1];
             let dy=y-oy;
             if(this.pointer2Down)
@@ -109,6 +123,8 @@ class GameManager
      */
     handlePointerUp(e)
     {
+        let ex=e.offsetX*this.scaleFactor;
+        let ey=e.offsetY*this.scaleFactor;
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
@@ -116,10 +132,10 @@ class GameManager
             this.pointer1Down=false;
             // generate the drag event from current position
             // and the position this pointer went down on
-            let x = e.offsetX;
+            let x = ex;
             let ox =this.downPointer1[0];
             let dx=x-ox;
-            let y = e.offsetY;
+            let y = ey;
             let oy=this.downPointer1[1];
             let dy=y-oy;
             let handled = false;
@@ -137,7 +153,7 @@ class GameManager
             // check if the control the pointer went up on is the same
             // the pointer previously went down on
             // if yes, generate a click for the UI manager
-            let eup= this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElementSpecific(ex,ey);
             console.warn(this.p1control, eup);
             if(eup==this.p1control)
             {
@@ -157,10 +173,10 @@ class GameManager
         else
         {
             this.pointer2Down=false;
-            let x = e.offsetX;
+            let x = ex;
             let ox =this.downPointer2[0];
             let dx=x-ox;
-            let y = e.offsetY;
+            let y = ey;
             let oy=this.downPointer2[1];
             let dy=y-oy;
             let handled = false;
@@ -174,7 +190,7 @@ class GameManager
                 e.preventDefault();
                 return;
             }
-            let eup= this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
+            let eup= this.currentScene.uimgr.pickElementSpecific(ex,ey);
             if(eup==this.p2control)
             {
                 handled = this.currentScene.uimgr.handleClick(x,y);
@@ -198,6 +214,8 @@ class GameManager
      */
     handlePointerDown(e)
     {
+        let ex=e.offsetX*this.scaleFactor;
+        let ey=e.offsetY*this.scaleFactor;
         // this distinguishes second (and so on) touch on touch devices
         // basically it records the UI control the pointer went down on, if any
         // this will be checked in the corresponding pointerUp handler to generate
@@ -207,8 +225,8 @@ class GameManager
             // also set the pointer down state
             this.pointer1Down=true;
             // and the location where the pointer went down
-            this.downPointer1=[e.offsetX,e.offsetY];
-            this.p1control=this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
+            this.downPointer1=[ex,ey];
+            this.p1control=this.currentScene.uimgr.pickElementSpecific(ex,ey);
             // yeah in theory should be some possibility for UI to intercept down event
             // but that's too hairy for now and most of the time
             // the artificial swipe event does whatever was needed anyway
@@ -217,8 +235,8 @@ class GameManager
         else
         {
             this.pointer2Down=true;
-            this.downPointer2=[e.offsetX,e.offsetY];
-            this.p2control=this.currentScene.uimgr.pickElementSpecific(e.offsetX,e.offsetY);
+            this.downPointer2=[ex,ey];
+            this.p2control=this.currentScene.uimgr.pickElementSpecific(ex,ey);
             this.currentScene.handleSecondaryPointerDown(e);
         }
         e.preventDefault();
@@ -230,17 +248,19 @@ class GameManager
      */
     handlePointerClick(e)
     {
+        let ex=e.offsetX*this.scaleFactor;
+        let ey=e.offsetY*this.scaleFactor;
         // fuck this, we get twice the clicks because of the pointerup event
         // so UI clicks happen in the PointerUp event
         // this will just pass the click event to the rest of the scene
         // this distinguishes second (and so on) touch on touch devices
         if(e.isPrimary)
         {
-            this.currentScene.handlePrimaryPointerClick(e.offsetX,e.offsetY);
+            this.currentScene.handlePrimaryPointerClick(ex,ey);
         }
         else
         {
-            this.currentScene.handleSecondaryPointerClick(e.offsetX,e.offsetY);
+            this.currentScene.handleSecondaryPointerClick(ex,ey);
         }
         e.preventDefault();
 

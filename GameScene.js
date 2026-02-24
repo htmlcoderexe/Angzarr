@@ -44,8 +44,8 @@ class GameScene
         // this currently defaults to portrait orientation
         // #TODO: make this actually use and adapt to landscape
         // sideways scrolling?
-        this.shortSide= window.innerWidth;
-        this.longSide=window.innerHeight;
+        this.shortSide= window.gameManager.shortSide;
+        this.longSide=window.gameManager.longSide;
         this.uimgr=new GUIManager(this.shortSide,this.longSide);
     }
     /**
