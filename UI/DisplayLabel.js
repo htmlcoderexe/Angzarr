@@ -16,6 +16,9 @@ class DisplayLabel extends UIElement
      * @param {Rectangle} rekt 
      * @param {string} text 
      */
+    static {
+        UIElement.controlRegistry.label=this;
+    }
     constructor(rekt,text,colour="")
     {
         super(rekt);

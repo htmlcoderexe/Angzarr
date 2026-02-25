@@ -16,6 +16,9 @@ class WrappedText extends UIElement
     set text(value) {
         this.setText(value);
     }
+    static {
+        UIElement.controlRegistry.text=this;
+    }
     constructor(rekt,text="Lorem ipsum dolor sit on ur mums face lmao gottem") // default test string courtesy of xochi
     {
         super(rekt);

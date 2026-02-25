@@ -16,6 +16,10 @@ class UIElement
     uimgr = null;
     layer = "system";
     id="";
+    static controlRegistry={};
+    static {
+        UIElement.controlRegistry.generic=this;
+    }
     get h() {
         return this.originalHitbox.height;
     }

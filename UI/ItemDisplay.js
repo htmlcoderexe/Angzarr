@@ -14,9 +14,12 @@ class ItemDisplay extends UIElement
         }
         this.#_item = value;
     }
-    constructor(x,y,item=undefined)
+    static {
+        UIElement.controlRegistry.itemslot=this;
+    }
+    constructor(rekt,item=undefined)
     {
-        super([x,y,64,64]);
+        super([rekt[0],rekt[1],64,64]);
         this.item = item;
         this.addEventListener("click",(x,y)=>
         {
@@ -44,9 +47,12 @@ class ItemDisplay extends UIElement
                 ctx.strokeText(this.item.count,12,64-3);
                 ctx.fillText(this.item.count,12,64-3);
             }
-            ctx.translate(32,32);
-            this.item.inventorySprite.draw(ctx);
-            ctx.translate(-32,-32);
+            if(this.item.inventorySprite)
+            {
+                ctx.translate(32,32);
+                this.item.inventorySprite.draw(ctx);
+                ctx.translate(-32,-32);
+            }
         }
     }
     update(dt)

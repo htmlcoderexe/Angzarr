@@ -6,6 +6,9 @@ class StageProgressBar extends UIElement
     progress = 0.0;
     paused = false;
     markers = [];
+    static {
+        UIElement.controlRegistry.stageprogress=this;
+    }
     
     drawControl(ctx)
     {

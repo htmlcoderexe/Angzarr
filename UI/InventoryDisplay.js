@@ -20,14 +20,18 @@ class InventoryDisplay extends UIElement
             this.raiseEvent("select",value);
         }
     }
-    constructor(x, y,inventory, columns)
+    static {
+        UIElement.controlRegistry.inventory=this;
+    }
+    constructor(rekt,inventory, columns)
     {
+        console.log(...arguments);
         let padding = 5;
         let iwidth = 64+6;
         let width = columns*(padding+iwidth)+padding;
         let rows = Math.ceil(inventory.capacity/columns);
         let height = rows*(padding+iwidth)+padding;
-        super([x,y,width,height]);
+        super([rekt.x,rekt.y,width,height]);
         this.inventory=inventory;
         for(let row = 0;row<rows;row++)
             for(let col =0;col<columns;col++)
@@ -35,7 +39,7 @@ class InventoryDisplay extends UIElement
                 let offset = row*columns+col;
                 if(offset>inventory.capacity)
                     continue;
-                let ii = new ItemDisplay(col*(padding+iwidth)+padding,row*(padding+iwidth)+padding,inventory.items[offset]);
+                let ii = new ItemDisplay([col*(padding+iwidth)+padding,row*(padding+iwidth)+padding,1,1],inventory.items[offset]);
                 ii.inventoryIndex = offset;
                 this.add(ii);
             }

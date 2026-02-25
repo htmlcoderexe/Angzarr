@@ -7,6 +7,9 @@ class AbilitySlot extends UIElement
      * The assigned ability.
      */
     ability = null;
+    static {
+        UIElement.controlRegistry.skillslot=this;
+    }
     /**
      * Creates the control given the hitbox and the ability to control
      * @param {Rectangle} rekt 

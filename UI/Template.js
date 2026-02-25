@@ -1,28 +1,46 @@
 class UITemplate
 {
+    /**
+     * Loads and displays a defined UI template.
+     * @param {GUIManager} uimgr GUI manager 
+     * @param {*} template Name of the template
+     * @param {*} offset Coordinate origin of the template
+     * @param  {...any} params Any additional data to pass to the template
+     * @returns 
+     */
     static ShowTemplate(uimgr, template, offset, ...params)
     {
+        // get the template and fail if it doesn't exist
         let tpl = UI_TEMPLATES[template];
         if(!tpl)
         {
             return false;
         }
+        // Write the params to the context to be accessible
+        // inside the template functions
         for(let i =0;i<tpl.params.length;i++)
         {
             uimgr.contextParams[tpl.params[i]]=params[i];
         }
-        // console.log(...arguments);
+        // Create a container element
+        // this allows for clean removal of the template's
+        // elements
         let container = new UIElement(uimgr.hitbox);
         uimgr.add(container);
         let controls = [];
+        // create each element and add it to the container
         for(let i= 0; i<tpl.controls.length;i++)
         {
             let c = UITemplate.InstantiateControl(tpl.controls[i], uimgr,offset);
             container.add(c);
             controls.push(c);
         }
+        // this allows any element to close the template
+        // by sending a "close" event to its .top()
         container.addEventListener("close",()=>{$destroy(container)});
+        // also add a click handler to catch all clicks outside any template elements
         container.addEventListener("click",(x,y)=>{console.log("Outside template click: "+x+","+y);});
+        // wire up event handlers specified in the template
         for(let i= 0; i<tpl.event_handlers.length;i++)
         {
             let control = tpl.event_handlers[i].control;
@@ -33,56 +51,20 @@ class UITemplate
                 console.warn("Failed to add event <" + eventname + "> to control <" + control + ">");
             }
         }
+        // run init proc if given
         if(tpl.init)
         {
             tpl.init();
         }
     }
+    // creates the controls from templates
     static ControlFactory(type, rekt,params)
     {
         let result;
-        switch(type)
+        let cls = UIElement.controlRegistry[type];
+        if(cls)
         {
-            case "button":
-            {
-                result = new UIButton(rekt,...params);
-                break;
-            }
-            case "label":
-            {
-                result = new DisplayLabel(rekt,...params);
-                break;
-            }
-            case "selector":
-            {
-                result = new UISelector(rekt,...params);
-                break;
-            }
-            case "skillslot":
-            {
-                result = new AbilitySlot(rekt,...params);
-                break;
-            }
-            case "itemslot":
-            {
-                result = new ItemDisplay(rekt.x,rekt.y, ...params);
-                break;
-            }
-            case "scroll":
-            {
-                result = new ScrollPane(rekt,...params);
-                break;
-            }
-            case "text":
-            {
-                result = new WrappedText(rekt,...params);
-                break;
-            }
-            case "inventory":
-            {
-                result = new InventoryDisplay(rekt.x,rekt.y,...params);
-                break;
-            }
+            result = new cls(rekt,...params);
         }
         return result;
     }

@@ -7,6 +7,9 @@ class ScrollPane extends UIElement
     moverate=1;
     lastswipe=0;
     diff=0;
+    static {
+        UIElement.controlRegistry.scroll=this;
+    }
     update(dT)
     {
         super.update(dT);

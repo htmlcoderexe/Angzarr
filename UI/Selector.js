@@ -4,6 +4,9 @@ class UISelector extends UIElement
     selectedIndex = 0;
     arrowPadding = 0;
     arrowWidth=32;
+    static {
+        UIElement.controlRegistry.selector=this;
+    }
     constructor(rekt, options)
     {
         super(rekt);

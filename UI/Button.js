@@ -14,6 +14,9 @@ class UIButton extends UIElement
     // #TODO: fuck this
     bgcolor="#FF9000";
     colourScheme = "";
+    static {
+        UIElement.controlRegistry.button=this;
+    }
     constructor(rekt, text, colour="")
     {
         super(rekt);
