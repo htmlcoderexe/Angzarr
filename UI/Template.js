@@ -14,6 +14,7 @@ class UITemplate
         let tpl = UI_TEMPLATES[template];
         if(!tpl)
         {
+            console.error("Unable to load template: <"+template+">");
             return false;
         }
         // Write the params to the context to be accessible
@@ -46,10 +47,7 @@ class UITemplate
             let control = tpl.event_handlers[i].control;
             let eventname = tpl.event_handlers[i].event;
             let handler = tpl.event_handlers[i].handler;
-            if(!$id(control).addEventListener(eventname, handler))
-            {
-                console.warn("Failed to add event <" + eventname + "> to control <" + control + ">");
-            }
+            $id(control).addEventListener(eventname, handler);
         }
         // run init proc if given
         if(tpl.init)
@@ -57,56 +55,90 @@ class UITemplate
             tpl.init();
         }
     }
-    // creates the controls from templates
+    /**
+     * Creates a control given its type, bounding box and any additional params
+     * @param {string} type name of the control as registered
+     * @param {Rectangle} rekt a bounding box for the control
+     * @param {Array} params any additional params the control would need
+     * @returns {UIElement | null} the resulting control if successful
+     */
     static ControlFactory(type, rekt,params)
     {
         let result;
         let cls = UIElement.controlRegistry[type];
         if(cls)
         {
-            result = new cls(rekt,...params);
+            result = new cls(rekt,...params);        
+            return result;
         }
-        return result;
+        console.error("Unable to load control: <"+control.type+">");
+        return null;
     }
+    /**
+     * Creates a control out of its definition in a template
+     * @param {*} control - control definition
+     * @param {UIElement} parent - parent control of this
+     * @param {int[]} offset - optional offset to shift the control's position by
+     * @returns {UIElement | null} the resulting control if successful
+     */
     static InstantiateControl(control, parent,offset=[0,0])
     {
         let params = control.params;
         if(!params)
             params = [];
-        console.warn(...arguments);
+        // params which are strings prefixed with an "$"
+        // are references to the template's context params
+        // so go through given params and replace
+        // any references with the actual values
         for(let i=0;i<params.length;i++)
         {
             let p=params[i];
             if(typeof p =="string" && p[0]=="$")
             {
-                console.warn(parent);
                 params[i]=parent.uimgr.contextParams[p.substring(1)];
             }
         }
+        // for centered controls, x=0 centers the control exactly
+        // and any other x value offsets the control off that position
         let basex = offset[0];
         if(control.halign=="centre")
         {
             basex+=parent.hitbox.width/2-control.w/2;
         }
         let basey= offset[1];
+        // define control hitbox based on the offset/centering as applicable
         let x = basex+control.x;
         let y = basey+control.y;
         let w = control.w;
         let h = control.h;
         let rekt = new Rectangle(x,y,w,h);
+        // create the control
         let result = UITemplate.ControlFactory(control.type,rekt,params);
+        if(!result)
+        {
+            return null;
+        }
+        // some controls have varying width that's only determined
+        // once they are created; therefore, re-align the control
+        // if it's supposed to be centered
         if(control.w==0 && control.halign=="centre")
         {
             result.hitbox=new Rectangle(x-result.hitbox.width/2,y,result.hitbox.width,result.hitbox.height);
             result.originalHitbox=new Rectangle(x-result.originalHitbox.width/2,y,result.hitbox.width,result.hitbox.height);
-            //result.originalHitbox.x-=result.originalHitbox.w/2;
         }
+        // set obligatory attributes
         result.id=control.id;
         result.uimgr = parent.uimgr;
+        // recurse if children defined
         if(control.children)
             for(let i=0;i<control.children.length;i++)
             {
-                result.add(UITemplate.InstantiateControl(control.children[i],result));
+                let c=UITemplate.InstantiateControl(control.children[i],result);
+                if(!c)
+                {
+                    break;
+                }
+                result.add(c);
             }
         return result;
     }
