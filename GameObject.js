@@ -248,7 +248,7 @@ class GameObject
         {
             ctx.strokeStyle="#FF0000";
             ctx.lineWidth=1;
-            ctx.strokeRect(this.hitbox.x+0.5,this.hitbox.y+0.5,this.hitbox.width,this.hitbox.height);
+            ctx.strokeRect(this.originalHitbox.x,this.originalHitbox.y,this.hitbox.width,this.hitbox.height);
         }
         ctx.translate(-this.x,-this.y);
     }
