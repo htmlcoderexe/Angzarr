@@ -48,6 +48,7 @@ class UITemplate
             let eventname = tpl.event_handlers[i].event;
             let handler = tpl.event_handlers[i].handler;
             $id(control).addEventListener(eventname, handler);
+            console.log("Installed <"+eventname+"> for control <"+control+">");
         }
         // run init proc if given
         if(tpl.init)
@@ -364,6 +365,45 @@ inventory_test: {
     params:[ "inventory","scene" ],
     init:()=>{
         $message("GAME PAUSED","#00C010",0.5,9999);
+    }
+},
+arcade_level_done: {
+    controls: [
+        {
+            type: "button", id: "continue_bt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Continue"]
+        },
+        {
+            type: "button", id: "shop_bt",
+            halign: "centre",
+            x: 0, y: 220, w: 240, h: 80,
+            params: ["Shop","green"]
+        }
+    ],
+    event_handlers: [
+        {
+            control:"continue_bt",
+            event: "click",
+            handler:(x,y)=>{
+                $message("","#000000");
+                $param('player').level++;
+                console.log("next lvl go");
+                window.gameManager.currentScene = new GameSceneDash($param('mode'),$param('player'));
+            }
+        },
+        {
+            control:"shop_bt",
+            event:"click",
+            handler:(x,y)=>{
+                $show("system","arcade_shop",[0,$uimgr().h*0.60],$param('player'));
+            }
+        }
+    ],
+    params:["mode","player"],
+    init:()=>{
+        $message("LEVEL CLEAR","#00C010",1,9999);
     }
 },
 inventory_test2: {

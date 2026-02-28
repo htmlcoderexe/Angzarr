@@ -25,80 +25,13 @@ class GameSceneDash extends GameScene
             return;
         console.log("game thinks it's unpaused");
         this.paused=true;
-        this.uimgr.activeLayer="system";
-        UITemplate.ShowTemplate(this.uimgr,"inventory_test",[0,this.longSide*0.50],this.player.inventory,this);
-        return;
-        if(this.player.inventory)
-        {
-           
-            //let ii = new InventoryDisplay(40,150,this.player.inventory,4);
-            //this.uimgr.add(ii,"system");
-            this.uimgr.activeLayer="system";
-        }
-        this.uimgr.message("GAME PAUSED","#00C010",0.5,9999);
-        let unpausebt = new UIButton(new Rectangle(
-            this.shortSide/2-240/2,
-            this.longSide*0.60,
-            240,
-            80),
-            "Continue"
-        );
-        this.uimgr.add(unpausebt,"system");
-        let titlebt = new UIButton(new Rectangle(
-            this.shortSide/2-240/2,
-            this.longSide*0.60+100,
-            240,
-            80),
-            "Exit"
-        );
-        titlebt.addEventListener("click",()=>{
-            window.gameManager.currentScene = new GameSceneTitle();
-        });
-        unpausebt.addEventListener("click",()=>{
-            
-            console.warn("BEGIN removing shit");
-            this.uimgr.message("","#000000");
-            this.uimgr.remove(unpausebt);
-            this.uimgr.remove(titlebt);
-            this.uimgr.remove($id('inv_container'));
-            console.warn("removed shit");
-            this.paused=false;
-        });
-        this.uimgr.add(titlebt,"system");
+        $show("system","inventory_test",[0,this.longSide*0.50],this.player.inventory,this);
     }
     levelDone()
     {
-        this.uimgr.message("LEVEL CLEAR","#00C010",1,9999);
-        let retrybt = new UIButton(new Rectangle(
-            this.shortSide/2-240/2,
-            this.longSide*0.60-50,
-            240,
-            80),
-            "Continue"
-        );
-        retrybt.addEventListener("click",()=>{
-            // pass the player here to keep progress
-            this.uimgr.message("","#000000");
-            this.player.level++;
-            window.gameManager.currentScene = new GameSceneDash(this.mode,this.player);
-        });
-        this.uimgr.activeLayer="system";
-        this.uimgr.add(retrybt);
-        let shopbt = new UIButton(new Rectangle(
-            this.shortSide/2-240/2,
-            this.longSide*0.60+100,
-            240,
-            80),
-            "Shop"
-        );
-        shopbt.colourScheme="green";
-        shopbt.addEventListener("click",()=>{
-            this.uimgr.activeLayer="system";
-            UITemplate.ShowTemplate(this.uimgr,"arcade_shop",[0,this.longSide*0.60],this.player);
-        });
-        this.uimgr.activeLayer="system";
-        this.uimgr.add(shopbt);
+        
         this.paused=true;
+        $show("system","arcade_level_done",[0,this.longSide*0.50],this.mode,this.player);
     }
     generateArcadeStage(level)
     {
@@ -169,9 +102,9 @@ class GameSceneDash extends GameScene
         this.uimgr.add(bt);
         const pBt = new UIButton(
             new Rectangle(
-                this.shortSide - 80,
-                this.longSide - 80,
-                64,64
+                this.shortSide - 95,
+                this.longSide - 100,
+                70,72
             ),"||"
         );
         pBt.addEventListener("click",()=>{

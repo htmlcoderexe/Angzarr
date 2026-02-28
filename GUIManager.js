@@ -42,6 +42,12 @@ class GUIManager
             return this.contextParams[param];
         };
         window.$message=(t,c,d)=>this.message(t,c,d);
+        window.$show=(layer,name,offset,...params)=>{
+            console.log(arguments);
+            this.activeLayer=layer;
+            UITemplate.ShowTemplate(this,name,offset,...params);
+        };
+        window.$uimgr=()=>this;
     }
     /**
      * Adds an UI Element to the screen
