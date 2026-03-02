@@ -14,11 +14,26 @@ class StageObject
     /**
      * Keeps track of whether the object has already been triggered.
      */
+     x;
+     y;
     triggered = false;
-    constructor(offset, type="stageobject")
+    static objectRegistry = {};
+    static register(cls, name)
     {
-        this.offset=offset;
-        this.type=type;
+        StageObject.objectRegistry[name]=cls;
+    }
+    static load(obj)
+    {
+        let cls = StageObject.objectRegistry[obj.type];
+        if(cls)
+            return cls(obj);
+    }
+    constructor(obj)
+    {
+        this.offset=obj.offset;
+        this.type=obj.type;
+        this.x=obj.x;
+        this.y=obj.y;
     }
     /**
      * Performs the action associated with triggering this object.

@@ -1,10 +1,18 @@
 class SpawnObject extends StageObject
 {
     spawn;
-    constructor(offset, stageObject)
+    static {
+        SpawnObject.register(this,"enemy");
+    }
+    constructor(obj)
     {
-        super(offset,"spawn");
-        this.spawn = stageObject;
+        super(obj);
+        console.warn(obj);
+        this.spawn  = Hostile.fromTemplate(HostileData.hostiles[obj.enemy_type]);
+        this.spawn.x=this.x;
+        this.spawn.y=this.y;
+        this.spawn.targetX=this.x;
+        this.spawn.targetY=this.y;
     }
     trigger(scene, diff)
     {

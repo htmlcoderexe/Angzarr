@@ -43,16 +43,7 @@ class Stage
     {
         let result = [];
         map.forEach((item)=>{
-            // for testing!
-            let x = item.x;
-            let y = item.y;
-            let o = item.offset;
-            let testmob = Hostile.fromTemplate(HostileData.hostiles[item.type]);
-            testmob.x=x;
-            testmob.y=y;
-            testmob.targetX=x;
-            testmob.targetY=y;
-            let so = new SpawnObject(o,testmob);
+            let so = new SpawnObject(item);
             result.push(so);
         });
         return result;

@@ -37,26 +37,26 @@ class GameSceneDash extends GameScene
     {
 
         let testStage = [
-            {x:50,y:0,offset:0, type:"eye_swarm"},
-            {x:350,y:0,offset:0, type:"eye_swarm2"},
-            {x:50,y:0,offset:1000, type:"basic_l1"},
-            {x:350,y:0,offset:1000, type:"static_spinner"},
-            {x:50,y:0,offset:2000, type:"static_spinner"},
-            {x:200,y:0,offset:2000, type:"eye_swarm"},
-            {x:350,y:0,offset:2000, type:"static_spinner"},
-            {x:50,y:0,offset:3000, type:"eye_swarm"},
-            {x:350,y:0,offset:3000, type:"basic_l1"},
-            {x:50,y:0,offset:4000, type:"static_spinner"},
-            {x:350,y:0,offset:4000, type:"static_spinner"},
-            {x:50,y:0,offset:5000, type:"eye_swarm"},
-            {x:350,y:0,offset:5000, type:"eye_swarm"},
-            {x:50,y:0,offset:6000, type:"static_spinner"},
-            {x:150,y:0,offset:6500, type:"eye_swarm"},
-            {x:250,y:0,offset:7000, type:"eye_swarm"},
-            {x:350,y:0,offset:7500, type:"static_spinner"},
-            {x:50,y:0,offset:8000, type:"basic_l1"},
-            {x:200,y:0,offset:8000, type:"static_spinner"},
-            {x:350,y:0,offset:8000, type:"basic_l1"}
+            {x:50,y:0,offset:0, type:"enemy",enemy_type:"eye_swarm"},
+            {x:350,y:0,offset:0, type:"enemy",enemy_type:"eye_swarm2"},
+            {x:50,y:0,offset:1000, type:"enemy",enemy_type:"basic_l1"},
+            {x:350,y:0,offset:1000, type:"enemy",enemy_type:"static_spinner"},
+            {x:50,y:0,offset:2000, type:"enemy",enemy_type:"static_spinner"},
+            {x:200,y:0,offset:2000, type:"enemy",enemy_type:"eye_swarm"},
+            {x:350,y:0,offset:2000, type:"enemy",enemy_type:"static_spinner"},
+            {x:50,y:0,offset:3000, type:"enemy",enemy_type:"eye_swarm"},
+            {x:350,y:0,offset:3000, type:"enemy",enemy_type:"basic_l1"},
+            {x:50,y:0,offset:4000, type:"enemy",enemy_type:"static_spinner"},
+            {x:350,y:0,offset:4000, type:"enemy",enemy_type:"static_spinner"},
+            {x:50,y:0,offset:5000, type:"enemy",enemy_type:"eye_swarm"},
+            {x:350,y:0,offset:5000, type:"enemy",enemy_type:"eye_swarm"},
+            {x:50,y:0,offset:6000, type:"enemy",enemy_type:"static_spinner"},
+            {x:150,y:0,offset:6500, type:"enemy",enemy_type:"eye_swarm"},
+            {x:250,y:0,offset:7000, type:"enemy",enemy_type:"eye_swarm"},
+            {x:350,y:0,offset:7500, type:"enemy",enemy_type:"static_spinner"},
+            {x:50,y:0,offset:8000, type:"enemy",enemy_type:"basic_l1"},
+            {x:200,y:0,offset:8000, type:"enemy",enemy_type:"static_spinner"},
+            {x:350,y:0,offset:8000, type:"enemy",enemy_type:"basic_l1"}
         ];
         let fullStage= [];
         let offset_tally=testStage[testStage.length-1].offset+1000;
@@ -65,7 +65,7 @@ class GameSceneDash extends GameScene
             for(let j=0;j<testStage.length;j++)
             {
                 let row = testStage[j];
-                let newRow = {x:row.x,y:row.y,type:row.type,offset:row.offset+i*offset_tally};
+                let newRow = {x:row.x,y:row.y,type:row.type,enemy_type:row.enemy_type,offset:row.offset+i*offset_tally};
                 fullStage.push(newRow);
             }
         }
