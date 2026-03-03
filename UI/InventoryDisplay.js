@@ -39,7 +39,7 @@ class InventoryDisplay extends UIElement
                 let offset = row*columns+col;
                 if(offset>inventory.capacity)
                     continue;
-                let ii = new ItemDisplay([col*(padding+iwidth)+padding,row*(padding+iwidth)+padding,1,1],inventory.items[offset]);
+                let ii = new ItemDisplay(new Rectangle(col*(padding+iwidth)+padding,row*(padding+iwidth)+padding,1,1),inventory.items[offset]);
                 ii.inventoryIndex = offset;
                 this.add(ii);
             }

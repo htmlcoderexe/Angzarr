@@ -8,6 +8,7 @@ class WrappedText extends UIElement
     linespace=1;
     lineheight=1;
     fill="#FFFFFF";
+    stroke="#000000";
     align = TEXT_ALIGN_LEFT;
     #text ="";
     get text() {

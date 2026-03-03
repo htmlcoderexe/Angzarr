@@ -19,7 +19,7 @@ class ItemDisplay extends UIElement
     }
     constructor(rekt,item=undefined)
     {
-        super([rekt[0],rekt[1],64,64]);
+        super(new Rectangle(rekt.x,rekt.y,64,64));
         this.item = item;
         this.addEventListener("click",(x,y)=>
         {
@@ -30,7 +30,7 @@ class ItemDisplay extends UIElement
     }
     drawControl(ctx)
     {
-        UIRenderer.drawFrame(ctx, 0,0,this.hitbox.width,this.hitbox.height);
+        UIRenderer.drawFrame(ctx, 0,0,this.w,this.h);
         if(this.item)
         {
             if(this.item.count>1)
@@ -38,7 +38,7 @@ class ItemDisplay extends UIElement
                 // font, #TODO: replace with something cooler, Geo font looks nice
                 ctx.font = "bold 16px roboto";
                 // braindead centering logic at 3AM
-                //ctx.textAlign="center";
+                ctx.textAlign="left";
                 ctx.textBaseline="bottom";
                 // draw the shit
                 ctx.lineWidth = 2;

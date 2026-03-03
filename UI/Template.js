@@ -371,17 +371,25 @@ inventory_test: {
     controls: [
         {
             type: "itemslot", id: "item_icon",
-            x: 0, y: -300, w: 70, h: 70
+            halign: "centre", 
+            x: -115, y: 200, w: 70, h: 70
         },
         {
             type: "text", id: "item_desc",
-            x:100, y:-300, w:200, h:200,
-            params: ["Select an item to view it."]
+            halign: "centre", 
+            x: 0, y:300, w:300, h:160,
+            params: ["Select an item to view it.","bold 20px roboto"]
+        },
+        {
+            type: "text", id: "item_name",
+            halign: "centre", 
+            x: 40, y:200, w:200, h:40,
+            params: ["","bold 32px roboto"]
         },
         {
             type: "scroll", id: "inv_container",
             halign: "centre", 
-            x:0,y:-100, w: 300, h:200,
+            x:0,y:500, w: 300, h:200,
             params: [],
             children: [
             {
@@ -393,6 +401,12 @@ inventory_test: {
 
             ]
         },
+        {
+            type: "button",id:"back_bt",
+            halign:"centre",
+            x:0,y:750,w:240,h:80,
+            params: ["Back"]
+        }
     ],
     event_handlers: [
         {
@@ -404,12 +418,22 @@ inventory_test: {
                 {
                     $id('item_desc').text = item.description;
                     $id('item_icon').item = item;
+                    $id('item_name').text = item.name;
+                    $id('item_name').fill = item.nameFill;
+                    $id('item_name').stroke = item.nameStroke;
                 }
 
             }
+        },
+        {
+            control:"back_bt",
+            event:"click",
+            handler: (x,y)=>{
+                $destroy($id('back_bt').top());
+            }
         }
     ],
-    params:[ "inventory","scene" ],
+    params:[ "inventory"],
     init:()=>{
         $message("GAME PAUSED","#00C010",0.5,9999);
     }
@@ -540,6 +564,13 @@ location_test: {
             event:"click",
             handler:(x,y)=>{
                 window.gameManager.currentScene=new GameSceneDash("rpg",$param('scene').player);
+            }
+        },
+        {
+            control:"inv_bt",
+            event:"click",
+            handler:(x,y)=>{
+                $show("system","inventory_test",[0,0],$param('scene').player.inventory);
             }
         }
     ],
