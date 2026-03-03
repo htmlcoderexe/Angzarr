@@ -26,7 +26,7 @@ class StageObject
     {
         let cls = StageObject.objectRegistry[obj.type];
         if(cls)
-            return cls(obj);
+            return new cls(obj);
     }
     constructor(obj)
     {

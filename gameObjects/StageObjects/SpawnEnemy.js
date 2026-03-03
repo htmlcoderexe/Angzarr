@@ -1,8 +1,8 @@
-class SpawnObject extends StageObject
+class SpawnEnemy extends StageObject
 {
     spawn;
     static {
-        SpawnObject.register(this,"enemy");
+        StageObject.register(this,"enemy");
     }
     constructor(obj)
     {

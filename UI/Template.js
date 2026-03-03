@@ -428,5 +428,51 @@ inventory_test2: {
     params:[
         "inventory"
     ]
+},
+location_test: {
+    controls: [
+        {
+            type: "button", id: "inv_bt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Inventory"]
+        },
+        {
+            type: "button", id: "ship_bt",
+            halign: "centre",
+            x: 0, y: 220, w: 240, h: 80,
+            params: ["Ship"]
+        },
+        {
+            type: "button", id: "shop_bt",
+            halign: "centre",
+            x: 0, y: 340, w: 240, h: 80,
+            params: ["Shop","green"]
+        },
+        {
+            type: "button", id: "craft_bt",
+            halign: "centre",
+            x: 0, y: 560, w: 240, h: 80,
+            params: ["Craft"]
+        },
+        {
+            type: "button", id: "continue_bt",
+            halign: "centre",
+            x: 0, y: 780, w: 240, h: 80,
+            params: ["Continue"]
+        }
+    ],
+    event_handlers:[
+        {
+            control:"continue_bt",
+            event:"click",
+            handler:(x,y)=>{
+                
+            }
+        }
+    ],
+    params:[
+        "scene"
+    ]
 }
 };

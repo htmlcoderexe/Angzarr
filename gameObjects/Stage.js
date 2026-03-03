@@ -43,7 +43,7 @@ class Stage
     {
         let result = [];
         map.forEach((item)=>{
-            let so = new SpawnObject(item);
+            let so = StageObject.load(item);
             result.push(so);
         });
         return result;
