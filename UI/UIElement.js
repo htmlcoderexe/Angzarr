@@ -16,6 +16,7 @@ class UIElement
     uimgr = null;
     layer = "system";
     id="";
+    bgColor="#00000000";
     static controlRegistry={};
     static {
         UIElement.controlRegistry.generic=this;
@@ -64,7 +65,8 @@ class UIElement
     }
     drawControl(ctx)
     {
-
+        ctx.fillStyle=this.bgColor;
+        ctx.fillRect(0,0,this.w,this.h);
     }
     add(control)
     {

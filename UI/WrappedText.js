@@ -19,10 +19,11 @@ class WrappedText extends UIElement
     static {
         UIElement.controlRegistry.text=this;
     }
-    constructor(rekt,text="Lorem ipsum dolor sit on ur mums face lmao gottem") // default test string courtesy of xochi
+    constructor(rekt,text="Lorem ipsum dolor sit on ur mums face lmao gottem",font=null) // default test string courtesy of xochi
     {
         super(rekt);
-
+        if(font)
+            this.font=font;
         this.setText(text);
     }
     setText(text)

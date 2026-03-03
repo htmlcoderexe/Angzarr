@@ -25,13 +25,28 @@ class GameSceneDash extends GameScene
             return;
         console.log("game thinks it's unpaused");
         this.paused=true;
-        $show("system","inventory_test",[0,this.longSide*0.50],this.player.inventory,this);
+        if(this.mode=="arcade")
+        {
+            $show("system","pause_arcade",[0,this.longSide*0.50],this);
+        }
+        else
+        {
+            $show("system","pause_rpg",[0,this.longSide*0.50],this);
+        }
+        
     }
     levelDone()
     {
         
         this.paused=true;
-        $show("system","arcade_level_done",[0,this.longSide*0.50],this.mode,this.player);
+        if(this.mode=="arcade")
+        {
+            $show("system","arcade_level_done",[0,this.longSide*0.50],this.mode,this.player);
+        }
+        else
+        {
+            $show("system","rpg_level_done",[0,this.longSide*0.50],this.mode,this.player);
+        }
     }
     generateArcadeStage(level)
     {
@@ -174,13 +189,6 @@ class GameSceneDash extends GameScene
         
         this.uimgr.draw(ctx,"game");
         UIRenderer.drawGauge(ctx, 10,10,120,32,this.player.HP, this.player.MaxHP,"255 30 30",true);
-        if(this.paused)
-        {
-            ctx.save();
-            ctx.fillStyle="rgb(0 0 48 / 0.7)";
-            ctx.fillRect(0,0,this.shortSide,this.longSide);
-            ctx.restore();
-        }
         this.uimgr.draw(ctx,"system");
         //console.log(this.test);
     }

@@ -26,7 +26,10 @@ class UITemplate
         // Create a container element
         // this allows for clean removal of the template's
         // elements
-        let container = new UIElement(uimgr.hitbox);
+        let container = new UIElement(new Rectangle(...uimgr.hitbox));
+        if(tpl.bgcolor)
+            container.bgColor = tpl.bgcolor;
+        console.warn(container);
         uimgr.add(container);
         let controls = [];
         // create each element and add it to the container
@@ -149,6 +152,7 @@ class UITemplate
 const UI_TEMPLATES = {
 arcade_shop:
 {
+    bgcolor:"#00000090",
     controls: [
         {
             type:"selector", id: "shopselector",
@@ -290,7 +294,80 @@ arcade_shop:
         $id('shopselector').raiseEvent("change", 0);
     }
 },
+pause_rpg: {
+    controls:[
+        {
+            type: "button", id: "unpausebt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Continue"]
+        },
+        {
+            type: "button", id: "exitbt",
+            halign: "centre",
+            x: 0, y: 220, w: 240, h: 80,
+            params: ["Return"]
+        }],
+        event_handlers: [
+        {
+            control: "exitbt",
+            event: "click",
+            handler:(x,y)=>{
+                
+                $message("","#000000");
+                window.gameManager.currentScene = new SceneLanded($param('scene').player);
+            }
+        },
+        {
+            control: "unpausebt",
+            event: "click",
+            handler:(x,y)=>{
+                $message("","#000000");
+                console.log("destroying template");
+                $destroy($id('unpausebt').top());
+                console.log("unpausing game");
+                $param('scene').paused=false;
+            }
+        }],
+        params: ["scene"]
+},
+pause_arcade: {
+    controls:[
+        {
+            type: "button", id: "unpausebt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Continue"]
+        },
+        {
+            type: "button", id: "exitbt",
+            halign: "centre",
+            x: 0, y: 220, w: 240, h: 80,
+            params: ["Exit"]
+        }],
+        event_handlers: [
+        {
+            control: "exitbt",
+            event: "click",
+            handler:(x,y)=>{
+                window.gameManager.currentScene = new GameSceneTitle();
+            }
+        },
+        {
+            control: "unpausebt",
+            event: "click",
+            handler:(x,y)=>{
+                $message("","#000000");
+                console.log("destroying template");
+                $destroy($id('unpausebt').top());
+                console.log("unpausing game");
+                $param('scene').paused=false;
+            }
+        }],
+        params: ["scene"]
+},
 inventory_test: {
+    bgcolor: "#000030B0",
     controls: [
         {
             type: "itemslot", id: "item_icon",
@@ -316,18 +393,6 @@ inventory_test: {
 
             ]
         },
-        {
-            type: "button", id: "unpausebt",
-            halign: "centre",
-            x: 0, y: 100, w: 240, h: 80,
-            params: ["Continue"]
-        },
-        {
-            type: "button", id: "exitbt",
-            halign: "centre",
-            x: 0, y: 220, w: 240, h: 80,
-            params: ["Exit"]
-        }
     ],
     event_handlers: [
         {
@@ -342,30 +407,37 @@ inventory_test: {
                 }
 
             }
-        },
-        {
-            control: "exitbt",
-            event: "click",
-            handler:(x,y)=>{
-                window.gameManager.currentScene = new GameSceneTitle();
-            }
-        },
-        {
-            control: "unpausebt",
-            event: "click",
-            handler:(x,y)=>{
-                $message("","#000000");
-                console.log("destroying template");
-                $destroy($id('unpausebt').top());
-                console.log("unpausing game");
-                $param('scene').paused=false;
-            }
         }
     ],
     params:[ "inventory","scene" ],
     init:()=>{
         $message("GAME PAUSED","#00C010",0.5,9999);
     }
+},
+rpg_level_done: {
+    controls: [
+        {
+            type: "button", id: "continue_bt",
+            halign: "centre",
+            x: 0, y: 100, w: 240, h: 80,
+            params: ["Continue"]
+        }
+    ],
+    event_handlers: [
+        {
+            control:"continue_bt",
+            event: "click",
+            handler:(x,y)=>{
+                $message("","#000000");
+                window.gameManager.currentScene = new SceneLanded($param('player'));
+            }
+        }
+    ],
+    params:["mode","player"],
+    init:()=>{
+        $message("COMPLETE","#00C010",1,9999);
+    }
+
 },
 arcade_level_done: {
     controls: [
@@ -390,7 +462,7 @@ arcade_level_done: {
                 $message("","#000000");
                 $param('player').level++;
                 console.log("next lvl go");
-                window.gameManager.currentScene = new GameSceneDash($param('mode'),$param('player'));
+                window.gameManager.currentScene = new GameSceneDash("arcade",$param('player'));
             }
         },
         {
@@ -467,7 +539,7 @@ location_test: {
             control:"continue_bt",
             event:"click",
             handler:(x,y)=>{
-                
+                window.gameManager.currentScene=new GameSceneDash("rpg",$param('scene').player);
             }
         }
     ],
