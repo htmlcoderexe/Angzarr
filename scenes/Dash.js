@@ -74,9 +74,11 @@ class GameSceneDash extends GameScene
             {x:350,y:0,offset:8000, type:"enemy",enemy_type:"basic_l1"}
         ];
         let fullStage= [];
+        let smap = new StageMap();
         let offset_tally=testStage[testStage.length-1].offset+1000;
         for(let i=0;i<this.player.level;i++)
         {
+            smap.add(testStage,offset_tally*i);
             for(let j=0;j<testStage.length;j++)
             {
                 let row = testStage[j];
@@ -84,6 +86,7 @@ class GameSceneDash extends GameScene
                 fullStage.push(newRow);
             }
         }
+        console.log(smap);
         return fullStage;
     }
     constructor(mode="arcade",player = null)

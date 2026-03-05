@@ -25,12 +25,23 @@ class GameSceneTitle extends GameScene
             this.longSide*0.60,
             240,
             80),
-            "Play"
+            "Arcade"
         );
         playbt.addEventListener("click",()=>{
-            window.gameManager.currentScene = new GameSceneDash("rpg");
+            window.gameManager.currentScene = new GameSceneDash("arcade");
         });
         this.uimgr.add(playbt,"system");
+        let playbt2 = new UIButton(new Rectangle(
+            this.shortSide/2-240/2,
+            this.longSide*0.60+110,
+            240,
+            80),
+            "Explorer"
+        );
+        playbt2.addEventListener("click",()=>{
+            window.gameManager.currentScene = new GameSceneDash("rpg");
+        });
+        this.uimgr.add(playbt2,"system");
     }
     update(dT)
     {
