@@ -19,4 +19,10 @@ class StageMap
             });
         this.objects.sort((a,b)=>a.offset-b.offset);
     }
+    *[Symbol.iterator]() {
+        for(let i=0;i<this.objects.length;i++)
+        {    
+            yield this.objects[i];
+        }
+    }
 }

@@ -73,21 +73,14 @@ class GameSceneDash extends GameScene
             {x:200,y:0,offset:8000, type:"enemy",enemy_type:"static_spinner"},
             {x:350,y:0,offset:8000, type:"enemy",enemy_type:"basic_l1"}
         ];
-        let fullStage= [];
         let smap = new StageMap();
         let offset_tally=testStage[testStage.length-1].offset+1000;
         for(let i=0;i<this.player.level;i++)
         {
             smap.add(testStage,offset_tally*i);
-            for(let j=0;j<testStage.length;j++)
-            {
-                let row = testStage[j];
-                let newRow = {x:row.x,y:row.y,type:row.type,enemy_type:row.enemy_type,offset:row.offset+i*offset_tally};
-                fullStage.push(newRow);
-            }
         }
         console.log(smap);
-        return fullStage;
+        return smap;
     }
     constructor(mode="arcade",player = null)
     {
@@ -142,7 +135,7 @@ class GameSceneDash extends GameScene
         this.stageProgressBox = new StageProgressBar(new Rectangle(this.shortSide-24,150,18,400));
         this.uimgr.add(this.stageProgressBox);
 
-        let objs = Stage.load(this.generateArcadeStage(this.player.level));
+        let objs = Stage.load([...this.generateArcadeStage(this.player.level)]);
         this.stage= new Stage(this,objs);
     }
     handlePrimaryPointerMove(x,y)
