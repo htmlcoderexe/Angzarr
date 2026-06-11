@@ -22,7 +22,7 @@ class GameSceneTitle extends GameScene
         this.logosprite=VectorSprite.fromRawObject(this.logo);
         let playbt = new UIButton(new Rectangle(
             this.shortSide/2-240/2,
-            this.longSide*0.60,
+            this.longSide*0.60+55,
             240,
             80),
             "Arcade"
@@ -31,17 +31,6 @@ class GameSceneTitle extends GameScene
             window.gameManager.currentScene = new GameSceneDash("arcade");
         });
         this.uimgr.add(playbt,"system");
-        let playbt2 = new UIButton(new Rectangle(
-            this.shortSide/2-240/2,
-            this.longSide*0.60+110,
-            240,
-            80),
-            "Explorer"
-        );
-        playbt2.addEventListener("click",()=>{
-            window.gameManager.currentScene = new GameSceneDash("rpg");
-        });
-        this.uimgr.add(playbt2,"system");
     }
     update(dT)
     {
